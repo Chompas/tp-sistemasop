@@ -1,14 +1,14 @@
 #!/bin/bash
-cantidadLineasADejar=5		# Cantidad de lineas luego de truncar
-cantidadParametros=$#
-esLogInstalacion=false		# Fue invocado por el instalador?
-debug=true
+cantidadLineasADejar=5			# Cantidad de lineas luego de truncar
+esLogInstalacion=false			# Fue invocado por el instalador?
+tipoMensaje=""					# Tipo de mensaje de error
+debug=false
 
 if $debug ; then
 	LOGEXT="log"
 	LOGDIR="dirLogs"
 	CONFDIR="dirLogsInstalacion"
-	LOGSIZE=100
+	LOGSIZE=1000
 fi
 
 # Array asociativo con los tipos posibles de mensajes
@@ -18,6 +18,10 @@ tiposMensajes=([i]=Info [w]=Warning [e]=Error [se]=Severe)
 # Imprime la forma correcta de uso de este script
 function uso() { 
 	echo "Uso: $0 [-i] comando [-t <i|w|e|se>] mensaje" 1>&2;
+	echo "Descripción: Escribe en el archivo de log el <comando> que generó el mensaje, y el <mensaje>."
+	echo "Si el archivo de log no existe, lo crea con el nombre <comando>." 
+	echo "Si existe, escribe en una línea nueva al final del archivo."
+	echo "Si el archivo de log es muy grande, lo trunca y luego escribe."
 	echo "Parámetros opcionales:"
 	echo -e "\t-i: El modulo invocante es el instalador del TP."
 	echo -e "\t-t: Tipo de mensaje a loggear:"
@@ -124,7 +128,13 @@ if [ "$tamanioArchivo" -ge "$tamanioMaximoLog" ]; then
 	fi
 fi
 
+# Obtenemos el tipo de mensaje (completo)
+tipo=""
+if [ "$tipoMensaje" != "" ] ; then
+	tipo=${tiposMensajes[$tipoMensaje]}
+fi
+
 # Finalmente... escribimos en el archivo de log!!!
-echo -e "$fecha \t $usuario \t $comando \t ${tiposMensajes[$tipoMensaje]} \t \t $mensaje" >> $path
+echo -e "$fecha \t $usuario \t $comando \t $tipo \t \t $mensaje" >> $path
 
 exit 0
