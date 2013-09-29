@@ -1,0 +1,5 @@
+Decisiones de implementacion:
+
+- Grabar_L
+	Un parametro opcional "-i" para invocarlo solo desde el modulo de instalación
+	Cuando el archivo de log es muy grande se quitan todas las lineas, excepto las ultimas 5
