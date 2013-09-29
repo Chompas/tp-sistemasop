@@ -1,8 +1,15 @@
 #!/bin/bash
 cantidadLineasADejar=5		# Cantidad de lineas luego de truncar
 cantidadParametros=$#
-esModuloInstalador=false	# Fue invocado por el instalador?
-debug=false
+esLogInstalacion=false		# Fue invocado por el instalador?
+debug=true
+
+if $debug ; then
+	LOGEXT="log"
+	LOGDIR="dirLogs"
+	CONFDIR="dirLogsInstalacion"
+	LOGSIZE=100
+fi
 
 # Array asociativo con los tipos posibles de mensajes
 declare -A tiposMensajes
@@ -26,12 +33,12 @@ function uso() {
 # Hay un parametro opcional "-i", y un parámetro opcional "-h"
 while getopts "hi" opt; do
     case "${opt}" in
-		h)
+		h)		# Muestra la ayuda del script y finaliza
 			uso
 			return 0
 			;;
         i)
-			esModuloInstalador=true            
+			esLogInstalacion=true            
             ;;
     esac
 done
@@ -71,45 +78,53 @@ mensaje="$2"
 
 # ------- FIN PROCESAMIENTO DE ARGUMENTOS -------- 
 
-LOGDIR="dirLogs"
-LOGEXT="log"
-LOGSIZE=1000
-nombreArchivoDeLog=${comando}.$LOGEXT
-path=${LOGDIR}/${nombreArchivoDeLog}
-fecha=$(date)
+directorio=$LOGDIR
+extension=$LOGEXT
+if $esLogInstalacion ; then
+	directorio=$CONFDIR
+	extension="log"
+fi
+tamanioMaximoLog=$LOGSIZE
+nombreArchivoDeLog=${comando}.${extension}
+path=${directorio}/${nombreArchivoDeLog}
+fecha=$(date +"%d-%m-%y %T")
 usuario=$USER
 
 if $debug ; then
-	echo "esModuloInstalador = "$esModuloInstalador
+	echo "esLogInstalacion = "$esLogInstalacion
 	echo "comando = "$comando
 	echo "tipo mensaje = "$tipoMensaje
 	echo "mensaje = "$mensaje
 	echo "path = "$path
-	echo "tamanioArchivo = "$tamanioArchivo
 fi
 
 # Si el archivo no existe
 if [ ! -f $path ]; then
 	# Si el directorio no existe
-    if [ ! -d $LOGDIR ]; then
-		mkdir -m 775 $LOGDIR # Creamos el directorio
+    if [ ! -d $directorio ]; then
+		mkdir -m 775 $directorio # Creamos el directorio
 	fi
 	
 	# Creamos el archivo con el encabezado
 	echo -e "FECHA \t \t \t USUARIO \t COMANDO \t TIPO \t \t MENSAJE" >> $path
 fi
 
-# Si el archivo es muy grande, lo truncamos
+# Si el archivo es muy grande, y no es el log de instalación, lo truncamos
 tamanioArchivo=$(stat -c '%s' $path)
-if [ "$tamanioArchivo" -ge "$LOGSIZE" ]; then
-	echo -e "FECHA \t USUARIO \t COMANDO \t TIPO \t MENSAJE" >> ${path}_tmp
-	tail --lines=$cantidadLineasADejar $path >> ${path}_tmp
-	rm $path
-	mv ${path}_tmp $path
-	echo "Log Excedido" >> $path		# El parametro -n es para evitar el fin de linea
+if $debug ; then 
+	echo "tamanio archivo = "$tamanioArchivo
+fi
+if [ "$tamanioArchivo" -ge "$tamanioMaximoLog" ]; then
+	if ! $esLogInstalacion ; then
+		echo -e "FECHA \t \t \t USUARIO \t COMANDO \t TIPO \t \t MENSAJE" >> ${path}_tmp
+		tail --lines=$cantidadLineasADejar $path >> ${path}_tmp
+		rm $path
+		mv ${path}_tmp $path
+		echo "Log Excedido" >> $path
+	fi
 fi
 
 # Finalmente... escribimos en el archivo de log!!!
-echo -e "$fecha \t $usuario \t ${tiposMensajes[$tipoMensaje]} \t $mensaje" >> $path
+echo -e "$fecha \t $usuario \t $comando \t ${tiposMensajes[$tipoMensaje]} \t \t $mensaje" >> $path
 
 exit 0
