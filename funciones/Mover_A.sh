@@ -4,12 +4,6 @@
 #Parámetro 3 (opcional): comando que la invoca
 #Otros parámetros u opciones a especificar por el desarrollador
 
-debug=false
-
-if $debug ; then
-	PATH=$PATH:.
-fi
-
 function uso() { 
 	echo "Uso: $0 origen destino [comando]" 1>&2;
 	echo "Mueve el archivo <origen> al directorio <destino>. En caso de ser invocada por un comando que graba en un archivo de log, debe pasarse el nombre del mismo como <comando>"
@@ -64,18 +58,35 @@ fi
 
 # Verificar si es un archivo duplicado
 if [ -f $dirDestino/$nombreOrigen ]; then
+
     # Archivo duplicado
+    
+    # Creo directorio dup en caso que no exista
     if [ ! -d "$dirDestino/dup" ]; then
         mkdir "$dirDestino/dup"
     fi
+    
+    # En el directorio dup se guardan los archivos duplicados con el siguiente nombre:
+    # <nombreOriginal>.nnn dónde nnn es un número de secuencia que evita nombres duplicados, es
+	# decir, evita “sobreescribir” archivos.
+	
+	# Obtengo nnn del ultimo duplicado almacenado
+
     nnn=$(ls "$dirDestino/dup" | grep "^$nombreOrigen.[0-9]\{1,3\}$" | sort -r -V | sed s/$nombreOrigen.// | head -n 1)
+    
+    # En caso de no haber duplicados inicializo nnn
 	if [ "$nnn" == "" ]; then
 	    nnn=0
 	fi
+	
+	# Le sumo 1 a nnn
 	nnn=$(echo $nnn +1 | bc -l)
+	
 	if [ $# -eq 3 ]; then
 		./Grabar_L.sh "$comando" -t w "Archivo duplicado"
 	fi	
+	
+	# Muevo a dup con el nuevo nombre
 	mv "$origen" "$dirDestino/dup/$nombreOrigen.$nnn"
 	
 else

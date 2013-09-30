@@ -4,3 +4,9 @@ Decisiones de implementacion:
 	Un parametro opcional "-i" para invocarlo solo desde el modulo de instalación
 	Cuando el archivo de log es muy grande se quitan todas las lineas, excepto las ultimas 5
 	Fecha y hora en formato DD-MM-AA HH:MM:SS (script aparte?)
+
+- Mover_A
+	El numero de secuencia nnn es descentralizado (no es comun para todo el sistema), 
+	se lo obtiene directamente del directorio de duplicados, por eso no es necesario guardarlo
+	
+	
