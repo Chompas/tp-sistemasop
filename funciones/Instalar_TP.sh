@@ -95,15 +95,27 @@ verificarExistenciaComponentes(){
 	if [ $iniciar_a_file -eq 1 ] && [ $recibir_a_file -eq 1] && [ $reservar_a_file -eq 1] && [ $start_a_file -eq 1 ] && [ $stop_a_file -eq 1 ] && [ $mover_a_file -eq 1 ] && [ $imprimir_a_file -eq 1 ] && [ $grabar_l_file -eq 1] 
 	then
 		echo "Estado de la instalación: COMPLETA"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Estado de la instalación: COMPLETA"
+
 		echo "Proceso de Instalación Cancelado"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Proceso de Instalación Cancelado"
 	else
 		echo "Componentes faltantes:"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Componentes faltantes:"
+
 		imprimirComponentesFaltantes
 		echo "Estado de la instalación: INCOMPLETA"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Estado de la instalación: INCOMPLETA"
+
 		echo "Desea completar la instalación? (Si-No)"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Desea completar la instalación? (Si-No)"
+
 		INPUT="0"
 		while [ "$INPUT" != 'No' ] && [ "$INPUT" != 'Si' ]; do  # falla con cadena vacia
 		    read INPUT
+
+            	    ./Grabar_L.sh -i "Instalar_TP" -t i "$INPUT"
+
 		    AUX=`echo $INPUT | sed 's-^$-X-'`
 		    if [ $AUX == 'No' ];
 		    then
@@ -127,34 +139,42 @@ imprimirComponentesFaltantes() {
 	if [ $iniciar_a_file -eq 0 ] 
 	then
 		echo "Iniciar_A.sh"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Iniciar_A.sh"
 	fi
 	if [ $recibir_a_file -eq 0 ]
 	then
 		echo "Recibir_A.sh"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Recibir_A.sh"
 	fi
 	if [ $reservar_a_file -eq 0 ]
 	then
 		echo "Reservar_A.sh"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Reservar_A.sh"
 	fi
 	if [ $start_a_file -eq 0 ] 
 	then
 		echo "Start_A.sh"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Start_A.sh"
 	fi
 	if [ $stop_a_file -eq 0 ] 
 	then
 		echo "Stop_A.sh"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Stop_A.sh"
 	fi	
 	if [ $mover_a_file -eq 0 ] 
 	then
 		echo "Mover_A.sh"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Mover_A.sh"
 	fi
 	if [ $imprimir_a_file -eq 0 ] 
 	then
 		echo "Imprimir_A.sh"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Imprimir_A.sh"
 	fi
 	if  [ $grabar_l_file -eq 0 ]
 	then
 		echo "Grabar_L.sh"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Grabar_L.sh"
 	fi
 }
 
@@ -164,17 +184,41 @@ verificarInstalacionPrevia() {
 	then
 	    # Determinar si esta completo y faltantes
 		echo "Librería del sistema: $GRUPO/$CONFDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Librería del sistema: $GRUPO/$CONFDIR"
+		
 		ls $GRUPO/$CONFDIR
+		./Grabar_L.sh -i "Instalar_TP" -t i "`ls $GRUPO/$CONFDIR`"
+
 		echo "Ejecutables: $GRUPO$BINDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Ejecutables: $GRUPO$BINDIR"
+
 		ls $GRUPO$BINDIR
+		./Grabar_L.sh -i "Instalar_TP" -t i "`ls $GRUPO$BINDIR`"
+
 		echo "Archivos Maestros: $GRUPO$MAEDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Archivos Maestros: $GRUPO$MAEDIR"
+
 		ls $GRUPO$MAEDIR
+		./Grabar_L.sh -i "Instalar_TP" -t i "`ls $GRUPO$MAEDIR`"
+
 		echo "Directorio de arribo de archivos externos: $GRUPO$ARRIDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Directorio de arribo de archivos externos: $GRUPO$ARRIDIR"
+
 		echo "Archivos externos aceptados: $GRUPO$ACEPDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Archivos externos aceptados: $GRUPO$ACEPDIR"
+
 		echo "Archivos externos rechazados: $GRUPO$RECHDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Archivos externos rechazados: $GRUPO$RECHDIR"
+
 		echo "Reportes de salida: $GRUPO$REPODIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Reportes de salida: $GRUPO$REPODIR"
+
 		echo "Archivos procesados: $GRUPO$PROCDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Archivos procesados: $GRUPO$PROCDIR"
+
 		echo "Logs de auditoria del Sistema: $GRUPO$LOGDIR/<comando>.$LOGEXT"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Logs de auditoria del Sistema: $GRUPO$LOGDIR/<comando>.$LOGEXT"
+
 		verificarExistenciaComponentes
 	    fin
 	fi
@@ -187,9 +231,17 @@ A T E N C I O N: Al instalar TP SO7508 Segundo Cuatrimestre 2013 UD. expresa
 aceptar los términos y Condiciones del \"ACUERDO DE LICENCIA DE SOFTWARE\" 
 incluido en este paquete.
 Acepta? Si – No"
+	./Grabar_L.sh -i "Instalar_TP" -t i "TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01"
+	./Grabar_L.sh -i "Instalar_TP" -t i "A T E N C I O N: Al instalar TP SO7508 Segundo Cuatrimestre 2013 UD. expresa
+aceptar los términos y Condiciones del \"ACUERDO DE LICENCIA DE SOFTWARE\" incluido en este paquete."
+	./Grabar_L.sh -i "Instalar_TP" -t i "Acepta? Si – No"
+
 	INPUT="0"
 	while [ "$INPUT" != 'No' ] && [ "$INPUT" != 'Si' ]; do  # falla con cadena vacia
+
 	    read INPUT
+	    ./Grabar_L.sh -i "Instalar_TP" -t i "$INPUT"
+
 	    AUX=`echo $INPUT | sed 's-^$-X-'`
 	    if [ $AUX == 'No' ];
 	    then
@@ -225,7 +277,11 @@ instalado.
 Efectúe su instalación e inténtelo nuevamente.
 Proceso de Instalación Cancelado"
 
-	#loguear lo mismo
+	./Grabar_L.sh -i "Instalar_TP" -t i "TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Para instalar el TP es necesario contar con Perl 5 o superior instalado."
+	./Grabar_L.sh -i "Instalar_TP" -t i "Efectúe su instalación e inténtelo nuevamente."
+	./Grabar_L.sh -i "Instalar_TP" -t i "Proceso de Instalación Cancelado"
+	
 	fin
 }
 
@@ -233,48 +289,63 @@ Proceso de Instalación Cancelado"
 existePerl() {
 	echo "TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01
 Perl Version: $chequeo_perl"
-	# loguear lo mismo
+
+	./Grabar_L.sh -i "Instalar_TP" -t i "TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Perl Version: $chequeo_perl"
 }
 
 # 7. Definir el directorio de instalación de los ejecutables
 definirDirectorioEjecutables() {
 	echo -n "Defina el directorio de instalación de los ejecutables ($GRUPO$BINDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los ejecutables ($GRUPO$BINDIR): "
+
         read INPUT
 	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO$BINDIR"'-'`
+	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO/bin"'-'`
 	
 	#Reservar este path en la variable BINDIR
 	BINDIR=$AUX
+	
 	echo $BINDIR
+	./Grabar_L.sh -i "Instalar_TP" -t i "$BINDIR"
+
 }
 
 # 8. Definir el directorio de instalación de los archivos Maestros
 definirDirectorioMaestros() {
 	echo -n "Defina el directorio de instalación de los archivos maestros ($GRUPO$MAEDIR): "
-        read INPUT
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los archivos maestros ($GRUPO$MAEDIR): "
+        
+	read INPUT
 	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO$MAEDIR"'-'`
+	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO/mae"'-'`
 	
 	#Reservar este path en la variable MAEDIR
 	MAEDIR=$AUX
+
 	echo $MAEDIR
+	./Grabar_L.sh -i "Instalar_TP" -t i "$MAEDIR"
 }
 
 # 9. Definir el directorio de arribo de archivos externos
 definirDirectorioArribos() {
 	echo -n "Defina el directorio de arribo de archivos externos ($GRUPO$ARRIDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de arribo de archivos externos ($GRUPO$ARRIDIR): "
+
         read INPUT
 	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO$ARRIDIR"'-'`
+	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO/arribos"'-'`
 
-	#Reservar este path en la variable MAEDIR
 	ARRIDIR=$AUX
 	echo $ARRIDIR
+	./Grabar_L.sh -i "Instalar_TP" -t i "$ARRIDIR"
 }
 
 #10. Definir espacio minimo libre para el arribo de archivos
 definirEspacioMinimoParaExternos() {
 	echo -n "Defina el espacio mínimo libre para el arribo de archivos externos en Mbytes (100):"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el espacio mínimo libre para el arribo de archivos externos en Mbytes (100):"
+
 	read INPUT
 	# Si no ingresa nada se toma el valor por default
 	AUX=`echo $INPUT | sed 's-^$-'"$DATASIZE"'-' | grep '^[0-9]*$' | sed 's-^$-'"X"'-'`
@@ -286,61 +357,81 @@ definirEspacioMinimoParaExternos() {
 	
 	DATASIZE=$AUX
 	echo $DATASIZE
+	./Grabar_L.sh -i "Instalar_TP" -t i "$DATASIZE"
 }
 
 # 11. Verificar espacio en disco
 verificarEspacioEnDisco() {
-#
-echo ""
-#ESPACIO= 12
-#echo "Insuficiente espacio en disco.
-#Espacio disponible: $ESPACIO Mb.
-#Espacio requerido $DATASIZE Mb
-#Cancele la instalación e inténtelo mas tarde o vuelva a intentarlo
-#con otro valor.
-#"
-# loguear
+	ESPACIO=`df -BM . | sed 's/ \+/,/g' | cut -f4 -d, | tail -1 | sed 's/M//'`
+	
+	if [ $ESPACIO -lt $DATASIZE ]
+	then
+		echo "Insuficiente espacio en disco."
+		echo "Espacio disponible: $ESPACIO Mb."
+		echo "Espacio requerido $DATASIZE Mb"
+		echo "Cancele la instalación e inténtelo mas tarde o vuelva a intentarlo con otro valor."
+		./Grabar_L.sh -i "Instalar_TP" -t i "Insuficiente espacio en disco."
+		./Grabar_L.sh -i "Instalar_TP" -t i "Espacio disponible: $ESPACIO Mb."
+		./Grabar_L.sh -i "Instalar_TP" -t i "Espacio requerido $DATASIZE Mb"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Cancele la instalación e inténtelo mas tarde o vuelva a intentarlo con otro valor."
+
+		definirEspacioMinimoParaExternos
+	fi
 }
 
 # 12. Definir el directorio de aceptados
 definirDirectorioArribosAceptados() {
 	echo -n "Defina el directorio de grabación de los archivos externos aceptados ($GRUPO$ACEPDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos aceptados ($GRUPO$ACEPDIR): "
+
         read INPUT
 	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO$ACEPDIR"'-'`
+	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO/aceptados"'-'`
 	
 	ACEPDIR=$AUX
+
 	echo $ACEPDIR
+	./Grabar_L.sh -i "Instalar_TP" -t i "$ACEPDIR"
 }
 
 # 13. Definir el directorio de rechazados
 definirDirectorioArribosRechazados() {
 	echo -n "Defina el directorio de grabación de los archivos externos rechazados ($GRUPO$RECHDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos rechazados ($GRUPO$RECHDIR): "
+
         read INPUT
 	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO$RECHDIR"'-'`
+	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO/rechazados"'-'`
 	
 	RECHDIR=$AUX
+
 	echo $RECHDIR
+	./Grabar_L.sh -i "Instalar_TP" -t i "$RECHDIR"
 }
 
 # 14. Definir el directorio de procesados
 definirDirectorioProcesados() {
 	echo -n "Defina el directorio de grabación de los archivos procesados ($GRUPO$PROCDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos procesados ($GRUPO$PROCDIR): "
+
         read INPUT
 	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO$PROCDIR"'-'`
+	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO/procesados"'-'`
 	
 	PROCDIR=$AUX
+
 	echo $PROCDIR
+	./Grabar_L.sh -i "Instalar_TP" -t i "$PROCDIR"
 }
 
 # 15. Definir el directorio de Listados
 definirDirectorioListados() {
 	echo -n "Defina el directorio de los listados de salida ($GRUPO$REPODIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de los listados de salida ($GRUPO$REPODIR): "
+
         read INPUT
 	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO$REPODIR"'-'`
+	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO/repo"'-'`
 	
 	REPODIR=$AUX
 	echo $REPODIR
@@ -349,28 +440,37 @@ definirDirectorioListados() {
 #16. Definir el directorio de logs para los comandos
 definirDirectorioLogs() {
 	echo -n "Defina el directorio de logs ($GRUPO$LOGDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de logs ($GRUPO$LOGDIR): "
+
         read INPUT
 	# Si no ingresa nada se toma el valor por default
 	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO$LOGDIR"'-'`
 	
 	LOGDIR=$AUX
+
 	echo $LOGDIR
+	./Grabar_L.sh -i "Instalar_TP" -t i "$LOGDIR"
 }
 
 #17. Definir la extensión para los archivos de log
 definirExtensionLogs() {
 	echo -n "Ingrese la extensión para los archivos de log: ($LOGEXT): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Ingrese la extensión para los archivos de log: ($LOGEXT): "
+
         read INPUT
 	# Si no ingresa nada se toma el valor por default
 	AUX=`echo $INPUT | sed 's-^$-'"$LOGEXT"'-'`
 	
 	LOGEXT=$AUX
 	echo $LOGEXT
+	./Grabar_L.sh -i "Instalar_TP" -t i "$LOGEXT"
 }
 
 # 18. Definir tamaño maximo LOG
 definirTamanioMaximoLog() {
 	echo -n "Defina el tamaño máximo para los archivos $LOGEXT en Kbytes ($LOGSIZE):"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el tamaño máximo para los archivos $LOGEXT en Kbytes ($LOGSIZE):"
+
 	read INPUT
 	# Si no ingresa nada se toma el valor por default
 	AUX=`echo $INPUT | sed 's-^$-'"$LOGSIZE"'-' | grep '^[0-9]*$' | sed 's-^$-'"X"'-'`
@@ -382,21 +482,27 @@ definirTamanioMaximoLog() {
 	
 	LOGSIZE=$AUX
 	echo $LOGSIZE
+	./Grabar_L.sh -i "Instalar_TP" -t i "$LOGSIZE"
 }
 
 # 19. Mostrar estructura de directorios resultante y valores de parámetros configurados
 mostrarEstructura() {
 	limpiarPantalla
 	verEstructura
+
 	echo "Los datos ingresados son válidos? (Si/No): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Los datos ingresados son válidos? (Si/No): "
+
 	INPUT="0"
 	while [ "$INPUT" != 'No' ] && [ "$INPUT" != 'Si' ]; do  # falla con cadena vacia
 	    read INPUT
+	    ./Grabar_L.sh -i "Instalar_TP" -t i "$INPUT"
+
 	    AUX=`echo $INPUT | sed 's-^$-X-'`
 	    if [ $AUX == 'No' ];
 	    then
         	limpiarPantalla
-			definirParametros		
+		definirParametros		
 	    fi
 
 	    INPUT=$AUX
@@ -423,18 +529,40 @@ verEstructura() {
 	Logs de auditoria del Sistema: $LOGDIR/<comando>.$LOGEXT
 	Tamaño máximo para los archivos de log del sistema: $LOGSIZE Kb
 	Estado de la instalacion: LISTA"
+	./Grabar_L.sh -i "Instalar_TP" -t i "TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Librería del Sistema: $GRUPO/$CONFDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Ejecutables: $BINDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Archivos maestros: $MAEDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Directorio de arribo de archivos externos: $ARRIDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Espacio mínimo libre para arribos: $DATASIZE Mb"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Archivos externos aceptados: $ACEPDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Archivos externos rechazados: $RECHDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Archivos procesados: $PROCDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Reportes de salida: $REPODIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Logs de auditoria del Sistema: $LOGDIR/<comando>.$LOGEXT"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Tamaño máximo para los archivos de log del sistema: $LOGSIZE Kb"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Estado de la instalacion: LISTA"
+
 }
 
 # 20. Confirmar Inicio de Instalación
 confirmarInicio() {
 	echo "Iniciando Instalación. Esta Ud. seguro? (Si-No)"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Iniciando Instalación. Esta Ud. seguro? (Si-No)"
+
 	INPUT="0"
 	while [ "$INPUT" != 'No' ] && [ "$INPUT" != 'Si' ]; do  # falla con cadena vacia
 	    read INPUT
+	    ./Grabar_L.sh -i "Instalar_TP" -t i "$INPUT"
+
 	    AUX=`echo $INPUT | sed 's-^$-X-'`
 	    if [ $AUX == 'No' ];
 	    then
 		fin
+	    fi
+	    if [ $AUX == 'Si' ];
+	    then
+		instalacion
 	    fi
 	    INPUT=$AUX
 	done
@@ -452,6 +580,7 @@ instalacion() {
 # 21.1. Crear Estructuras
 crearEstructuras() {
 	echo "Creando Estructuras de directorio. . . ."
+	./Grabar_L.sh -i "Instalar_TP" -t i "Creando Estructuras de directorio. . . ."
 	mkdir -p $BINDIR
 	mkdir -p $MAEDIR
 	mkdir -p $ARRIDIR
@@ -465,26 +594,38 @@ crearEstructuras() {
 # 21.2. Mover los archivos maestros al directorio MAEDIR mostrando el siguiente mensaje
 moverMaestros() {
 	echo "Instalando Archivos Maestros"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Archivos Maestros" 
 	# mover
 }
 
 # 21.3.Mover el archivo de disponibilidad al directorio PROCDIR mostrando el siguiente mensaje
 moverDisponibilidad() {
 	echo "Instalando Archivo de Disponibilidad"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Archivo de Disponibilidad"
 	# mover
 }
 
 # 21.4. Mover los ejecutables y funciones al directorio BINDIR mostrando el siguiente mensaje
 moverProgramasYFunciones() {
 	echo "Instalando Programas y Funciones"
-	# mover
+	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Programas y Funciones"
+
+	cp "./Iniciar_A.sh" "$BINDIR/"
+	cp "./Recibir_A.sh" "$BINDIR/"
+	cp "./Reservar_A.sh" "$BINDIR/"
+	cp "./Start_A.sh" "$BINDIR/"
+	cp "./Stop_A.sh" "$BINDIR/"
+	cp "./Mover_A.sh" "$BINDIR/"
+	cp "./Imprimir_A.sh" "$BINDIR/"
+	cp "./Grabar_L.sh" "$BINDIR/"
 }
 
 # 21.5. Actualizar el archivo de configuración mostrando el siguiente mensaje
 actualizarArchivoConfiguracion() {
 	echo "Actualizando la configuración del sistema"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Actualizando la configuración del sistema"
 	
-	fecha=$(date +"%d/%m/%y %T")
+	fecha=$(date +"%d/%m/%y %T") #FIXME: ARREGLAR FORMATO DE LA FECHA Y REEMPLAZAR FECHA_AUX
 
 	FECHA_AUX="30/09/2013 10:03 p.m"
 	LINEA_AUX="GRUPO=$GRUPO=$USUARIO=$FECHA_AUX"
@@ -534,6 +675,7 @@ actualizarArchivoConfiguracion() {
 # 23. Instalacion Concluida
 instalacionConcluida() {
 	echo "Instalación CONCLUIDA"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Instalación CONCLUIDA"
 }
 
 # 24. FIN
@@ -588,7 +730,7 @@ mostrarEstructura
 #20
 confirmarInicio
 #21
-instalacion
+#instalacion
 #23
 instalacionConcluida
 #24
