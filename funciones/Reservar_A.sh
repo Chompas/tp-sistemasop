@@ -25,12 +25,33 @@ function horaValida() {
 function existeEvento() {
 	match=$(grep "^.*;$1;$2;$3;.*$" $PROCDIR/combos.dis)
 	# Devuelve true si match es vacio
+	IFS=';' read -ra CAMPOS_MATCH <<< "$match"
+	# 0: id del combo
+	# 6: butacas disponibles	
+	
 	if [ -z $match ]
 	then
-		return 1
+		echo 0
 	else
-		return 0
+		existeFuncionEnMemoria=1;
+		for idFuncion in "${IDS_FUNCIONES[@]}"
+		do
+			if [ $idFuncion = ${CAMPOS_MATCH[0]} ]
+			then
+				existeFuncionEnMemoria=0
+			fi
+		done
+		if [ $existeFuncionEnMemoria = 1 ]
+		then
+			IDS_FUNCIONES+=(${CAMPOS_MATCH[0]})
+			DISP_FUNCIONES+=(${CAMPOS_MATCH[6]})
+		fi
+		echo ${CAMPOS_MATCH[0]}
 	fi
+}
+
+function reservarEvento() {
+	
 }
 
 function rechazar() {
@@ -39,6 +60,10 @@ function rechazar() {
 }
 
 # MAIN
+
+IDS_FUNCIONES=()
+DISP_FUNCIONES=()
+
 # Inicializar log
 ./Grabar_L.sh "Reservar_A" -t i "Inicio de Reservar"
 cant=$(cantidadArchivos $ACEPDIR)
@@ -112,12 +137,18 @@ do
 			elif  ! horaValida ${CAMPOS[2]} 
 			then
 				rechazar
-			elif ! existeEvento ${CAMPOS_FILENAME[0]} ${CAMPOS[1]} ${CAMPOS[2]}
-			then
-				rechazar
-				
+			# Verifico que exista la funcion
+			else 
+				numeroEvento=$(existeEvento ${CAMPOS_FILENAME[0]} ${CAMPOS[1]} ${CAMPOS[2]})
+				if [ $numeroEvento = 0 ]
+				then
+					rechazar
+				# Chequeo de disponibilidad y realizo la reserva de estar todo ok
+				elif ! reservarEvento ${CAMPOS_FILENAME[0]} ${CAMPOS[1]} ${CAMPOS[2]} ${CAMPOS[5]} $numeroEvento ${CAMPOS[0]} ${CAMPOS_FILENAME[1]}
+				then 
+					rechazar
+				fi
 			fi
-			
 			
 		done < $f
 	fi
