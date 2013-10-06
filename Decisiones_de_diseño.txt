@@ -8,5 +8,9 @@ Decisiones de implementacion:
 - Mover_A
 	El numero de secuencia nnn es descentralizado (no es comun para todo el sistema), 
 	se lo obtiene directamente del directorio de duplicados, por eso no es necesario guardarlo
+
+- Imprimir_A
+	Se usa un array asociativo (estructura de hash) para manejar los parámetros y las funciones
+	a las que estan asociados esos parámetros.
 	
 	
