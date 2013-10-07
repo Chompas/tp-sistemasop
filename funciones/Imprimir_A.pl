@@ -22,8 +22,7 @@ $in_disponibilidad = "$PROCDIR/"."combos.dis"; #id combo;id obra;fecha;hora;id s
 $in_invitados = "$REPODIR/"."$ref".".inv"; 	#invitado[;empresa[;cantidad acompanantes]]
 
 # Archivos de output
-$out_invitados_confirmados = "$REPODIR"."/"."$ref".".inv";	#linea
-$out_ranking = "$REPODIR"."/ranking."."$nnn";			#linea
+$out_invitados_confirmados = "$REPODIR"."/"."$ref".".inv";
 $out_tickets = "$REPODIR"."/"."$idcombo".".tck";		#tipo comprobante,nombre obra,fecha funcion,hora funcion,nombre sala,ref int sol,email
 
 # ---------- INICIO COMPROBACIONES DE RUTINA ------------
@@ -110,10 +109,11 @@ sub generar_disponibilidad_por_obra {
 	
 	$resultados = `sed "s/;/-/g" $in_disponibilidad`;		#Reemplazo ; por -
 		
-	$resultados = `echo "$resultados" | grep "^[^-]*-$id_obra-.*"`;	#Selecciono por id de obra (2do campo)	
+	$resultados = `echo -n "$resultados" | grep "^[^-]*-$id_obra-.*"`;	#Selecciono por id de obra (2do campo)	
 	
-	$resultados = `echo "$resultados" | cut -d "-" -f 1-7`;	#Quito el ultimo campo
+	$resultados = `echo -n "$resultados" | cut -d "-" -f 1-7`;	#Quito el ultimo campo
 	print "$resultados";
+	&escribir_listado_disponibilidad($nombre_listado);
 	return ($resultados);
 }
 
@@ -131,10 +131,11 @@ sub generar_disponibilidad_por_sala {
 
 	$resultados = `sed "s/;/-/g" $in_disponibilidad`;		#Reemplazo ; por -
 	
-	$resultados = `echo "$resultados" | grep "^[^-]*-[^-]*-[^-]*-[^-]*-$id_sala"`;	#Selecciono por id de sala (5to campo)
+	$resultados = `echo -n "$resultados" | grep "^[^-]*-[^-]*-[^-]*-[^-]*-$id_sala-"`;	#Selecciono por id de sala (5to campo)
 
-	$resultados = `echo "$resultados" | cut -d "-" -f 1-7`;	#Quito el ultimo campo
+	$resultados = `echo -n "$resultados" | cut -d "-" -f 1-7`;	#Quito el ultimo campo
 	print "$resultados";
+	&escribir_listado_disponibilidad($nombre_listado);
 	return ($resultados);
 }
 
@@ -143,19 +144,43 @@ sub generar_disponibilidad_por_rango_sala {
 	local $max = $_[1];
 	for ($i=$min; $i <= $max; $i++)
 	{
-		&generar_disponibilidad_por_s($i);
+		$listado=&generar_disponibilidad_por_sala($i);
 	}
 }
 
 sub escribir_listado_disponibilidad {
 	local $out_disponibilidad = "$REPODIR"."/"."$_[0]".".dis";
-	
 	if ($write == 1)
 	{
-		open (MYFILE, ">$out_disponibilidad");		#Si el archivo ya existia, se trunca
+		open (MYFILE, ">>$out_disponibilidad");		#Modo append
 		print MYFILE "$resultados";					#Escribo en el archivo
 		close (MYFILE);
-		print "Listado guardado en: $out_disponibilidad\n";
+	}
+}
+
+sub escribir_tickets {
+}
+
+sub escribir_ranking {
+	local $linea = $_[0];
+	
+	# Extension autoincremental del archivo
+	$nnn=`ls "$REPODIR" | grep "^ranking" | sed s/ranking\.//g | sort -r | head -n 1`;
+
+    # En caso de no existir un archivo "ranking.*" inicializo nnn en 0
+	if ($nnn eq "") {
+	    $nnn=0;
+	}
+	
+	$nnn += 1;
+	if ($debug == 1) {print "nnn=$nnn";}
+	
+	$out_ranking = "$REPODIR"."/ranking."."$nnn";
+	if ($write == 1)
+	{
+		open (MYFILE, ">>$out_ranking");	#Modo append
+		print MYFILE "$linea";				#Escribo en el archivo
+		close (MYFILE);
 	}
 }
 
@@ -242,15 +267,32 @@ sub fDisp {
 			goto pideRangoIDsala;
 		}
 		
-		print "Rango ID obra válido. \n";
+		print "Rango ID sala válido. \n";
 		&generar_disponibilidad_por_rango_sala($min_id_sala,$max_id_sala);
 	}
-	&escribir_listado_disponibilidad($nombre_listado);
 	exit(0);	
 }
 
 sub fRanking {
 	print "fRanking"."\n";
+	#$in_reservas_confirmadas = "$PROCDIR/"."reservas.ok";	
+	#id obra;nombre;fecha;hora;id sala;nombre sala;cant butacas confir;id combo[;ref int];cant butacas solicitadas;email;usuario;fecha grabacion
+	$cantidad = 10;
+	# Ordeno en orden descendente (r) por el 7mo campo (n-numerico) con delimitador ";"
+	# Y luego muestro solo las primeras 10 lineas
+	$top10ordenado = `sort -t';' -k7nr $in_reservas_confirmadas | head -n $cantidad`;
+	@lineas = split("\n", $top10ordenado);	#Un array con cada linea sin cortar
+	@alarchivo = ();	#Un array con cada linea cortada como se requiere
+	for ($i = 0; $i < $cantidad; $i++)
+	{
+		@campos = split (";", $lineas[$i]);		#Separamos cada linea en sus campos
+		$resultado = "$campos[1], $campos[5], $campos[2], $campos[3], $campos[6]";
+		print "$resultado\n";
+		push(@alarchivo,$resultado);
+		
+	}
+	$resultado = join("\n", @alarchivo);
+	&escribir_ranking($resultado);
 }
 
 sub fTickets {
