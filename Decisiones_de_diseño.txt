@@ -9,4 +9,8 @@ Decisiones de implementacion:
 	El numero de secuencia nnn es descentralizado (no es comun para todo el sistema), 
 	se lo obtiene directamente del directorio de duplicados, por eso no es necesario guardarlo
 	
+- Instalar_TP
+	El log de instalación es único. Todas las instalaciones loguearán en el mismo archivo dentro de $CONFDIR
+	Recibe un único parámetro con la ruta del GRUPO.
+	Ej: ./Instalar_TP.sh "path/hasta/el/grupo"
 	
