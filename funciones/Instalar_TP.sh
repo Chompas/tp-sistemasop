@@ -15,15 +15,15 @@ GRUPO=$1
 CONFDIR="conf"
 export CONFDIR
 
-BINDIR="/bin"
-MAEDIR="/mae" 
-ARRIDIR="/arribos" 
+BINDIR="bin"
+MAEDIR="mae" 
+ARRIDIR="arribos" 
 DATASIZE=100  
-ACEPDIR="/aceptados" 
-RECHDIR="/rechazados" 
-PROCDIR="/proc" 
-REPODIR="/repo" 
-LOGDIR="/log" 
+ACEPDIR="aceptados" 
+RECHDIR="rechazados" 
+PROCDIR="proc" 
+REPODIR="repo" 
+LOGDIR="log" 
 LOGEXT="log"
 LOGSIZE=400
 export LOGSIZE
@@ -220,7 +220,7 @@ verificarInstalacionPrevia() {
 		./Grabar_L.sh -i "Instalar_TP" -t i "Logs de auditoria del Sistema: $GRUPO$LOGDIR/<comando>.$LOGEXT"
 
 		verificarExistenciaComponentes
-	    fin
+	    	fin
 	fi
 }
 
@@ -296,49 +296,49 @@ Perl Version: $chequeo_perl"
 
 # 7. Definir el directorio de instalación de los ejecutables
 definirDirectorioEjecutables() {
-	echo -n "Defina el directorio de instalación de los ejecutables ($GRUPO$BINDIR): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los ejecutables ($GRUPO$BINDIR): "
+	echo -n "Defina el directorio de instalación de los ejecutables ($GRUPO/bin): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los ejecutables ($GRUPO/bin): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO/bin"'-'`
+	AUX=`echo $INPUT | sed 's-^$-'"bin"'-'`
 	
 	#Reservar este path en la variable BINDIR
 	BINDIR=$AUX
 	
-	echo $BINDIR
-	./Grabar_L.sh -i "Instalar_TP" -t i "$BINDIR"
+	echo "$GRUPO/$BINDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "$GRUPO/$BINDIR"
 
 }
 
 # 8. Definir el directorio de instalación de los archivos Maestros
 definirDirectorioMaestros() {
-	echo -n "Defina el directorio de instalación de los archivos maestros ($GRUPO$MAEDIR): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los archivos maestros ($GRUPO$MAEDIR): "
+	echo -n "Defina el directorio de instalación de los archivos maestros ($GRUPO/mae): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los archivos maestros ($GRUPO/mae): "
         
 	read INPUT
 	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO/mae"'-'`
+	AUX=`echo $INPUT | sed 's-^$-'"mae"'-'`
 	
 	#Reservar este path en la variable MAEDIR
 	MAEDIR=$AUX
 
-	echo $MAEDIR
-	./Grabar_L.sh -i "Instalar_TP" -t i "$MAEDIR"
+	echo "$GRUPO/$MAEDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "$GRUPO/$MAEDIR"
 }
 
 # 9. Definir el directorio de arribo de archivos externos
 definirDirectorioArribos() {
-	echo -n "Defina el directorio de arribo de archivos externos ($GRUPO$ARRIDIR): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de arribo de archivos externos ($GRUPO$ARRIDIR): "
+	echo -n "Defina el directorio de arribo de archivos externos ($GRUPO/arribos): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de arribo de archivos externos ($GRUPO/arribos): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO/arribos"'-'`
+	AUX=`echo $INPUT | sed 's-^$-'"arribos"'-'`
 
 	ARRIDIR=$AUX
-	echo $ARRIDIR
-	./Grabar_L.sh -i "Instalar_TP" -t i "$ARRIDIR"
+	echo "$GRUPO/$ARRIDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "$GRUPO/$ARRIDIR"
 }
 
 #10. Definir espacio minimo libre para el arribo de archivos
@@ -381,75 +381,76 @@ verificarEspacioEnDisco() {
 
 # 12. Definir el directorio de aceptados
 definirDirectorioArribosAceptados() {
-	echo -n "Defina el directorio de grabación de los archivos externos aceptados ($GRUPO$ACEPDIR): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos aceptados ($GRUPO$ACEPDIR): "
+	echo -n "Defina el directorio de grabación de los archivos externos aceptados ($GRUPO/aceptados): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos aceptados ($GRUPO/aceptados): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO/aceptados"'-'`
+	AUX=`echo $INPUT | sed 's-^$-'"aceptados"'-'`
 	
 	ACEPDIR=$AUX
 
-	echo $ACEPDIR
-	./Grabar_L.sh -i "Instalar_TP" -t i "$ACEPDIR"
+	echo "$GRUPO/$ACEPDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "$GRUPO/$ACEPDIR"
 }
 
 # 13. Definir el directorio de rechazados
 definirDirectorioArribosRechazados() {
-	echo -n "Defina el directorio de grabación de los archivos externos rechazados ($GRUPO$RECHDIR): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos rechazados ($GRUPO$RECHDIR): "
+	echo -n "Defina el directorio de grabación de los archivos externos rechazados ($GRUPO/rechazados): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos rechazados ($GRUPO/rechazados): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO/rechazados"'-'`
+	AUX=`echo $INPUT | sed 's-^$-'"rechazados"'-'`
 	
 	RECHDIR=$AUX
 
-	echo $RECHDIR
-	./Grabar_L.sh -i "Instalar_TP" -t i "$RECHDIR"
+	echo "$GRUPO/$RECHDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "$GRUPO/$RECHDIR"
 }
 
 # 14. Definir el directorio de procesados
 definirDirectorioProcesados() {
-	echo -n "Defina el directorio de grabación de los archivos procesados ($GRUPO$PROCDIR): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos procesados ($GRUPO$PROCDIR): "
+	echo -n "Defina el directorio de grabación de los archivos procesados ($GRUPO/procesados): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos procesados ($GRUPO/procesados): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO/procesados"'-'`
+	AUX=`echo $INPUT | sed 's-^$-'"procesados"'-'`
 	
 	PROCDIR=$AUX
 
-	echo $PROCDIR
-	./Grabar_L.sh -i "Instalar_TP" -t i "$PROCDIR"
+	echo "$GRUPO/$PROCDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "$GRUPO/$PROCDIR"
 }
 
 # 15. Definir el directorio de Listados
 definirDirectorioListados() {
-	echo -n "Defina el directorio de los listados de salida ($GRUPO$REPODIR): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de los listados de salida ($GRUPO$REPODIR): "
+	echo -n "Defina el directorio de los listados de salida ($GRUPO/repo): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de los listados de salida ($GRUPO/repo): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO/repo"'-'`
+	AUX=`echo $INPUT | sed 's-^$-'"repo"'-'`
 	
 	REPODIR=$AUX
-	echo $REPODIR
+	echo "$GRUPO/$REPODIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "$GRUPO/$REPODIR"
 }
 
 #16. Definir el directorio de logs para los comandos
 definirDirectorioLogs() {
-	echo -n "Defina el directorio de logs ($GRUPO$LOGDIR): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de logs ($GRUPO$LOGDIR): "
+	echo -n "Defina el directorio de logs ($GRUPO/log): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de logs ($GRUPO/log): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"$GRUPO$LOGDIR"'-'`
+	AUX=`echo $INPUT | sed 's-^$-'"log"'-'`
 	
 	LOGDIR=$AUX
 
-	echo $LOGDIR
-	./Grabar_L.sh -i "Instalar_TP" -t i "$LOGDIR"
+	echo "$GRUPO/$LOGDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "$GRUPO/$LOGDIR"
 }
 
 #17. Definir la extensión para los archivos de log
@@ -518,28 +519,28 @@ limpiarPantalla() {
 verEstructura() {
 	echo "TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01
 	Librería del Sistema: $GRUPO/$CONFDIR
-	Ejecutables: $BINDIR
-	Archivos maestros: $MAEDIR
-	Directorio de arribo de archivos externos: $ARRIDIR
+	Ejecutables: $GRUPO/$BINDIR
+	Archivos maestros: $GRUPO/$MAEDIR
+	Directorio de arribo de archivos externos: $GRUPO/$ARRIDIR
 	Espacio mínimo libre para arribos: $DATASIZE Mb
-	Archivos externos aceptados: $ACEPDIR
-	Archivos externos rechazados: $RECHDIR
-	Archivos procesados: $PROCDIR
-	Reportes de salida: $REPODIR
-	Logs de auditoria del Sistema: $LOGDIR/<comando>.$LOGEXT
+	Archivos externos aceptados: $GRUPO/$ACEPDIR
+	Archivos externos rechazados: $GRUPO/$RECHDIR
+	Archivos procesados: $GRUPO/$PROCDIR
+	Reportes de salida: $GRUPO/$REPODIR
+	Logs de auditoria del Sistema: $GRUPO/$LOGDIR/<comando>.$LOGEXT
 	Tamaño máximo para los archivos de log del sistema: $LOGSIZE Kb
 	Estado de la instalacion: LISTA"
 	./Grabar_L.sh -i "Instalar_TP" -t i "TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Librería del Sistema: $GRUPO/$CONFDIR"
-	./Grabar_L.sh -i "Instalar_TP" -t i "Ejecutables: $BINDIR"
-	./Grabar_L.sh -i "Instalar_TP" -t i "Archivos maestros: $MAEDIR"
-	./Grabar_L.sh -i "Instalar_TP" -t i "Directorio de arribo de archivos externos: $ARRIDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Ejecutables: $GRUPO/$BINDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Archivos maestros: $GRUPO/$MAEDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Directorio de arribo de archivos externos: $GRUPO/$ARRIDIR"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Espacio mínimo libre para arribos: $DATASIZE Mb"
-	./Grabar_L.sh -i "Instalar_TP" -t i "Archivos externos aceptados: $ACEPDIR"
-	./Grabar_L.sh -i "Instalar_TP" -t i "Archivos externos rechazados: $RECHDIR"
-	./Grabar_L.sh -i "Instalar_TP" -t i "Archivos procesados: $PROCDIR"
-	./Grabar_L.sh -i "Instalar_TP" -t i "Reportes de salida: $REPODIR"
-	./Grabar_L.sh -i "Instalar_TP" -t i "Logs de auditoria del Sistema: $LOGDIR/<comando>.$LOGEXT"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Archivos externos aceptados: $GRUPO/$ACEPDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Archivos externos rechazados: $GRUPO/$RECHDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Archivos procesados: $GRUPO/$PROCDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Reportes de salida: $GRUPO/$REPODIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Logs de auditoria del Sistema: $GRUPO/$LOGDIR/<comando>.$LOGEXT"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Tamaño máximo para los archivos de log del sistema: $LOGSIZE Kb"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Estado de la instalacion: LISTA"
 
@@ -581,14 +582,14 @@ instalacion() {
 crearEstructuras() {
 	echo "Creando Estructuras de directorio. . . ."
 	./Grabar_L.sh -i "Instalar_TP" -t i "Creando Estructuras de directorio. . . ."
-	mkdir -p $BINDIR
-	mkdir -p $MAEDIR
-	mkdir -p $ARRIDIR
-	mkdir -p $ACEPDIR
-	mkdir -p $RECHDIR
-	mkdir -p $PROCDIR
-	mkdir -p $REPODIR
-	mkdir -p $LOGDIR
+	mkdir -p "$GRUPO/$BINDIR"
+	mkdir -p "$GRUPO/$MAEDIR"
+	mkdir -p "$GRUPO/$ARRIDIR"
+	mkdir -p "$GRUPO/$ACEPDIR"
+	mkdir -p "$GRUPO/$RECHDIR"
+	mkdir -p "$GRUPO/$PROCDIR"
+	mkdir -p "$GRUPO/$REPODIR"
+	mkdir -p "$GRUPO/$LOGDIR"
 }
 
 # 21.2. Mover los archivos maestros al directorio MAEDIR mostrando el siguiente mensaje
@@ -610,14 +611,14 @@ moverProgramasYFunciones() {
 	echo "Instalando Programas y Funciones"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Programas y Funciones"
 
-	cp "./Iniciar_A.sh" "$BINDIR/"
-	cp "./Recibir_A.sh" "$BINDIR/"
-	cp "./Reservar_A.sh" "$BINDIR/"
-	cp "./Start_A.sh" "$BINDIR/"
-	cp "./Stop_A.sh" "$BINDIR/"
-	cp "./Mover_A.sh" "$BINDIR/"
-	cp "./Imprimir_A.sh" "$BINDIR/"
-	cp "./Grabar_L.sh" "$BINDIR/"
+	cp "./Iniciar_A.sh" "$GRUPO/$BINDIR/"
+	cp "./Recibir_A.sh" "$GRUPO/$BINDIR/"
+	cp "./Reservar_A.sh" "$GRUPO/$BINDIR/"
+	cp "./Start_A.sh" "$GRUPO/$BINDIR/"
+	cp "./Stop_A.sh" "$GRUPO/$BINDIR/"
+	cp "./Mover_A.sh" "$GRUPO/$BINDIR/"
+	cp "./Imprimir_A.sh" "$GRUPO/$BINDIR/"
+	cp "./Grabar_L.sh" "$GRUPO/$BINDIR/"
 }
 
 # 21.5. Actualizar el archivo de configuración mostrando el siguiente mensaje
@@ -625,9 +626,9 @@ actualizarArchivoConfiguracion() {
 	echo "Actualizando la configuración del sistema"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Actualizando la configuración del sistema"
 	
-	fecha=$(date +"%d/%m/%y %T") #FIXME: ARREGLAR FORMATO DE LA FECHA Y REEMPLAZAR FECHA_AUX
+	fecha=$(date +"%d/%m/%Y %H:%M %P") #FIXME: ARREGLAR FORMATO DE LA FECHA Y REEMPLAZAR FECHA_AUX
 
-	FECHA_AUX="30/09/2013 10:03 p.m"
+	FECHA_AUX=$fecha
 	LINEA_AUX="GRUPO=$GRUPO=$USUARIO=$FECHA_AUX"
 	echo "$LINEA_AUX" >> configuracion.conf.tmp
 
