@@ -1,5 +1,10 @@
 Decisiones de implementacion:
 
+- Instalar_TP
+	El log de instalación es único. Todas las instalaciones loguearán en el mismo archivo dentro de $CONFDIR
+	Recibe un único parámetro con la ruta del GRUPO.
+	Ej: ./Instalar_TP.sh "path/hasta/el/grupo"
+
 - Grabar_L
 	Un parametro opcional "-i" para invocarlo solo desde el modulo de instalación
 	Cuando el archivo de log es muy grande se quitan todas las lineas, excepto las ultimas 5
@@ -12,5 +17,4 @@ Decisiones de implementacion:
 - Imprimir_A
 	Se usa un array asociativo (estructura de hash) para manejar los parámetros y las funciones
 	a las que estan asociados esos parámetros.
-	
 	
