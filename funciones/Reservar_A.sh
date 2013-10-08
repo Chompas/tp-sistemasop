@@ -160,9 +160,6 @@ do
 	# 1: correo
 	# 2: xxx
 	
-	# Arrays de disponibilidades
-	
-	
 	# Verifico que el archivo no fue procesado
 	
 	if [ -f $PROCDIR/${f##*/} ]
@@ -226,10 +223,18 @@ do
 					rechazar "Falta de disponibilidad" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
 				fi
 			fi
-		echo ${DISP_FUNCIONES[@]}
-		#TODO: Actualizar disponibilidades en combos.dis
-			
 		done < $f
 	fi
 	
+done
+
+#TODO: Actualizar disponibilidades en combos.dis
+
+index=0
+for id in "${IDS_FUNCIONES[@]}"
+do
+	dispId=${DISP_FUNCIONES[$index]}
+	sed 's-\(^$id;[^;]*;[^;]*;[^;]*;[^;]*;[^;]*;\)[0-9]*\(;[^;]*$\)-\1$dispId\2-g' $PROCDIR/combos.dis
+	
+index=$(expr $index + 1)
 done
