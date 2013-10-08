@@ -59,7 +59,7 @@ function existeEvento() {
 	
 	if [ -z $match ]
 	then
-		echo 0
+		numeroEvento=0
 	else
 		existeFuncionEnMemoria=1;
 		for idFuncion in "${IDS_FUNCIONES[@]}"
@@ -74,12 +74,35 @@ function existeEvento() {
 			IDS_FUNCIONES+=(${CAMPOS_MATCH[0]})
 			DISP_FUNCIONES+=(${CAMPOS_MATCH[6]})
 		fi
-		echo ${CAMPOS_MATCH[0]}
+		numeroEvento=${CAMPOS_MATCH[0]}
 	fi
 }
 
 function reservarEvento() {
-	echo "reservar"
+	idEvento=$5
+	dispSolicitada=$4
+	index=0
+	position=-1
+	# Busco en el array de IDS
+	for id in "${IDS_FUNCIONES[@]}"
+	do
+		if [ $idEvento = $id ]
+		then
+			position=$index
+		fi
+		index=$(expr $index + 1)
+	done
+	
+	disponibilidad=${DISP_FUNCIONES[$position]}
+	if [ $dispSolicitada -le $disponibilidad ]
+	then
+		disponibilidad=$(expr $disponibilidad - $dispSolicitada)
+		DISP_FUNCIONES[$position]=$disponibilidad
+		#RESERVO -> GUARDO EN reservas.ok
+		return 0;
+	else
+		return 1;
+	fi
 }
 
 function rechazar() {
@@ -110,6 +133,7 @@ function rechazar() {
 
 IDS_FUNCIONES=()
 DISP_FUNCIONES=()
+numeroEvento=0
 
 # Inicializar log
 ./Grabar_L.sh "Reservar_A" -t i "Inicio de Reservar"
@@ -135,6 +159,9 @@ do
 	# 0: id obra o sala
 	# 1: correo
 	# 2: xxx
+	
+	# Arrays de disponibilidades
+	
 	
 	# Verifico que el archivo no fue procesado
 	
@@ -189,7 +216,7 @@ do
 				rechazar "Hora invalida" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
 			# Verifico que exista la funcion
 			else 
-				numeroEvento=$(existeEvento ${CAMPOS_FILENAME[0]} ${CAMPOS[1]} ${CAMPOS[2]})
+				existeEvento ${CAMPOS_FILENAME[0]} ${CAMPOS[1]} ${CAMPOS[2]}
 				if [ $numeroEvento = 0 ]
 				then
 					rechazar "No existe el evento solicitado" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
@@ -199,6 +226,8 @@ do
 					rechazar "Falta de disponibilidad" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
 				fi
 			fi
+		echo ${DISP_FUNCIONES[@]}
+		#TODO: Actualizar disponibilidades en combos.dis
 			
 		done < $f
 	fi
