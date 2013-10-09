@@ -23,7 +23,6 @@ $in_invitados = "$REPODIR/"."$ref".".inv"; 	#invitado[;empresa[;cantidad acompan
 
 # Archivos de output
 $out_invitados_confirmados = "$REPODIR"."/"."$ref".".inv";
-$out_tickets = "$REPODIR"."/"."$idcombo".".tck";		#tipo comprobante,nombre obra,fecha funcion,hora funcion,nombre sala,ref int sol,email
 
 # ---------- INICIO COMPROBACIONES DE RUTINA ------------
 if ($ambiente_inicializado == 0)
@@ -80,7 +79,7 @@ sub uso {
 	print "\t [-w]: Graba en el archivo correspondiente."."\n";
 	print "\t -i: Genera lista de invitados para las reservas confirmadas."."\n";
 	print "\t -d: Realiza consultas de disponibilidad."."\n";
-	print "\t -r: Emite el ranking de los 10 principales (?)"."\n";
+	print "\t -r: Emite el ranking de los 10 eventos con más reservas confirmadas."."\n";
 	print "\t -t: Genera archivos para imprimir los tickets de entrada."."\n";
 }
 
@@ -94,6 +93,12 @@ sub existeIDsala {
 	local $id_sala = $_[0];
 	# Se retorna el siguiente valor (cuantas lineas tienen el ID de sala)
 	$lineas = `grep -c "^$id_sala;" "$in_salas"`;
+}
+
+sub existeIDcombo {
+	local $id_combo = $_[0];
+	# Se retorna el siguiente valor (cuantas lineas tienen el ID de combo)
+	$lineas = `grep -c "^$id_combo;" "$in_disponibilidad"`;
 }
 
 sub es_rango_valido {
@@ -144,7 +149,7 @@ sub generar_disponibilidad_por_rango_sala {
 	local $max = $_[1];
 	for ($i=$min; $i <= $max; $i++)
 	{
-		$listado=&generar_disponibilidad_por_sala($i);
+		&generar_disponibilidad_por_sala($i);
 	}
 }
 
@@ -158,7 +163,19 @@ sub escribir_listado_disponibilidad {
 	}
 }
 
-sub escribir_tickets {
+#Parametro 0: id_combo
+#Parametro 1: array de tickets
+sub escribir_listado_tickets {
+	local $out_tickets = "$REPODIR"."/"."$_[0]".".tck";
+	open (MYFILE, ">$out_tickets");				#Modo overwrite
+	
+	local $tickets = $_[1];
+	local $cant_tickets = $#tickets + 1;
+	for ($i = 0; $i < $cant_tickets; $i ++) {
+		print MYFILE "$tickets[$i]";					#Escribo en el archivo
+	}
+	close (MYFILE);
+	
 }
 
 sub escribir_ranking {
@@ -173,7 +190,7 @@ sub escribir_ranking {
 	}
 	
 	$nnn += 1;
-	if ($debug == 1) {print "nnn=$nnn";}
+	if ($debug == 1) {print "nnn = $nnn\n";}
 	
 	$out_ranking = "$REPODIR"."/ranking."."$nnn";
 	if ($write == 1)
@@ -189,7 +206,6 @@ sub fInvitados {
 }
 
 sub fDisp {
-	print "fDisp"."\n";
 	#$in_disponibilidad = "$PROCDIR"."/combos.dis"; #id combo;id obra;fecha;hora;id sala;butacas habilitadas;butacas disp;requisitos especiales
 	local %opciones_fdisp = (1, "ID OBRA", 2, "ID SALA", 3, "RANGO de ID OBRA", 4, "RANGO de ID SALA");
 	local $opcion_elegida = "";
@@ -209,10 +225,10 @@ sub fDisp {
 	# Paso 2: Pedir un dato inicial
 	while (exists($opciones_fdisp{$opcion_elegida}) == 0)
 	{
-		print "Ingrese alguna de las siguientes opciones: \n";
 		for ($op = 1; $op < 5; $op++) {
-			print "Opcion ".$op.": ".$opciones_fdisp{$op}."\n";
+			print "Opción ".$op.": ".$opciones_fdisp{$op}."\n";
 		}
+		print "Ingrese la opción deseada: ";
 		$opcion_elegida = <STDIN>;
 		chomp($opcion_elegida);
 	}
@@ -223,7 +239,7 @@ sub fDisp {
 		pideIDobra:print "Ingrese un ID de obra: ";
 		$id_obra = <STDIN>; chomp($id_obra);
 		while(&existeIDobra($id_obra) == 0) {
-			print "No se encontró ese ID de obra.\n";
+			print "ERROR: No se encontró ese ID de obra.\n";
 			goto pideIDobra;
 		}
 		
@@ -235,7 +251,7 @@ sub fDisp {
 		pideIDsala:print "Ingrese un ID de sala: ";
 		$id_sala= <STDIN>; chomp($id_sala);
 		while(&existeIDsala($id_sala) == 0) {
-			print "No se encontró ese ID de sala.\n";
+			print "ERROR: No se encontró ese ID de sala.\n";
 			goto pideIDsala;
 		}
 		
@@ -249,7 +265,7 @@ sub fDisp {
 		print "Ingrese el máximo de ID de obra: ";
 		$max_id_obra = <STDIN>; chomp($max_id_obra);
 		while (&es_rango_valido($min_id_obra,$max_id_obra) == 0) {
-			print "Rango inválido.\n"; 
+			print "ERROR: Rango inválido.\n"; 
 			goto pideRangoIDobra;
 		}
 		
@@ -263,7 +279,7 @@ sub fDisp {
 		print "Ingrese el máximo de ID de sala: ";
 		$max_id_sala = <STDIN>; chomp($max_id_sala);
 		while (&es_rango_valido($min_id_sala,$max_id_sala) == 0) {
-			print "Rango inválido.\n"; 
+			print "ERROR: Rango inválido.\n"; 
 			goto pideRangoIDsala;
 		}
 		
@@ -274,7 +290,6 @@ sub fDisp {
 }
 
 sub fRanking {
-	print "fRanking"."\n";
 	#$in_reservas_confirmadas = "$PROCDIR/"."reservas.ok";	
 	#id obra;nombre;fecha;hora;id sala;nombre sala;cant butacas confir;id combo[;ref int];cant butacas solicitadas;email;usuario;fecha grabacion
 	$cantidad = 10;
@@ -296,5 +311,60 @@ sub fRanking {
 }
 
 sub fTickets {
-	print "fTickets"."\n";
+	pideIDcombo: print "Ingrese ID del combo: ";
+	$id_combo = <STDIN>; chomp($id_combo);
+	while (&existeIDcombo($id_combo) == 0)
+	{
+		print "ERROR: ID de combo inválido.\n";
+		goto pideIDcombo;
+	}
+	print "ID de combo válido.\n";
+	
+	#$in_reservas_confirmadas = "$PROCDIR/"."reservas.ok";	
+	#id obra;nombre;fecha;hora;id sala;nombre sala;cant butacas confir;id combo;ref int;cant butacas solicitadas;email;usuario;fecha grabacion
+	
+	#Examino el archivo de reservas linea por linea
+	open($reservas, '<', $in_reservas_confirmadas) or die "No se pudo abrir '$in_reservas_confirmadas' $!\n";
+	@tickets = ();
+	while ($linea = <$reservas>) {
+		chomp($linea);
+		@campos = split (";" , $linea);
+		if ($campos[7] eq $id_combo)
+		{
+			$cant_but_confir = $campos[6];
+			if ($debug == 1) {print "Cantidad de tickets a emitir: $cant_but_confir\n";}
+			if ($cant_but_confir <= 2) 
+			{
+				$string = ''; if ($cant_but_confir == 2) {$string = 'S';}
+				$un_ticket= "VALE POR $cant_but_confir ENTRADA$string; $campos[1]; $campos[2]; $campos[3]; $campos[5]; $campos[8]; $campos[10] \n";
+				print "$un_ticket";
+				push(@tickets, $un_ticket);
+				
+			}
+			else {
+				local $cant_but_confir_es_impar = $cant_but_confir % 2 == 1; # 0=no, 1=si
+								
+				#Emito los "vale por 2 entradas" que correspondan
+				$cant_vale_por_2 = ($cant_but_confir - $cant_but_confir_es_impar)/2;
+				for ($i = 0; $i < $cant_vale_por_2; $i++)
+				{
+					$un_ticket= "VALE POR 2 ENTRADAS; $campos[1]; $campos[2]; $campos[3]; $campos[5]; $campos[8]; $campos[10] \n";
+					print "$un_ticket";
+					push(@tickets, $un_ticket);
+				}
+				
+				#Si la cantidad era impar, emito un unico "vale por 1 entrada"
+				if ($cant_but_confir_es_impar == 1)
+				{
+					$un_ticket= "VALE POR 1 ENTRADA; $campos[1]; $campos[2]; $campos[3]; $campos[5]; $campos[8]; $campos[10] \n";
+					print "$un_ticket";
+					push(@tickets, $un_ticket);
+				}
+			}
+		}
+	}
+
+	&escribir_listado_tickets($id_combo, @tickets);
+	
+	close ($reservas);
 }
