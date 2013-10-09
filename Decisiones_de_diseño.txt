@@ -15,6 +15,9 @@ Decisiones de implementacion:
 	se lo obtiene directamente del directorio de duplicados, por eso no es necesario guardarlo
 
 - Imprimir_A
-	Se usa un array asociativo (estructura de hash) para manejar los parámetros y las funciones
-	a las que estan asociados esos parámetros.
+	Se usa un array asociativo (estructura de hash) para manejar las opciones y las funciones
+	a las que estan asociados esas opciones.
+	Si se especifica la opción "t", el archivo se escribe siempre, independientemente de si se especificó "-w" como argumento.
+	El separador del archivo escrito es ";".
+	
 	
