@@ -49,6 +49,16 @@ function horaValida() {
 	fi
 }
 
+function fechaValida() {
+	
+	if [[ $1 =~ ^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$ ]]
+	then
+		return 0
+	else
+		return 1
+	fi
+}
+
 function existeEvento() {
 	filename=$1
 	rem=$(( $filename % 2 ))
@@ -164,7 +174,7 @@ function reservarEvento() {
 		idCombo=$idEvento
 		refInterna=$6
 		cantidadButacasSolic=$dispSolicitada
-		correo=$1
+		correo=$7
 		user=$USER
 		fechaGrabacion=$(date +"%Y/%m/%d") #FORMATO A DETERMINAR
 		
@@ -275,12 +285,10 @@ do
 			existeEvento ${CAMPOS_FILENAME[0]} ${CAMPOS[1]} ${CAMPOS[2]}
 			
 			# Validar fecha
-			#^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$
-			if [ fechaInvalida  ]
+			if ! fechaValida ${CAMPOS[1]}
 			then
-			
+				rechazar "Fecha invalida" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
 			else
-				
 				
 				fechaActual=$(date +"%Y/%m/%d")
 				fechaActualT=`date --date="$fechaActual" +%s`
