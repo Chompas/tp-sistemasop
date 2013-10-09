@@ -50,8 +50,10 @@ function horaValida() {
 }
 
 function fechaValida() {
-	
-	if [[ $1 =~ ^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$ ]]
+	echo $1
+	#if [[ $1 =~ ^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$ ]]
+	if [[ $1 =~ ^[0-9][0-9]/[0-9][0-9]/[0-9]{4}$ ]]
+	#if [[ $1 =~ ^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$ ]]
 	then
 		return 0
 	else
@@ -65,15 +67,14 @@ function existeEvento() {
 	if [ $rem -eq 0 ]
 	then
 		#SALAS
-		match=$(grep "^.*;$2;$3;$1;.*$" $PROCDIR/combos.dis)
+		match=$(grep "^[^;]*;[^;]*;$2;$3;$1;.*$" $PROCDIR/combos.dis)
 		idSala=$filename
 	else
 		#OBRAS
-		match=$(grep "^.*;$1;$2;$3;.*$" $PROCDIR/combos.dis)
+		match=$(grep "^[^;]*;$1;$2;$3;.*$" $PROCDIR/combos.dis)
 		idObra=$filename
 	fi
-	
-	
+		
 	# Devuelve true si match es vacio
 	IFS=';' read -ra CAMPOS_MATCH <<< "$match"
 	# 0: id del combo
@@ -88,7 +89,6 @@ function existeEvento() {
 	# campo6 BUTACAS HABILITADAS numérico
 	# campo7 BUTACAS DISPONIBLES numérico
 	# campo8 REQUISITOS ESPECIALES caracteres
-	
 	
 	
 	if [ -z $match ]
@@ -215,9 +215,7 @@ function rechazar() {
     
     nuevoRegistro="$refInt;$fecha;$hora;$fila;$butaca;$cantSolicitada;$seccion;$motivo;$sala;$obra;$correo;$user;$date"
     echo $nuevoRegistro >> $PROCDIR/reservas.nok
-    
-    #EN SECCION ME TRAE UN \n -> TODO: SACARLO!!!!
-    
+        
     #TODO: CONTAR REGISTROS GUARDADOS
     
 }
@@ -335,7 +333,7 @@ index=0
 for id in "${IDS_FUNCIONES[@]}"
 do
 	dispId=${DISP_FUNCIONES[$index]}
-	sed 's-\(^$id;[^;]*;[^;]*;[^;]*;[^;]*;[^;]*;\)[0-9]*\(;[^;]*$\)-\1$dispId\2-g' $PROCDIR/combos.dis
+	sed -i "s-\(^$id;[^;]*;[^;]*;[^;]*;[^;]*;[^;]*;\)[0-9]*\(;[^;]*$\)-\1$dispId\2-g" $PROCDIR/combos.dis
 	
 index=$(expr $index + 1)
 done
