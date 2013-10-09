@@ -50,18 +50,50 @@ function horaValida() {
 }
 
 function existeEvento() {
-	#SOLO PARA ID DE OBRAS FALTA COMPROBACION CON ID DE SALAS
-	match=$(grep "^.*;$1;$2;$3;.*$" $PROCDIR/combos.dis)
+	filename=$1
+	rem=$(( $filename % 2 ))
+	if [ $rem -eq 0 ]
+	then
+		#SALAS
+		match=$(grep "^.*;$2;$3;$1;.*$" $PROCDIR/combos.dis)
+		idSala=$filename
+	else
+		#OBRAS
+		match=$(grep "^.*;$1;$2;$3;.*$" $PROCDIR/combos.dis)
+		idObra=$filename
+	fi
+	
+	
 	# Devuelve true si match es vacio
 	IFS=';' read -ra CAMPOS_MATCH <<< "$match"
 	# 0: id del combo
 	# 6: butacas disponibles	
+	
+	# combo.dis
+	# campo1 ID DEL COMBO Numérico (clave)
+	# campo2 ID DE LA OBRA numérico
+	# campo3 FECHA DE FUNCIÓN formato: día/mes/año
+	# campo4 HORA DE FUNCIÓN formato: hh:mm
+	# campo5 ID DE LA SALA numérico
+	# campo6 BUTACAS HABILITADAS numérico
+	# campo7 BUTACAS DISPONIBLES numérico
+	# campo8 REQUISITOS ESPECIALES caracteres
+	
+	
 	
 	if [ -z $match ]
 	then
 		numeroEvento=0
 	else
 		existeFuncionEnMemoria=1;
+		if [ $rem -eq 0 ]
+		then
+			#SALAS
+			idObra=${CAMPOS_MATCH[1]}
+		else
+			#OBRAS
+			idSala=${CAMPOS_MATCH[4]}
+		fi
 		for idFuncion in "${IDS_FUNCIONES[@]}"
 		do
 			if [ $idFuncion = ${CAMPOS_MATCH[0]} ]
@@ -79,6 +111,10 @@ function existeEvento() {
 }
 
 function reservarEvento() {
+	
+	#Parametros:
+	# ${CAMPOS_FILENAME[0]} ${CAMPOS[1]} ${CAMPOS[2]} ${CAMPOS[5]} $numeroEvento ${CAMPOS[0]} ${CAMPOS_FILENAME[1]}
+	
 	idEvento=$5
 	dispSolicitada=$4
 	index=0
@@ -98,7 +134,43 @@ function reservarEvento() {
 	then
 		disponibilidad=$(expr $disponibilidad - $dispSolicitada)
 		DISP_FUNCIONES[$position]=$disponibilidad
-		#RESERVO -> GUARDO EN reservas.ok
+
+
+		# Armo registro de registro.ok
+		
+		# campo1 ID de la OBRA 
+		# Campo2 NOMBRE DE LA OBRA (del archivo de obras)
+		# Campo3 FECHA DE FUNCIÓN
+		# Campo4 HORA DE FUNCIÓN
+		# Campo5 ID de la SALA
+		# Campo6 NOMBRE DE LA SALA (del archivo de salas)
+		# Campo7 CANTIDAD DE BUTACAS CONFIRMADAS
+		# Campo8 ID del COMBO
+		# Campo9 REFERENCIA INTERNA DEL SOLICITANTE
+		# Campo10 CANTIDAD DE BUTACAS SOLICITADAS
+		# Campo11 CORREO DEL SOLICITANTE
+		# campo12 USUARIO GRABACION
+		# campo13 FECHA GRABACION
+
+		obra=$idObra
+		#IR A BUSCAR A OBRAS.mae EL ID Y TRAER EL NOMBRE DE LA OBRA
+		#nombreObra=
+		fechaFuncion=$2
+		horaFuncion=$3
+		sala=$idSala
+		#IDEM OBRAS pero para salas
+		#nombreSala=
+		cantidadButacasConf=$dispSolicitada
+		idCombo=$idEvento
+		refInterna=$6
+		cantidadButacasSolic=$dispSolicitada
+		correo=$1
+		user=$USER
+		fechaGrabacion=$(date +"%Y/%m/%d") #FORMATO A DETERMINAR
+		
+		nuevoRegistro="$idObra;$nombreObra;$fechaFuncion;$horaFuncion;$idSala;$nombreSala;$cantidadButacasConf;$idCombo;$refInterna;$cantidadButacasSolic;$correo;$user;$date"
+		echo $nuevoRegistro >> $PROCDIR/reservas.ok
+		
 		return 0;
 	else
 		return 1;
@@ -115,12 +187,23 @@ function rechazar() {
     butaca=${local_array[5]}
     cantSolicitada=${local_array[6]}
     seccion=${local_array[7]}
-    #FALTAN ID SALA O OBRA QUE ME LO TENGO QUE TRAER DE COMBOS
+	if [ idSala = 0 ]
+	then
+		sala="falta sala"
+	else
+		sala=$idSala
+	fi
+	if [ idObra = 0 ]
+	then
+		obra="falta obra"
+	else 
+		obra=$idObra
+	fi
     correo=${local_array[9]}
     user=$USER
     date=$(date +"%Y/%m/%d") #FORMATO A DETERMINAR
     
-    nuevoRegistro="$refInt;$fecha;$hora;$fila;$butaca;$cantSolicitada;$seccion;$motivo;;;$correo;$user;$date"
+    nuevoRegistro="$refInt;$fecha;$hora;$fila;$butaca;$cantSolicitada;$seccion;$motivo;$sala;$obra;$correo;$user;$date"
     echo $nuevoRegistro >> $PROCDIR/reservas.nok
     
     #EN SECCION ME TRAE UN \n -> TODO: SACARLO!!!!
@@ -134,6 +217,8 @@ function rechazar() {
 IDS_FUNCIONES=()
 DISP_FUNCIONES=()
 numeroEvento=0
+idObra=0
+idSala=0
 
 # Inicializar log
 ./Grabar_L.sh "Reservar_A" -t i "Inicio de Reservar"
@@ -186,41 +271,49 @@ do
 			# 6: (seccion)
 			
 			
-			#TODO: Validar fecha
 			
+			existeEvento ${CAMPOS_FILENAME[0]} ${CAMPOS[1]} ${CAMPOS[2]}
 			
-			fechaActual=$(date +"%Y/%m/%d")
-			fechaActualT=`date --date="$fechaActual" +%s`
-			IFS='/' read -ra FECHACAMPO <<< "${CAMPOS[1]}"
-			fechaInvertida="${FECHACAMPO[2]}/${FECHACAMPO[1]}/${FECHACAMPO[0]}"
-			fechaRegT=`date --date="$fechaInvertida" +%s`
+			# Validar fecha
+			#^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$
+			if [ fechaInvalida  ]
+			then
 			
-			let "dif=$fechaRegT-$fechaActualT"
-			# Obtengo la diferencia en dias
-			let "dayDif=dif/60/60/24"
-						
-			# Si la reserva esta vencida
-			if [ $dayDif -lt 1 ]
-			then
-				rechazar "Reserva tardia" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
-			# Si la reserva es superior a 45 dias
-			elif [ $dayDif -gt 45 ]
-			then
-				rechazar "Reserva anticipada" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
-			# Verifico formato hora (hh:mm)
-			elif  ! horaValida ${CAMPOS[2]} 
-			then
-				rechazar "Hora invalida" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
-			# Verifico que exista la funcion
-			else 
-				existeEvento ${CAMPOS_FILENAME[0]} ${CAMPOS[1]} ${CAMPOS[2]}
-				if [ $numeroEvento = 0 ]
+			else
+				
+				
+				fechaActual=$(date +"%Y/%m/%d")
+				fechaActualT=`date --date="$fechaActual" +%s`
+				IFS='/' read -ra FECHACAMPO <<< "${CAMPOS[1]}"
+				fechaInvertida="${FECHACAMPO[2]}/${FECHACAMPO[1]}/${FECHACAMPO[0]}"
+				fechaRegT=`date --date="$fechaInvertida" +%s`
+				
+				let "dif=$fechaRegT-$fechaActualT"
+				# Obtengo la diferencia en dias
+				let "dayDif=dif/60/60/24"
+							
+				# Si la reserva esta vencida
+				if [ $dayDif -lt 1 ]
 				then
-					rechazar "No existe el evento solicitado" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
-				# Chequeo de disponibilidad y realizo la reserva de estar todo ok
-				elif ! reservarEvento ${CAMPOS_FILENAME[0]} ${CAMPOS[1]} ${CAMPOS[2]} ${CAMPOS[5]} $numeroEvento ${CAMPOS[0]} ${CAMPOS_FILENAME[1]}
-				then 
-					rechazar "Falta de disponibilidad" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
+					rechazar "Reserva tardia" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
+				# Si la reserva es superior a 45 dias
+				elif [ $dayDif -gt 45 ]
+				then
+					rechazar "Reserva anticipada" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
+				# Verifico formato hora (hh:mm)
+				elif  ! horaValida ${CAMPOS[2]} 
+				then
+					rechazar "Hora invalida" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}" 
+				# Verifico que exista la funcion
+				else 
+					if [ $numeroEvento = 0 ]
+					then
+						rechazar "No existe el evento solicitado" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
+					# Chequeo de disponibilidad y realizo la reserva de estar todo ok
+					elif ! reservarEvento ${CAMPOS_FILENAME[0]} ${CAMPOS[1]} ${CAMPOS[2]} ${CAMPOS[5]} $numeroEvento ${CAMPOS[0]} ${CAMPOS_FILENAME[1]}
+					then 
+						rechazar "Falta de disponibilidad" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
+					fi
 				fi
 			fi
 		done < $f
