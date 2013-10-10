@@ -1,57 +1,12 @@
 #!/bin/bash
 
-
-###############################################################################
-# Funcion que formatea la informacion de configuracion para ser mostrada 
-# en pantalla
-function MOSTRAR_RESUMEN() {
-	getAssoc 'CONFIGURACION' CONFDIR 'CONFDIR'
-	echo "- Libreria del Sistema: ${CONFDIR}"
-	ls -1 ${CONFDIR}
-	
-	getAssoc 'CONFIGURACION' BINDIR 'BINDIR'
-	echo "- Ejecutables: ${BINDIR}"
-	ls -1 ${BINDIR}
-	
-	getAssoc 'CONFIGURACION' MAEDIR 'MAEDIR'
-	echo "- Archivos maestros: ${MAEDIR}"
-	ls -1 ${MAEDIR}
-
-	getAssoc 'CONFIGURACION' ARRIDIR 'ARRIDIR'
-	echo "- Directorio de arribo de archivos externos: ${ARRIDIR}"
-
-	getAssoc 'CONFIGURACION' ACEPDIR 'ACEPDIR'
-	echo "- Archivos externos aceptados: ${ACEPDIR}"
-
-	getAssoc 'CONFIGURACION' RECHDIR 'RECHDIR'
-	echo "- Archivos externos rechazados: ${RECHDIR}"
-
-	getAssoc 'CONFIGURACION' REPODIR 'REPODIR'
-	echo "- Reportes de salida: ${REPODIR}"
-	
-	getAssoc 'CONFIGURACION' PROCDIR 'PROCDIR'
-	echo "- Archivos procesados: ${PROCDIR}"
-
-	getAssoc 'CONFIGURACION' LOGDIR 'LOGDIR'
-	echo "- Logs de auditoria del Sistema: ${LOGDIR}" 
-	echo 
-	echo "Estado del sistema: INICIALIZADO"
-
-#TODO	echo "-Demonio corriendo bajo el no.:" #no va aca...
-}
-
-
-###############################################################################
-# Funciones que emulan arrays asociativos en BASH
-###############################################################################
-
-###############################################################################
+##############################################################################
+# Funciones que emulan arrays asociativos en Bash
+##########################################################################
 # Funcion que setea un valor en el array asociativo:
-# Modo de uso:
-# set nombreArray clave valor
-#
-# Ejemplo: setAssoc miArray color rojo
-function setAssoc {
+# Modo de uso: set nombreArray clave valor
+
+function setArraySimulado {
 	NOMBRE_ARRAY=$1
 	CLAVE=$2
 	VALOR=$3
@@ -59,23 +14,20 @@ function setAssoc {
 	eval "$NOMBRE_ARRAY[$CANTIDAD]=${CLAVE}:${VALOR}"
 }
 
-
-###############################################################################
+##########################################################################
 # Funcion que obtiene el valor de la clave pasada en el array asociativo:
-# Modo de uso:
-# get nombreArray clave nombreVariableRetorno
-#
-# Ejemplo: getAssoc miArray color miRetorno
-function getAssoc {
-	local x=0
+# Modo de uso: get nombreArray clave nombreVariableRetorno
+
+function getArraySimulado {
+	local aux=0
 	NOMBRE_ARRAY=$1
 	CLAVE=$2
 	NOMBRE_RETORNO=$3
 
 	eval "local CANTIDAD=\${#$NOMBRE_ARRAY[@]}"
-	for (( x=0; x<$CANTIDAD; x++ ));
+	for (( aux=0; aux<$CANTIDAD; aux++ ));
 	do
-		eval "local LINEA_ASSOC=\${$NOMBRE_ARRAY[$x]}"
+		eval "local LINEA_ASSOC=\${$NOMBRE_ARRAY[$aux]}"
 		VARIABLE=`echo $LINEA_ASSOC | cut -d\: -f1`
 		VALOR=`echo $LINEA_ASSOC | cut -d\: -f2`
 
@@ -86,94 +38,115 @@ function getAssoc {
 	done;
 }
 
+##########################################################################
+# Funcion que obtiene un array con todas las keys del asociado
+# Modo de uso: getArraySimuladoClaves nombreArray nombreArrayRetorno
 
-###############################################################################
-# Funcion que obtiene un array con todas las keys del asociativo
-# Modo de uso:
-# getAssocKeys nombreArray nombreArrayRetorno
-#
-# Ejemplo: getAssocKeys miArray misClaves
-function getAssocKeys {
-	local x=0
+function getArraySimuladoClaves {
+	local aux=0
 	local NOMBRE_ARRAY=$1
 	local NOMBRE_RETORNO=$2
 
 	eval "local CANTIDAD=\${#$NOMBRE_ARRAY[@]}"
-	for (( x=0; x < $CANTIDAD; x++ ));
+	for (( aux=0; aux < $CANTIDAD; aux++ ));
 	do
-		eval "local LINEA_ASSOC=\${$NOMBRE_ARRAY[$x]}"
+		eval "local LINEA_ASSOC=\${$NOMBRE_ARRAY[$aux]}"
 		VARIABLE=`echo $LINEA_ASSOC | cut -d\: -f1`
 		eval "$NOMBRE_RETORNO[\${#$NOMBRE_RETORNO[@]}]=$VARIABLE"
 	done
-}		
+}
 
 ###############################################################################
+# Funcion que informa sobre la configuracion del sistema
+
+function MOSTRAR_RESUMEN() {
+	getArraySimulado 'CONFIGURACION' CONFDIR 'CONFDIR'
+	echo "- Libreria del Sistema: ${CONFDIR}"
+	ls -1 ${CONFDIR}
+	
+	getArraySimulado 'CONFIGURACION' BINDIR 'BINDIR'
+	echo "- Ejecutables: ${BINDIR}"
+	ls -1 ${BINDIR}
+	
+	getArraySimulado 'CONFIGURACION' MAEDIR 'MAEDIR'
+	echo "- Archivos maestros: ${MAEDIR}"
+	ls -1 ${MAEDIR}
+
+	getArraySimulado 'CONFIGURACION' ARRIDIR 'ARRIDIR'
+	echo "- Directorio de arribo de archivos externos: ${ARRIDIR}"
+
+	getArraySimulado 'CONFIGURACION' ACEPDIR 'ACEPDIR'
+	echo "- Archivos externos aceptados: ${ACEPDIR}"
+
+	getArraySimulado 'CONFIGURACION' RECHDIR 'RECHDIR'
+	echo "- Archivos externos rechazados: ${RECHDIR}"
+
+	getArraySimulado 'CONFIGURACION' REPODIR 'REPODIR'
+	echo "- Reportes de salida: ${REPODIR}"
+	
+	getArraySimulado 'CONFIGURACION' PROCDIR 'PROCDIR'
+	echo "- Archivos procesados: ${PROCDIR}"
+
+	getArraySimulado 'CONFIGURACION' LOGDIR 'LOGDIR'
+	echo "- Logs de auditoria del Sistema: ${LOGDIR}" 
+	echo 
+	echo "Estado del sistema: INICIALIZADO"
+}	
+
+##########################################################################
 # Encabezado
 clear
 echo "TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01"
 echo " "
 echo " "
 
-###############################################################################
+##########################################################################
 # Verifico que el comando no haya sido ejecutado en esta misma sesion
-#TODO sin probar!! falta chequear el llamado al loguear
+
 if [ $INICIAR_A_YA_CORRIO ]
 then
-	Loguear_A.sh Iniciar_A 'E' '10'
+	./Grabar_L.sh "Iniciar_A" -t e "El ambiente ya ha sido inicializado en esta sesion."
 	echo "La iniciacion ya fue ejecutada en esta sesion de usuario."
 	MOSTRAR_RESUMEN
 	exit 2
 else
 	INICIAR_A_YA_CORRIO=1
 fi
-echo 
-echo
+echo " "
 
+##########################################################################
+# Array asociativos donde almacenar las configuraciones de la aplicacion.
 
-###############################################################################
-# Obtengo las variables del archivo de configuracion y las guardo en un 
-# array asociativo donde almacenare las configuraciones de la aplicacion.
-# Esta variable va a ser exportada al comando siguiente para su uso.
 CONFIGURACION=( )
 DIRECTORIOS_EXISTENTES=( )
-
 ERRORES_DE_INSTALACION=( )
 VARIABLES_FALTANTES=( )
 
-
-# Ubicacion del archivo de configuracion
+# Archivo de configuracion
 NUMERO_GRUPO="01"
 ARCHIVO_CONFIGURACION="${HOME}/.grupo${NUMERO_GRUPO}/Instalar_TP.conf"
-#TODO chequear ubicacion del archivo de configurancion
 
-
-# Arrays asociativos para validación de que la instalación haya finalizado
-# con exito.
+# Arrays asociativos para futura validación de instalación exitosa
 DIRECTORIOS=( 'CONFDIR' 'BINDIR' 'MAEDIR' 'ARRIDIR' 'ACEPDIR' 'RECHDIR' 'REPODIR' 'PROCDIR' 'LOGDIR' )
 DIRECTORIOS_ESCRITURA=( 'CONFDIR' 'ARRIDIR' 'ACEPDIR' 'RECHDIR' 'REPODIR' 'PROCDIR' 'LOGDIR' )
-VARIABLES=('GRUPO' 'CONFDIR' 'BINDIR' 'MAEDIR' 'ARRIDIR' 'ACEPDIR' 'RECHDIR' 'REPODIR' 'PROCDIR' 'LOGDIR' 'LOGEXT' 'LOGSIZE')
-#TODO chequear nombres de variables y archivos maestros y comandos del sistema
+VARIABLES=('GRUPO' 'CONFDIR' 'BINDIR' 'MAEDIR' 'ARRIDIR' 'ACEPDIR' 'RECHDIR' 'REPODIR' 'PROCDIR' 'LOGDIR' 'LOGEXT' 'LOGSIZE' 'DATASIZE')
 ARCHIVOS_MAESTROS=( 'salas' 'obras' )
-COMANDOS_SISTEMA=( 'Loguear_A.sh' 'Mover_A.sh' 'Recibir_A.sh' 'Start_A.sh' 'Reservar_A.sh' 'Imprimir_A.pl' )
+COMANDOS_SISTEMA=( 'Grabar_L.sh' 'Mover_A.sh' 'Recibir_A.sh' 'Start_A.sh' 'Stop_A.sh' 'Reservar_A.sh' 'Imprimir_A.pl' )
 
-
-##############################################################################
+#########################################################################
 # Validacion de existencia del archivo de configuracion
 if [ ! -f "$ARCHIVO_CONFIGURACION" ]
 then
-#TODO sin probar!! falta chequear el llamado al loguear
-	Loguear_A.sh Iniciar_A 'E' '16'
+	./Grabar_L.sh "Iniciar_A" -t e "No se pudo iniciar el entorno. No se hallo el archivo de configuracion."
 	echo "No se pudo encontrar el archivo de configuracion"
 	exit 1
 fi
 
-
-##############################################################################
+#########################################################################
 # Verificacion de existencia de los directorios
-for (( x=0;x<${#DIRECTORIOS[@]};x++)); 
+for (( aux=0; aux<${#DIRECTORIOS[@]}; aux++)); 
 do
-	DIRECTORIO=${DIRECTORIOS[$x]}
-#TODO revisar. dudas
+	DIRECTORIO=${DIRECTORIOS[$aux]}
 	LINEA_CONFIGURACION=`cat $ARCHIVO_CONFIGURACION | grep -v "^[ ]*#.*$" | grep $DIRECTORIO`
 	
 	VARIABLE=`echo $LINEA_CONFIGURACION | cut -d\= -f1`
@@ -183,7 +156,7 @@ do
 	then
 		if [ -d $VALOR ]
 		then
-			setAssoc 'DIRECTORIOS_EXISTENTES' $VARIABLE $VALOR
+			setArraySimulado 'DIRECTORIOS_EXISTENTES' $VARIABLE $VALOR
 		else
 			ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No existe el directorio ${VARIABLE} en ${VALOR}"
 		fi
@@ -192,32 +165,27 @@ do
 	fi
 done
 
-
-############################################################################ti#
-# Verificacion de variables de configuracion
-for (( x=0; x<${#VARIABLES[@]}; x++));
+##########################################################################
+# Chequeo variables de la configuracion
+for (( aux=0; aux<${#VARIABLES[@]}; aux++));
 do
-	VARIABLE=${VARIABLES[${x}]}
-#TODO revisar. idem anterior
+	VARIABLE=${VARIABLES[${aux}]}
 	LINEA_CONFIGURACION=`cat $ARCHIVO_CONFIGURACION | grep -v "^[ ]*#.*$" | grep $VARIABLE`
 	
 	if [ "$LINEA_CONFIGURACION" ]
 	then
-		VALOR=`eval echo $LINEA_CONFIGURACION | cut -d\= -f2`
-                
- 		setAssoc 'CONFIGURACION' $VARIABLE $VALOR
+		VALOR=`eval echo $LINEA_CONFIGURACION | cut -d\= -f2`                
+ 		setArraySimulado 'CONFIGURACION' $VARIABLE $VALOR
 	else
 		ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No existe la variable $VARIABLE en la configuracion"
 	fi
-
 done
 
-##############################################################################
-# Verificacion de permisos de escritura en directorios de salida
-CANTIDAD_ESCRITURA=${#DIRECTORIOS_ESCRITURA[@]}
-for (( x=0;x<$CANTIDAD_ESCRITURA;x++));      
+#########################################################################
+# Chequeo permisos de escritura en directorios de salida
+for (( aux=0; aux<${#DIRECTORIOS_ESCRITURA[@]}; aux++));      
 do
-	getAssoc 'DIRECTORIOS_EXISTENTES' ${DIRECTORIOS_ESCRITURA[$x]} 'DIRECTORIO'
+	getArraySimulado 'DIRECTORIOS_EXISTENTES' ${DIRECTORIOS_ESCRITURA[$aux]} 'DIRECTORIO'
 	if [ -d $DIRECTORIO ]
 	then
 		if [ ! -w $DIRECTORIO ]
@@ -227,145 +195,132 @@ do
 	fi
 done
 
-
-##############################################################################
-# Miro permisos de archivos
-getAssoc 'CONFIGURACION' 'MAEDIR' DIRECTORIO_MAESTROS
+#########################################################################
+# Chequeo permisos de archivos
+getArraySimulado 'CONFIGURACION' 'MAEDIR' DIRECTORIO_MAESTROS
 if [ $DIRECTORIO_MAESTROS -a -d $DIRECTORIO_MAESTROS ]
 then
-        CANT_MAESTROS=${#ARCHIVOS_MAESTROS[@]}
-        for ((x=0; x<CANT_MAESTROS; x++));
+        for ((aux=0; aux<${#ARCHIVOS_MAESTROS[@]}; aux++));
         do
-		if [ ! -f ${DIRECTORIO_MAESTROS}"/"${ARCHIVOS_MAESTROS[${x}]} ]
+		if [ ! -f ${DIRECTORIO_MAESTROS}"/"${ARCHIVOS_MAESTROS[${aux}]} ]
                 then
-                        ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No existe el archivo maestro: ${DIRECTORIO_MAESTROS}${ARCHIVOS_MAESTROS[${x}]}"
+                        ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No existe el archivo maestro: ${DIRECTORIO_MAESTROS}${ARCHIVOS_MAESTROS[${aux}]}"
 
-		elif [ ! -r ${DIRECTORIO_MAESTROS}"/"${ARCHIVOS_MAESTROS[${x}]} ]
+		elif [ ! -r ${DIRECTORIO_MAESTROS}"/"${ARCHIVOS_MAESTROS[${aux}]} ]
                 then
-                        ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No hay permisos sobre el archivo maestro: ${DIRECTORIO_MAESTROS}${ARCHIVOS_MAESTROS[${x}]}"
+                        ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No hay permisos sobre el archivo maestro: ${DIRECTORIO_MAESTROS}${ARCHIVOS_MAESTROS[${aux}]}"
                 fi
         done
 fi
 
+#########################################################################
+# Verificacion de exitencias de los comandos
 
-##############################################################################
-# Verificacion de los archivos de comandos
-#TODO dudas importantes...
-getAssoc 'CONFIGURACION' 'BINDIR' DIRECTORIO_EJECUTABLES
+getArraySimulado 'CONFIGURACION' 'BINDIR' DIRECTORIO_EJECUTABLES
 if [ $DIRECTORIO_EJECUTABLES -a -d $DIRECTORIO_EJECUTABLES ]
 then
-	CANT_COMANDOS=${#COMANDOS_SISTEMA[@]}
-	for ((x=0; x<CANT_COMANDOS; x++));
+	for ((aux=0; aux<${#COMANDOS_SISTEMA[@]}; aux++));
 	do
-		if [ ! -f ${DIRECTORIO_EJECUTABLES}"/"${COMANDOS_SISTEMA[${x}]} ]
+		if [ ! -f ${DIRECTORIO_EJECUTABLES}"/"${COMANDOS_SISTEMA[${aux}]} ]
 		then
-			ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No existe el comando: ${DIRECTORIO_EJECUTABLES}${COMANDOS_SISTEMA[${x}]}"
+			ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No existe el comando: ${DIRECTORIO_EJECUTABLES}${COMANDOS_SISTEMA[${aux}]}"
 		
-#TODO ops variable x versus -x como "instruccion" trae problemas??
-		elif [ ! -x ${DIRECTORIO_EJECUTABLES}"/"${COMANDOS_SISTEMA[${x}]} ]
+		elif [ ! -x ${DIRECTORIO_EJECUTABLES}"/"${COMANDOS_SISTEMA[${aux}]} ]
 		then	
-			ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No hay permisos de ejecucion del comando: ${DIRECTORIO_EJECUTABLES}/${COMANDOS_SISTEMA[${x}]}"
+			ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No hay permisos de ejecucion del comando: ${DIRECTORIO_EJECUTABLES}/${COMANDOS_SISTEMA[${aux}]}"
 		fi
 	done
 fi
 
-
-
-###############################################################################
+##########################################################################
 # Seteo variable PATH, solo si se encuentra en la configuracion
-getAssoc 'CONFIGURACION' 'BINDIR' DIRECTORIO_EJECUTABLES
+
+getArraySimulado 'CONFIGURACION' 'BINDIR' DIRECTORIO_EJECUTABLES
 if [ -d ${DIRECTORIO_EJECUTABLES} ] 
 then
 	PATH=$PATH:${DIRECTORIO_EJECUTABLES}
 fi
 
+##########################################################################
+# En caso que existan errores en la instalacion, se muestra el detalle. 
 
-###############################################################################
-# En caso que existan errores en la instalacion, se muestra el detalle, 
-# tal como fue indicado en el enunciado.
-#TODO no se si el instalador solo deberia estar esto y no aca...
 if [ ${#ERRORES_DE_INSTALACION[@]} -gt 0 ]
 then
-	echo "La instalacion no ha sido concluida. Detalles:"
-	for (( x=0;x<${#ERRORES_DE_INSTALACION[@]};x++ ))
+	echo "La instalacion no pudo ser concluida. Detalles:"
+	for (( aux=0; aux<${#ERRORES_DE_INSTALACION[@]}; aux++ ))
 	do
-		MSG="${ERRORES_DE_INSTALACION[$x]}"
-		echo " - $MSG"
+		MSG="${ERRORES_DE_INSTALACION[$aux]}"
+		echo "- $MSG"
+		./Grabar_L.sh "Iniciar_A" -t e "$MSG"
 	done
 
-	getAssoc 'CONFIGURACION' 'BINDIR' DIRECTORIO_EJECUTABLES
+	getArraySimulado 'CONFIGURACION' 'BINDIR' DIRECTORIO_EJECUTABLES
 	if [ -d DIRECTORIO_EJECUTABLES ]
 	then
-		echo
-			echo "Componentes existentes:"
-			echo " - Ejecutables:"
-
-			ls -1 ${DIRECTORIO_EJECUTABLES}
+		echo " "
+		echo "Componentes existentes:"
+		echo "- Ejecutables:"
+		ls -1 ${DIRECTORIO_EJECUTABLES}
 	fi
 
-	getAssoc 'CONFIGURACION' 'MAEDIR' DIRECTORIO_MAESTROS
+	getArraySimulado 'CONFIGURACION' 'MAEDIR' DIRECTORIO_MAESTROS
 	if [ -d $DIRECTORIO_MAESTROS ] 
 	then
-		echo
-		echo " - Archivos Maestros:"
-
+		echo " "
+		echo "- Archivos Maestros:"
 		ls -1 ${DIRECTORIO_MAESTROS}	
 	fi
 	
 	exit 3
 fi
 
-
-###############################################################################
+##########################################################################
 # Inicializo archivo de log
-#TODO no chequie llamada al metodo loguear
-Loguear_A.sh Iniciar_A 'I' '1'
-
+./Grabar_L.sh "Iniciar_A" -t i "Inicio de ejecución."
 
 MOSTRAR_RESUMEN
 
-###############################################################################
-# En caso que la instalacion este correctamente finalizada
-# me fijo si Recibir_A no esta corriendo actualmente para invocarlo.
-#TODO dudas varias...
-PID_RECIBE=`ps ax | grep Recibir_A | grep -v Loguear_A | grep -v grep | awk '{print $1}'`
+##########################################################################
+# Instalacion correctamente finalizada. Chequeo si Recibir_A no esta corriendo actualmente
+
+PID_RECIBE=`ps ax | grep Recibir_A | grep -v Grabar_L | grep -v grep | awk '{print $1}'`
 
 if [ $PID_RECIBE ]
 then
-	echo
+	echo " "
 	echo "El proceso Recibir_A ya se esta ejecutando con el PID $PID_RECIBE"
-	Loguear_A.sh Iniciar_A 'A' '7'
+	./Grabar_L.sh "Iniciar_A" -t e "No se puede arrancar el demonio. Ya existe otro demonio en ejecucion."
 
 else
 	CONF=( )
-	getAssocKeys 'CONFIGURACION' CONF
+	getArraySimuladoClaves 'CONFIGURACION' CONF
 
 	CANT_VARIABLES=${#CONF[@]}
-	for ((i=0; i<CANT_VARIABLES; i++));
+	for ((aux=0; aux<CANT_VARIABLES; aux++));
 	do
-		getAssoc 'CONFIGURACION' "${CONF[$i]}" 'VALOR_CONF'
-		eval "${CONF[$i]}=${VALOR_CONF}; export ${CONF[$i]}"
+		getArraySimulado 'CONFIGURACION' "${CONF[$aux]}" 'VALOR_CONF'
+		eval "${CONF[$aux]}=${VALOR_CONF}; export ${CONF[$aux]}"
 	done
 	
-	# Flag de ejecucion de Iniciar_A exitoso, para chequeo en scripts subsiguientes.
+	# Flag de ejecucion de Iniciar_A exitoso, para chequeo en scripts subsiguientes, de ser necesario
 	INICIAR_A_EJECUTADO_EXITOSAMENTE=1
 	export INICIAR_A_EJECUTADO_EXITOSAMENTE
 
-	# Comienzo de ejecucion del demonio Recibir_A
+	# Ejecucion del demonio Recibir_A
 	bash Recibir_A.sh &
 	sleep 0.3 
         
-	PID_RECIBE=$(ps ax | grep Recibir_A | grep -v Loguear_A | grep -v grep | awk '{print $1}')
+	PID_RECIBE=$(ps ax | grep Recibir_A | grep -v Grabar_L | grep -v grep | awk '{print $1}')
 	let pid=$PID_RECIBE
 
 	if [ $pid -gt 0 ]
 	then
 		echo "Demonio corriendo bajo el Nro <$PID_RECIBE>"
-		echo "Proceso de inicializacion concluido con exito"
-		Loguear_A.sh Iniciar_A 'I' "-Demonio corriendo bajo el no.:" <$PID_RECIBE>"
+		echo "Proceso de inicializacion finalizado con exito."
+		./Grabar_L.sh "Iniciar_A" -t i "-Demonio corriendo bajo el no.: <$PID_RECIBE>"
 	else
-		echo "Proceso de inicializacion concluido sin exito"
-		Loguear_A.sh Iniciar_A 'E' '11'
+		echo "Proceso de inicializacion concluido sin exito."
+		./Grabar_L.sh "Iniciar_A" -t e "Inicializacion de Ambiente finalizado con errores."
 	fi
 fi
 
