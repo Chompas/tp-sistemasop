@@ -83,7 +83,7 @@ verificarExistenciaComponentes(){
 		elif [ "Mover_A.sh" = "$componente" ]
 		then
 			mover_a_file=1
-		elif [ "Imprimir_A.sh" = "$componente" ]
+		elif [ "Imprimir_A.pl" = "$componente" ]
 		then
 			imprimir_a_file=1
 		elif [ "Grabar_L.sh" = "$componente" ]
@@ -168,8 +168,8 @@ imprimirComponentesFaltantes() {
 	fi
 	if [ $imprimir_a_file -eq 0 ] 
 	then
-		echo "Imprimir_A.sh"
-		./Grabar_L.sh -i "Instalar_TP" -t i "Imprimir_A.sh"
+		echo "Imprimir_A.pl"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Imprimir_A.pl"
 	fi
 	if  [ $grabar_l_file -eq 0 ]
 	then
@@ -346,16 +346,25 @@ definirEspacioMinimoParaExternos() {
 	echo -n "Defina el espacio mínimo libre para el arribo de archivos externos en Mbytes (100):"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el espacio mínimo libre para el arribo de archivos externos en Mbytes (100):"
 
-	read INPUT
-	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"$DATASIZE"'-' | grep '^[0-9]*$' | sed 's-^$-'"X"'-'`
-	if [ AUX == "X" ];
-	then
-		definirEspacioMinimoParaExternos
-	fi
-#	AUX=`echo $AUX | grep '^[0-9]*$'`
+	esNumero=0
+	numero='X'
 	
-	DATASIZE=$AUX
+	while [ $esNumero -ne 1 ]; do
+	  read INPUT
+  	  numero=`echo "$INPUT"` # mantengo el original en $numero y reviso que sea numerico usando la auxiliar $numero1
+	  numero=`echo "$numero" | sed 's-^$-'"$DATASIZE"'-'` # si no ingresa nada se toma el default
+	  numero1=`echo "$numero" | grep '^[0-9]*$' | sed 's-^$-'"$DATASIZE"'-'` 
+	  numero1=`echo "$numero" | grep '^[0-9]*$'`
+	  if [ -z $numero1 ]; then
+	    esNumero=2
+	    echo " \"$numero\" no es numerico. Intente Nuevamente"
+	    ./Grabar_L.sh -i "Instalar_TP" -t i " \"$numero\" no es numerico. Intente Nuevamente"
+	  else
+	    esNumero=1
+	  fi  
+	done
+
+	DATASIZE=$numero
 	echo $DATASIZE
 	./Grabar_L.sh -i "Instalar_TP" -t i "$DATASIZE"
 }
@@ -472,16 +481,28 @@ definirTamanioMaximoLog() {
 	echo -n "Defina el tamaño máximo para los archivos $LOGEXT en Kbytes ($LOGSIZE):"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el tamaño máximo para los archivos $LOGEXT en Kbytes ($LOGSIZE):"
 
-	read INPUT
-	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"$LOGSIZE"'-' | grep '^[0-9]*$' | sed 's-^$-'"X"'-'`
-	if [ AUX == "X" ];
-	then
-		definirTamanioMaximoLog
-	fi
-#	AUX=`echo $AUX | grep '^[0-9]*$'`
+
+	esNumero=0
+	numero='X'
 	
-	LOGSIZE=$AUX
+	while [ $esNumero -ne 1 ]; do
+	  read INPUT
+  	  numero=`echo "$INPUT"` # mantengo el original en $numero y reviso que sea numerico usando la auxiliar $numero1
+	  numero=`echo "$numero" | sed 's-^$-'"$LOGSIZE"'-'` # si no ingresa nada se toma el default
+	  numero1=`echo "$numero" | grep '^[0-9]*$' | sed 's-^$-'"$LOGSIZE"'-'` 
+	  numero1=`echo "$numero" | grep '^[0-9]*$'`
+	  if [ -z $numero1 ]; then
+	    esNumero=2
+	    echo " \"$numero\" no es numerico. Intente Nuevamente"
+	    ./Grabar_L.sh -i "Instalar_TP" -t i " \"$numero\" no es numerico. Intente Nuevamente"
+	  else
+	    esNumero=1
+	  fi  
+	done
+	
+	echo $numero
+	
+	LOGSIZE=$numero
 	echo $LOGSIZE
 	./Grabar_L.sh -i "Instalar_TP" -t i "$LOGSIZE"
 }
@@ -617,7 +638,7 @@ moverProgramasYFunciones() {
 	cp "./Start_A.sh" "$GRUPO/$BINDIR/"
 	cp "./Stop_A.sh" "$GRUPO/$BINDIR/"
 	cp "./Mover_A.sh" "$GRUPO/$BINDIR/"
-	cp "./Imprimir_A.sh" "$GRUPO/$BINDIR/"
+	cp "./Imprimir_A.pl" "$GRUPO/$BINDIR/"
 	cp "./Grabar_L.sh" "$GRUPO/$BINDIR/"
 }
 
