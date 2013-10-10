@@ -92,7 +92,7 @@ verificarExistenciaComponentes(){
 		fi
     done
 
-	if [ $iniciar_a_file -eq 1 ] && [ $recibir_a_file -eq 1] && [ $reservar_a_file -eq 1] && [ $start_a_file -eq 1 ] && [ $stop_a_file -eq 1 ] && [ $mover_a_file -eq 1 ] && [ $imprimir_a_file -eq 1 ] && [ $grabar_l_file -eq 1] 
+	if [ $iniciar_a_file -eq 1 ] && [ $recibir_a_file -eq 1 ] && [ $reservar_a_file -eq 1 ] && [ $start_a_file -eq 1 ] && [ $stop_a_file -eq 1 ]  && [ $mover_a_file -eq 1 ] && [ $imprimir_a_file -eq 1 ] && [ $grabar_l_file -eq 1 ] 
 	then
 		echo "Estado de la instalación: COMPLETA"
 		./Grabar_L.sh -i "Instalar_TP" -t i "Estado de la instalación: COMPLETA"
@@ -189,35 +189,35 @@ verificarInstalacionPrevia() {
 		ls $GRUPO/$CONFDIR
 		./Grabar_L.sh -i "Instalar_TP" -t i "`ls $GRUPO/$CONFDIR`"
 
-		echo "Ejecutables: $GRUPO$BINDIR"
-		./Grabar_L.sh -i "Instalar_TP" -t i "Ejecutables: $GRUPO$BINDIR"
+		echo "Ejecutables: $GRUPO/$BINDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Ejecutables: $GRUPO/$BINDIR"
 
-		ls $GRUPO$BINDIR
-		./Grabar_L.sh -i "Instalar_TP" -t i "`ls $GRUPO$BINDIR`"
+		ls $GRUPO/$BINDIR
+		./Grabar_L.sh -i "Instalar_TP" -t i "`ls $GRUPO/$BINDIR`"
 
-		echo "Archivos Maestros: $GRUPO$MAEDIR"
-		./Grabar_L.sh -i "Instalar_TP" -t i "Archivos Maestros: $GRUPO$MAEDIR"
+		echo "Archivos Maestros: $GRUPO/$MAEDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Archivos Maestros: $GRUPO/$MAEDIR"
 
-		ls $GRUPO$MAEDIR
-		./Grabar_L.sh -i "Instalar_TP" -t i "`ls $GRUPO$MAEDIR`"
+		ls $GRUPO/$MAEDIR
+		./Grabar_L.sh -i "Instalar_TP" -t i "`ls $GRUPO/$MAEDIR`"
 
-		echo "Directorio de arribo de archivos externos: $GRUPO$ARRIDIR"
-		./Grabar_L.sh -i "Instalar_TP" -t i "Directorio de arribo de archivos externos: $GRUPO$ARRIDIR"
+		echo "Directorio de arribo de archivos externos: $GRUPO/$ARRIDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Directorio de arribo de archivos externos: $GRUPO/$ARRIDIR"
 
-		echo "Archivos externos aceptados: $GRUPO$ACEPDIR"
-		./Grabar_L.sh -i "Instalar_TP" -t i "Archivos externos aceptados: $GRUPO$ACEPDIR"
+		echo "Archivos externos aceptados: $GRUPO/$ACEPDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Archivos externos aceptados: $GRUPO/$ACEPDIR"
 
-		echo "Archivos externos rechazados: $GRUPO$RECHDIR"
-		./Grabar_L.sh -i "Instalar_TP" -t i "Archivos externos rechazados: $GRUPO$RECHDIR"
+		echo "Archivos externos rechazados: $GRUPO/$RECHDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Archivos externos rechazados: $GRUPO/$RECHDIR"
 
-		echo "Reportes de salida: $GRUPO$REPODIR"
-		./Grabar_L.sh -i "Instalar_TP" -t i "Reportes de salida: $GRUPO$REPODIR"
+		echo "Reportes de salida: $GRUPO/$REPODIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Reportes de salida: $GRUPO/$REPODIR"
 
-		echo "Archivos procesados: $GRUPO$PROCDIR"
-		./Grabar_L.sh -i "Instalar_TP" -t i "Archivos procesados: $GRUPO$PROCDIR"
+		echo "Archivos procesados: $GRUPO/$PROCDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Archivos procesados: $GRUPO/$PROCDIR"
 
-		echo "Logs de auditoria del Sistema: $GRUPO$LOGDIR/<comando>.$LOGEXT"
-		./Grabar_L.sh -i "Instalar_TP" -t i "Logs de auditoria del Sistema: $GRUPO$LOGDIR/<comando>.$LOGEXT"
+		echo "Logs de auditoria del Sistema: $GRUPO/$LOGDIR/<comando>.$LOGEXT"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Logs de auditoria del Sistema: $GRUPO/$LOGDIR/<comando>.$LOGEXT"
 
 		verificarExistenciaComponentes
 	    	fin
@@ -647,7 +647,12 @@ actualizarArchivoConfiguracion() {
 	echo "Actualizando la configuración del sistema"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Actualizando la configuración del sistema"
 	
-	fecha=$(date +"%d/%m/%Y %H:%M %P") #FIXME: ARREGLAR FORMATO DE LA FECHA Y REEMPLAZAR FECHA_AUX
+	AM_PM=$(date +"%P")
+	AM_PM='pm' # FIXME: SACAR SI ES QUE FUNCIONA
+	AM_PM=`echo $AM_PM | sed "s/\(.\)\(.\)/\1.\2/g"`
+
+	fecha=$(date +"%d/%m/%Y %H:%M")
+	fecha="$fecha $AM_PM"
 
 	FECHA_AUX=$fecha
 	LINEA_AUX="GRUPO=$GRUPO=$USUARIO=$FECHA_AUX"
