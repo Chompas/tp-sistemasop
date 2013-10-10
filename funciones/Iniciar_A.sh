@@ -307,7 +307,7 @@ else
 	export INICIAR_A_EJECUTADO_EXITOSAMENTE
 
 	# Ejecucion del demonio Recibir_A
-	bash Recibir_A.sh &
+	bash ./Recibir_A.sh &
 	sleep 0.3 
         
 	PID_RECIBE=$(ps ax | grep Recibir_A | grep -v Grabar_L | grep -v grep | awk '{print $1}')
