@@ -103,14 +103,12 @@ echo " "
 ##########################################################################
 # Verifico que el comando no haya sido ejecutado en esta misma sesion
 
-if [ $INICIAR_A_YA_CORRIO ]
+if [ $INICIAR_A_EJECUTADO_EXITOSAMENTE ]
 then
 	./Grabar_L.sh "Iniciar_A" -t e "El ambiente ya ha sido inicializado en esta sesion."
 	echo "La iniciacion ya fue ejecutada en esta sesion de usuario."
 	MOSTRAR_RESUMEN
 	exit 2
-else
-	INICIAR_A_YA_CORRIO=1
 fi
 echo " "
 
@@ -198,7 +196,7 @@ done
 #########################################################################
 # Chequeo permisos de archivos
 getArraySimulado 'CONFIGURACION' 'MAEDIR' DIRECTORIO_MAESTROS
-if [ $DIRECTORIO_MAESTROS -a -d $DIRECTORIO_MAESTROS ]
+if [ -d $DIRECTORIO_MAESTROS ]
 then
         for ((aux=0; aux<${#ARCHIVOS_MAESTROS[@]}; aux++));
         do
@@ -217,7 +215,7 @@ fi
 # Verificacion de exitencias de los comandos
 
 getArraySimulado 'CONFIGURACION' 'BINDIR' DIRECTORIO_EJECUTABLES
-if [ $DIRECTORIO_EJECUTABLES -a -d $DIRECTORIO_EJECUTABLES ]
+if [ -d $DIRECTORIO_EJECUTABLES ]
 then
 	for ((aux=0; aux<${#COMANDOS_SISTEMA[@]}; aux++));
 	do
@@ -308,7 +306,7 @@ else
 
 	# Ejecucion del demonio Recibir_A
 	bash ./Recibir_A.sh &
-	sleep 0.3 
+	sleep 0.4 
         
 	PID_RECIBE=$(ps ax | grep Recibir_A | grep -v Grabar_L | grep -v grep | awk '{print $1}')
 	let pid=$PID_RECIBE
