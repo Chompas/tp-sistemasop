@@ -5,7 +5,7 @@ tipoMensaje=""					# Tipo de mensaje de error
 debug=false
 
 if $debug ; then
-	LOGEXT="log"
+	LOGEXT="logext"
 	LOGDIR="dirLogs"
 	CONFDIR="dirLogsInstalacion"
 	LOGSIZE=1000
@@ -32,6 +32,10 @@ function uso() {
 	exit 1;
 }
 
+function escribe_header_log() {
+	echo -e "FECHA Y HORA-USUARIO-COMANDO-TIPO MENSAJE-MENSAJE" 	
+}
+
 # ------- COMIENZO PROCESAMIENTO DE ARGUMENTOS -------- 
 # Mas info: http://wiki.bash-hackers.org/howto/getopts_tutorial
 # Hay un parametro opcional "-i", y un parámetro opcional "-h"
@@ -39,7 +43,7 @@ while getopts "hi" opt; do
     case "${opt}" in
 		h)		# Muestra la ayuda del script y finaliza
 			uso
-			return 0
+			exit 0
 			;;
         i)
 			esLogInstalacion=true            
@@ -85,6 +89,7 @@ mensaje="$2"
 directorio=$LOGDIR
 extension=$LOGEXT
 if $esLogInstalacion ; then
+	comando="Instalar_TP"
 	directorio=$CONFDIR
 	extension="log"
 fi
@@ -110,7 +115,7 @@ if [ ! -f $path ]; then
 	fi
 	
 	# Creamos el archivo con el encabezado
-	echo -e "FECHA \t \t \t USUARIO \t COMANDO \t TIPO \t \t MENSAJE" >> $path
+	escribe_header_log >> $path
 fi
 
 # Si el archivo es muy grande, y no es el log de instalación, lo truncamos
@@ -120,7 +125,7 @@ if $debug ; then
 fi
 if [ "$tamanioArchivo" -ge "$tamanioMaximoLog" ]; then
 	if ! $esLogInstalacion ; then
-		echo -e "FECHA \t \t \t USUARIO \t COMANDO \t TIPO \t \t MENSAJE" >> ${path}_tmp
+		escribe_header_log >> ${path}_tmp
 		tail --lines=$cantidadLineasADejar $path >> ${path}_tmp
 		rm $path
 		mv ${path}_tmp $path
@@ -134,7 +139,13 @@ if [ "$tipoMensaje" != "" ] ; then
 	tipo=${tiposMensajes[$tipoMensaje]}
 fi
 
+# El mensaje debe tener hasta 120 caracteres
+mensajeTruncado=${mensaje:0:120}
+if $debug ; then
+	echo "mensaje truncado = $mensajeTruncado"
+fi
+
 # Finalmente... escribimos en el archivo de log!!!
-echo -e "$fecha \t $usuario \t $comando \t $tipo \t \t $mensaje" >> $path
+echo -e "$fecha-$usuario-$comando-$tipo-$mensajeTruncado" >> $path
 
 exit 0
