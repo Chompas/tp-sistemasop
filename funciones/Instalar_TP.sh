@@ -28,6 +28,15 @@ LOGEXT="log"
 LOGSIZE=400
 export LOGSIZE
 
+#FIXME: ver en que ruta buscarlos
+#salas.mae
+SALAS_FILE="../mae/salas.mae"
+#obras.mae
+OBRAS_FILE="../mae/obras.mae"
+#combos.dis
+COMBOS_FILE="../disp/combos.dis"
+
+
 iniciar_a_file=0
 recibir_a_file=0
 reservar_a_file=0
@@ -617,14 +626,33 @@ crearEstructuras() {
 moverMaestros() {
 	echo "Instalando Archivos Maestros"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Archivos Maestros" 
-	# mover
+
+	if [ -f $OBRAS_FILE ]; then
+		cp "$OBRAS_FILE" "$GRUPO/$MAEDIR"
+	else
+		echo "No se encontro el archivo de Obras"
+		./Grabar_L.sh -i "Instalar_TP" -t i "No se encontro el archivo de Obras"
+	fi
+
+	if [ -f $SALAS_FILE ]; then
+		cp "$SALAS_FILE" "$GRUPO/$MAEDIR"
+	else
+		echo "No se encontro el archivo de Salas"
+		./Grabar_L.sh -i "Instalar_TP" -t i "No se encontro el archivo de Salas"
+	fi
+
 }
 
 # 21.3.Mover el archivo de disponibilidad al directorio PROCDIR mostrando el siguiente mensaje
 moverDisponibilidad() {
 	echo "Instalando Archivo de Disponibilidad"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Archivo de Disponibilidad"
-	# mover
+	if [ -f $COMBOS_FILE ]; then
+		cp "$COMBOS_FILE" "$GRUPO/$PROCDIR"
+	else
+		echo "No se encontro el archivo de disponibilidad"
+		./Grabar_L.sh -i "Instalar_TP" -t i "No se encontro el archivo de disponibilidad"
+	fi
 }
 
 # 21.4. Mover los ejecutables y funciones al directorio BINDIR mostrando el siguiente mensaje
