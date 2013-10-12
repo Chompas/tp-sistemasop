@@ -1,12 +1,10 @@
 #!/usr/bin/perl
 
 # Variables generales
-$debug = 1;						# Debuggeando? 0=no, 1=si
+$debug = 0;						# Debuggeando? 0=no, 1=si
 $write = 0;						# Va a escribir en archivo? 0=no, 1=si
-$ambiente_inicializado = 1;		# Ambiente inicializado? 0=no, 1=si
-$en_ejecucion = 0;				# Hay otra instancia en ejecucion? 0=no, 1=si
 
-if ($debug == 1)
+if ($debug == 0)
 {
 	$MAEDIR = ".";
 	$PROCDIR = ".";
@@ -20,17 +18,26 @@ $in_reservas_confirmadas = "$PROCDIR/"."reservas.ok";	#id obra;nombre;fecha;hora
 $in_reservas_no_confirmadas = "$PROCDIR/"."reservas.nok";   #ref int;fecha;hora;numero fila;numero butaca;cant butacas solicitadas;seccion;motivo;id sala;id obra;email;usuario;fecha grabacion
 $in_disponibilidad = "$PROCDIR/"."combos.dis"; #id combo;id obra;fecha;hora;id sala;butacas habilitadas;butacas disp;requisitos especiales
 
+sub end {
+    close ($fpid);
+    unlink "Imprimir_A.PID" or warn "ERROR: no se pudo borrar Imprimir_A.PID.";
+}
+
 # ---------- INICIO COMPROBACIONES DE RUTINA ------------
-if ($ambiente_inicializado == 0)
+if ($INICIAR_A_EJECUTADO_EXITOSAMENTE == 1)
 {
 	print "ERROR: el ambiente no fue inicializado. \n";
 	exit(1);
 }
-if ($en_ejecucion == 1)
+
+if (-e "Imprimir_A.PID") 
 {
 	print "ERROR: hay otra instancia del script en ejecución. \n";
 	exit(1);
 }
+
+open ($fpid, '>', "Imprimir_A.PID");
+
 # ---------- FIN COMPROBACIONES DE RUTINA ------------
 
 # ---------- INICIO PROCESAMIENTO ARGUMENTOS ------------
@@ -40,10 +47,10 @@ $num_argv = $#ARGV +1;
 
 if ($num_argv == 0) {
 	print "ERROR: faltan parámetros.\n";
-	&uso;exit(1);
+	&uso;&end;exit(1);
 }
 if (($num_argv > 2) || ($ARGV[0] eq "-a")) {
-	&uso;exit(1);
+	&uso;&end;exit(1);
 }
 elsif (($num_argv == 2) && ($ARGV[0] eq "-w")) 
 {
@@ -51,23 +58,19 @@ elsif (($num_argv == 2) && ($ARGV[0] eq "-w"))
 	if ( exists($opciones{$ARGV[1]}) )	#Si existe la opcion
 	{
 		&{$opciones{$ARGV[1]}};		#Llamo a la funcion correspondiente
+		&end;
 	}
 }
 elsif (($num_argv == 1) && (exists($opciones{$ARGV[0]}))) 
 {
 	&{$opciones{$ARGV[0]}};
+	&end;
 }
 else {
 	print "ERROR: parámetros incorrectos.\n";
-	&uso;exit(1);
+	&uso;&end;exit(1);
 }
 
-if ($debug == 1)
-{
-	print "write = $write \n";
-	print "num argv = $num_argv \n";
-	print "argv[0] = $ARGV[0] \n";
-}
 # ---------- FIN PROCESAMIENTO ARGUMENTOS ------------
 
 sub uso {
@@ -287,7 +290,7 @@ sub fInvitados {
 			}
 			
 			else {
-				open ($arch_invitados, '<', $nom_archivo_invitados);
+				open ($arch_invitados, '<', $nom_archivo_invitados) or die "No se pudo abrir '$nom_archivo_invitados' $!\n";;
 								
 				while ($linea = <$arch_invitados>) 
 				{
