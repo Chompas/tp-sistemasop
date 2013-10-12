@@ -31,8 +31,9 @@ debug=true
 
 if $debug ; then
 	ACEPDIR="grupo1/aceptados"
-	PROCDIR="grupo1/proc"
+	PROCDIR="grupo1/procesados"
 	RECHDIR="grupo1/rechazados"
+	MAEDIR="grupo1/mae"
 fi
 
 function cantidadArchivos() {
@@ -50,7 +51,6 @@ function horaValida() {
 }
 
 function fechaValida() {
-	echo $1
 	#if [[ $1 =~ ^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$ ]]
 	if [[ $1 =~ ^[0-9][0-9]/[0-9][0-9]/[0-9]{4}$ ]]
 	#if [[ $1 =~ ^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$ ]]
@@ -60,6 +60,24 @@ function fechaValida() {
 		return 1
 	fi
 }
+
+function obtenerNombre() {
+	if [ $1 -eq 0 ]
+	then
+		#SALAS
+		match=$(grep "^$1;.*$" $MAEDIR/salas.mae)
+	else
+		#OBRAS
+		match=$(grep "^$1;.*$" $MAEDIR/obras.mae)
+	fi
+	IFS=';' read -ra CAMPOS_MAE <<< "$match"
+	# 0: id
+	# 1: nombre
+	# etc
+	echo ${CAMPOS_MAE[1]}
+	
+}
+
 
 function existeEvento() {
 	filename=$1
@@ -163,13 +181,13 @@ function reservarEvento() {
 		# campo13 FECHA GRABACION
 
 		obra=$idObra
-		#IR A BUSCAR A OBRAS.mae EL ID Y TRAER EL NOMBRE DE LA OBRA
-		#nombreObra=
+		#VOY A BUSCAR A OBRAS.mae EL ID Y TRAER EL NOMBRE DE LA OBRA
+		nombreObra=$(obtenerNombre $obra)
 		fechaFuncion=$2
 		horaFuncion=$3
 		sala=$idSala
 		#IDEM OBRAS pero para salas
-		#nombreSala=
+		nombreSala=$(obtenerNombre $sala)
 		cantidadButacasConf=$dispSolicitada
 		idCombo=$idEvento
 		refInterna=$6
@@ -180,6 +198,8 @@ function reservarEvento() {
 		
 		nuevoRegistro="$idObra;$nombreObra;$fechaFuncion;$horaFuncion;$idSala;$nombreSala;$cantidadButacasConf;$idCombo;$refInterna;$cantidadButacasSolic;$correo;$user;$date"
 		echo $nuevoRegistro >> $PROCDIR/reservas.ok
+		
+		cantidadOK=$((cantidadOK+1))
 		
 		return 0;
 	else
@@ -216,7 +236,7 @@ function rechazar() {
     nuevoRegistro="$refInt;$fecha;$hora;$fila;$butaca;$cantSolicitada;$seccion;$motivo;$sala;$obra;$correo;$user;$date"
     echo $nuevoRegistro >> $PROCDIR/reservas.nok
         
-    #TODO: CONTAR REGISTROS GUARDADOS
+    cantidadNOK=$((cantidadNOK+1))
     
 }
 
@@ -227,8 +247,10 @@ DISP_FUNCIONES=()
 numeroEvento=0
 idObra=0
 idSala=0
+cantidadOK=0
+cantidadNOK=0
 
-# Inicializar log
+# 1. Inicializar log
 ./Grabar_L.sh "Reservar_A" -t i "Inicio de Reservar"
 cant=$(cantidadArchivos $ACEPDIR)
 ./Grabar_L.sh "Reservar_A" -t i "Cantidad de Archivos en $ACEPDIR: $cant"
@@ -243,7 +265,7 @@ fi
 
 # Recorro archivos a procesar
 ACEPFILES="$ACEPDIR/*"
-
+# 2. Procesar Un Archivo
 for f in $ACEPFILES
 do
 	./Grabar_L.sh "Reservar_A" -t i "Archivo a procesar: $f"
@@ -254,6 +276,7 @@ do
 	# 2: xxx
 	
 	# Verifico que el archivo no fue procesado
+	# 3. Verificar que no sea un archivo duplicado
 	
 	if [ -f $PROCDIR/${f##*/} ]
 	then
@@ -262,10 +285,11 @@ do
 		./Mover_A.sh $f $RECHDIR "Reservar_A"
 	elif [ ! -s $f ]
 	then
-		# Archivo vacio. Lo rechazo
+		# 4. Archivo vacio. Lo rechazo
 		./Grabar_L.sh "Reservar_A" -t w "Se rechaza el archivo por estar VACIO"
 		./Mover_A.sh $f $RECHDIR "Reservar_A"
 	else
+		
 		# Proceso archivo
 		while read reg
 		do
@@ -278,11 +302,9 @@ do
 			# 5: cantidad de butacas solicitadas
 			# 6: (seccion)
 			
-			
-			
 			existeEvento ${CAMPOS_FILENAME[0]} ${CAMPOS[1]} ${CAMPOS[2]}
 			
-			# Validar fecha
+			# 5.1.a Validar fecha
 			if ! fechaValida ${CAMPOS[1]}
 			then
 				rechazar "Fecha invalida" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
@@ -298,24 +320,24 @@ do
 				# Obtengo la diferencia en dias
 				let "dayDif=dif/60/60/24"
 							
-				# Si la reserva esta vencida
+				# 5.1.b Si la reserva esta vencida
 				if [ $dayDif -lt 1 ]
 				then
 					rechazar "Reserva tardia" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
-				# Si la reserva es superior a 45 dias
+				# 5.1.c Si la reserva es superior a 45 dias
 				elif [ $dayDif -gt 45 ]
 				then
 					rechazar "Reserva anticipada" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
-				# Verifico formato hora (hh:mm)
+				# 5.2 Verifico formato hora (hh:mm)
 				elif  ! horaValida ${CAMPOS[2]} 
 				then
 					rechazar "Hora invalida" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}" 
-				# Verifico que exista la funcion
+				# 5.3 Verifico que exista la funcion
 				else 
 					if [ $numeroEvento = 0 ]
 					then
 						rechazar "No existe el evento solicitado" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
-					# Chequeo de disponibilidad y realizo la reserva de estar todo ok
+					# 5.4 Chequeo de disponibilidad y realizo la reserva de estar todo ok
 					elif ! reservarEvento ${CAMPOS_FILENAME[0]} ${CAMPOS[1]} ${CAMPOS[2]} ${CAMPOS[5]} $numeroEvento ${CAMPOS[0]} ${CAMPOS_FILENAME[1]}
 					then 
 						rechazar "Falta de disponibilidad" "${CAMPOS[@]}" "${CAMPOS_FILENAME[@]}"
@@ -323,11 +345,12 @@ do
 				fi
 			fi
 		done < $f
+		./Mover_A.sh $f $PROCDIR "Reservar_A"
 	fi
-	
 done
 
-#TODO: Actualizar disponibilidades en combos.dis
+./Grabar_L.sh "Reservar_A" -t i "Cantidad de registros grabados en reservas.ok: $cantidadOK"
+./Grabar_L.sh "Reservar_A" -t i "Cantidad de registros grabados en reservas.nok: $cantidadNOK"
 
 index=0
 for id in "${IDS_FUNCIONES[@]}"
@@ -337,3 +360,6 @@ do
 	
 index=$(expr $index + 1)
 done
+
+# 9 Cerrar el Log
+./Grabar_L.sh "Reservar_A" -t i "Fin de Reservar_A"
