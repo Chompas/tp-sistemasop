@@ -19,10 +19,6 @@ $in_obras = "$MAEDIR/"."obras.mae";	#id (n° impar);nombre;email produccion gene
 $in_reservas_confirmadas = "$PROCDIR/"."reservas.ok";	#id obra;nombre;fecha;hora;id sala;nombre sala;cant butacas confir;id combo[;ref int];cant butacas solicitadas;email;usuario;fecha grabacion
 $in_reservas_no_confirmadas = "$PROCDIR/"."reservas.nok";   #ref int;fecha;hora;numero fila;numero butaca;cant butacas solicitadas;seccion;motivo;id sala;id obra;email;usuario;fecha grabacion
 $in_disponibilidad = "$PROCDIR/"."combos.dis"; #id combo;id obra;fecha;hora;id sala;butacas habilitadas;butacas disp;requisitos especiales
-$in_invitados = "$REPODIR/"."$ref".".inv"; 	#invitado[;empresa[;cantidad acompanantes]]
-
-# Archivos de output
-$out_invitados_confirmados = "$REPODIR"."/"."$ref".".inv";
 
 # ---------- INICIO COMPROBACIONES DE RUTINA ------------
 if ($ambiente_inicializado == 0)
@@ -101,6 +97,40 @@ sub existeIDcombo {
 	$lineas = `grep -c "^$id_combo;" "$in_disponibilidad"`;
 }
 
+sub generar_listado_eventos_candidatos {
+	%eventos_candidatos = ();		#id evento => datos evento
+	%referencias_internas = ();		#referencia interna => id evento
+	
+	# $in_reservas_confirmadas = "$PROCDIR/"."reservas.ok";	
+	#	id obra;nombre;fecha;hora;id sala;nombre sala;cant butacas confir;id combo[;ref int];cant butacas solicitadas;email;usuario;fecha grabacion
+	open($reservas, '<', $in_reservas_confirmadas) or die "No se pudo abrir '$in_reservas_confirmadas' $!\n";
+	while ($linea = <$reservas>) 
+	{
+		chomp($linea);
+		#Datos del evento
+		@de = split(";", $linea);
+		if ($#de + 1 == 13) #Hay ref interna del solicitante?
+		{
+			$datos_evento = "Evento: $de[7] Obra: $de[0]-$de[1] Fecha y Hora: $de[2]-$de[3] Sala: $de[4]-$de[5]"."\n";
+			$eventos_candidatos{$de[7]} = $datos_evento;
+			$referencias_internas{$de[8]} = $de[7];
+		}
+	}
+	close ($reservas);
+}
+
+sub sumar_reservas_confirmadas {
+	local $ref_int = $_[0];
+	local $suma = 0;
+	$res = `grep ";$ref_int;" $in_reservas_confirmadas | cut -d ";" -f 7`;
+	@valores = split ("\n", $res);
+	for ($i = 0; $i < $#valores + 1; $i++)
+	{
+		$suma += $valores[$i];
+	}
+	return ($suma);
+}
+
 sub es_rango_valido {
 	local $min = $_[0];
 	local $max = $_[1];
@@ -163,6 +193,26 @@ sub escribir_listado_disponibilidad {
 	}
 }
 
+sub escribir_listado_invitados {
+	local $out_invitados_confirmados = "$REPODIR"."/"."$evento".".inv";
+	local $archivo;
+	
+	# Escribo el listado en la consola
+	foreach $linea (@_) {
+		print "$linea";		
+	}
+	
+	# Escribo el listado en el archivo de invitados
+	if ($write == 1) 
+	{
+		open ($archivo, '>', $out_invitados_confirmados);		
+		foreach $linea (@_) {
+			print $archivo "$linea";		
+		}
+		close ($archivo);	
+	}
+}
+
 #Parametro 0: id_combo
 #Parametro 1: array de tickets
 sub escribir_listado_tickets {
@@ -202,7 +252,69 @@ sub escribir_ranking {
 }
 
 sub fInvitados {
-	print "fInvitados"."\n";
+	&generar_listado_eventos_candidatos;
+	
+	foreach $key (keys(%eventos_candidatos)) {
+		print $eventos_candidatos{$key};		
+	}
+
+	pideEventoCandidato: print "Ingrese un evento candidato: ";
+	local $evento = <STDIN>; chomp($evento);
+	while (exists($eventos_candidatos{$evento}) == 0) {
+		print "ERROR: Evento inválido.\n";
+		goto pideEventoCandidato;
+	}
+	
+	print "Evento válido.\n";
+	
+	local @out = ();
+	
+	push(@out,$eventos_candidatos{$evento});
+	
+	foreach $ref_int (keys(%referencias_internas))
+	{
+		if ($referencias_internas{$ref_int} eq $evento)
+		{
+			local $total_acumulado = 0;
+			push(@out,"$ref_int \n");
+			
+			local $nom_archivo_invitados = "$REPODIR/"."$ref_int".".inv";
+			
+			# No existe archivo de invitados
+			if (! -e $nom_archivo_invitados) 
+			{
+				push (@out, "Sin listado de invitados.\n");
+			}
+			
+			else {
+				open ($arch_invitados, '<', $nom_archivo_invitados);
+								
+				while ($linea = <$arch_invitados>) 
+				{
+					chomp($linea);
+					@campos = split (";" , $linea); # 0-> invitado (ob), 1 -> empresa (opc), 2-> cantidad acompañantes (opc)
+					local $cant_acomp = 0;
+					if (($#campos + 1 == 3))
+					{
+						$cant_acomp = $campos[2];
+						
+					}
+					elsif (($#campos + 1 == 2) && (&esDigito($campos[1]) == 0))
+					{
+						$cant_acomp = $campos[1];
+					}
+					$total_acumulado+=1 + $cant_acomp;
+					$linea = "$campos[0]".", "."$cant_acomp".", "."$total_acumulado"."\n";
+					push(@out, "$linea");
+				}
+				close ($arch_invitados);				
+			}
+			push(@out,&sumar_reservas_confirmadas($ref_int)."\n");
+			push(@out,"$total_acumulado \n");
+		}		
+	}
+	
+	&escribir_listado_invitados(@out);
 }
 
 sub fDisp {
