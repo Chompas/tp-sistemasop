@@ -37,8 +37,8 @@ c. Para la instalación es requisito indispensable tener una instalación de Per
 		-> Imprimir_A.pl  
 		-> Mover_A.sh    
 		-> Reservar_A.sh
-		-> Start.sh
-		-> Stop.sh
+		-> Start_A.sh
+		-> Stop_A.sh
 	-> conf
 		-> Instalar_TP.conf
 	-> log 
