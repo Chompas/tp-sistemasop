@@ -27,7 +27,7 @@
 
 
 
-debug=true
+debug=false
 
 if $debug ; then
 	ACEPDIR="../aceptados"
