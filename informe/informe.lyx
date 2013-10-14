@@ -1345,6 +1345,26 @@ Recibe un único parámetro con la ruta del GRUPO.
 .
 \end_layout
 
+\begin_layout Itemize
+El instalador buscará los archivos 'obras.mae', 'salas.mae' en la carpeta
+ 'mae'.
+ Además buscará el archivo 'combos.disp' en la carpeta 'disp'.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\family typewriter
+Iniciar_A
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Antes de verificar que la configuración esté correcta, se escribe en el
+ log de instalación.
+ Luego, se escribe en el log común.
+\end_layout
+
 \end_deeper
 \begin_layout Itemize
 
@@ -1397,7 +1417,7 @@ Imprimir_A
 
 \begin_deeper
 \begin_layout Itemize
-Se usa un array asociativo (estructura de hash) para: -
+Se usa un array asociativo (estructura de hash) para:
 \end_layout
 
 \begin_deeper
@@ -1427,12 +1447,12 @@ t
 \end_layout
 
 \begin_layout Itemize
-Para chequear que no haya una instancia en ejecución, se utiliza un archivo
+Para no permitir más de una ejecución en simultáneo, se utiliza un archivo
  temporal llamado 
 \family typewriter
 Imprimir_A.PID
 \family default
- que se crea al crear una instancia y se elimina al terminar la ejecución.
+ que almacena el PID del proceso corriendo.
 \end_layout
 
 \end_deeper
@@ -1441,7 +1461,7 @@ Problemas Relevantes
 \end_layout
 
 \begin_layout Itemize
-Problema:
+Problema: manejo de fechas
 \end_layout
 
 \begin_layout Itemize
@@ -1507,7 +1527,7 @@ Temporal
 \end_layout
 
 \begin_layout Itemize
-Almacenado en:
+Almacenado en: /tmp
 \end_layout
 
 \begin_layout Itemize
