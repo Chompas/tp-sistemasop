@@ -8,7 +8,7 @@ if $debug ; then
 	LOGEXT="logext"
 	LOGDIR="dirLogs"
 	CONFDIR="dirLogsInstalacion"
-	LOGSIZE=1000
+	LOGSIZE=`echo "4*1024" | bc`
 fi
 
 # Array asociativo con los tipos posibles de mensajes
@@ -93,7 +93,7 @@ if $esLogInstalacion ; then
 	directorio=$CONFDIR
 	extension="log"
 fi
-tamanioMaximoLog=$LOGSIZE
+tamanioMaximoLog=`echo "$LOGSIZE*1024" | bc`
 nombreArchivoDeLog=${comando}.${extension}
 path=${directorio}/${nombreArchivoDeLog}
 fecha=$(date +"%d-%m-%y %T")
