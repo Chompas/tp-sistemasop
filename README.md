@@ -32,7 +32,7 @@ Instalación
 --------------------
 1. Navegar hasta la carpeta donde se encuentran las funciones: `cd funciones`
 2. Darle permisos de ejecución al script `Instalar_TP.sh`: `chmod +x Instalar_TP.sh`
-3. Ejecutar el script pasando como parámetro la ruta donde se desee realizar las instalación: `./Instalar_TP.sh instalacion1`
+3. Ejecutar el script pasando como parámetro la ruta donde se desee realizar las instalación: `./Instalar_TP.sh`
 4. Seguir los pasos indicados.
 
 
@@ -40,23 +40,24 @@ Estructura post instalación
 --------------------
 Luego de la instalación se creará la siguiente estructura dentro de la carpeta donde instalamos
 (en este ejemplo, `instalacion1`).
-> `-> instalacion1
-	-> aceptados
-	-> arribos
-	-> bin
-		-> Grabar_L.sh
-		-> Iniciar_A.sh
-		-> Recibir_A.sh
-		-> Imprimir_A.pl  
-		-> Mover_A.sh    
-		-> Reservar_A.sh
-		-> Start_A.sh
-		-> Stop_A.sh
-	-> conf
-		-> Instalar_TP.conf
-	-> log 
-	-> mae
-		-> obras.mae
+   `-> aceptados  
+	-> arribos  
+	-> bin  
+		-> Grabar_L.sh  
+		-> Iniciar_A.sh  
+		-> Recibir_A.sh  
+		-> Imprimir_A.pl   
+		-> Mover_A.sh  
+		-> Reservar_A.sh  
+		-> Start_A.sh  
+		-> Stop_A.sh  
+	-> conf  
+		-> Instalar_TP.conf  
+    -> disp
+    -> funciones
+    -> log  
+	-> mae  
+		-> obras.mae  
 		-> salas.mae
 	-> procesados
 		-> combos.dis
@@ -73,7 +74,8 @@ Además en la carpeta `tp2013g1` hay una carpeta `conf` donde está el log del i
 Primeros pasos
 --------------------
 
-1. Ejecutar el comando `Iniciar_A.sh`.
+1. Ir al directorio de instalación de los ejecutables `-bin`.
+2. Ejecutar el comando `./Iniciar_A.sh`.
 2. FIXME
 
 
