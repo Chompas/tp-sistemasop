@@ -97,8 +97,6 @@ function MOSTRAR_RESUMEN() {
 # Encabezado
 clear
 echo "TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01"
-echo " "
-echo " "
 
 ##########################################################################
 # Verifico que el comando no haya sido ejecutado en esta misma sesion
@@ -253,7 +251,6 @@ then
 	do
 		getArraySimulado 'CONFIGURACION' "${CONF[$aux]}" 'VALOR_CONF'
 		eval "${CONF[$aux]}=${VALOR_CONF}; export ${CONF[$aux]}"
-		echo "se exporto: ${CONF[$aux]} ---- ${VALOR_CONF}"
 	done
 fi
 
@@ -328,4 +325,6 @@ else
 		./Grabar_L.sh "Iniciar_A" -t e "Inicializacion de Ambiente finalizado con errores."
 	fi
 fi
+
+exit 0
 
