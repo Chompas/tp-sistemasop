@@ -90,7 +90,7 @@ directorio=$LOGDIR
 extension=$LOGEXT
 if $esLogInstalacion ; then
 	comando="Instalar_TP"
-	directorio=$CONFDIR
+	directorio="$GRUPO/$CONFDIR"
 	extension="log"
 fi
 tamanioMaximoLog=`echo "$LOGSIZE*1024" | bc`
@@ -108,18 +108,18 @@ if $debug ; then
 fi
 
 # Si el archivo no existe
-if [ ! -f $path ]; then
+if [ ! -f "$path" ]; then
 	# Si el directorio no existe
-    if [ ! -d $directorio ]; then
-		mkdir -m 775 $directorio # Creamos el directorio
+    if [ ! -d "$directorio" ]; then
+		mkdir -m 775 "$directorio" # Creamos el directorio
 	fi
 	
 	# Creamos el archivo con el encabezado
-	escribe_header_log >> $path
+	escribe_header_log >> "$path"
 fi
 
 # Si el archivo es muy grande, y no es el log de instalación, lo truncamos
-tamanioArchivo=$(stat -c '%s' $path)
+tamanioArchivo=$(stat -c '%s' "$path")
 if $debug ; then 
 	echo "tamanio archivo = "$tamanioArchivo
 fi
@@ -146,6 +146,6 @@ if $debug ; then
 fi
 
 # Finalmente... escribimos en el archivo de log!!!
-echo -e "$fecha-$usuario-$comando-$tipo-$mensajeTruncado" >> $path
+echo -e "$fecha-$usuario-$comando-$tipo-$mensajeTruncado" >> "$path"
 
 exit 0
