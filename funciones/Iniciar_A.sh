@@ -11,7 +11,7 @@ function setArraySimulado {
 	CLAVE=$2
 	VALOR=$3
 	eval "local CANTIDAD=\${#$NOMBRE_ARRAY[@]}"
-	eval "$NOMBRE_ARRAY[$CANTIDAD]=${CLAVE}:${VALOR}"
+	eval "$NOMBRE_ARRAY[$CANTIDAD]=${CLAVE}:'${VALOR}'"
 }
 
 ##########################################################################
@@ -33,7 +33,7 @@ function getArraySimulado {
 
 		if [ $VARIABLE == $CLAVE ]
 		then
-			eval "$NOMBRE_RETORNO=$VALOR"
+			eval "$NOMBRE_RETORNO='$VALOR'"
 		fi
 	done;
 }
@@ -149,12 +149,12 @@ fi
 for (( aux=0; aux<${#VARIABLES[@]}; aux++));
 do
 	VARIABLE=${VARIABLES[${aux}]}
-	LINEA_CONFIGURACION=`cat $ARCHIVO_CONFIGURACION | grep -v "^[ ]*#.*$" | grep $VARIABLE`
+	LINEA_CONFIGURACION=`cat $ARCHIVO_CONFIGURACION | grep $VARIABLE`
 	
 	if [ "$LINEA_CONFIGURACION" ]
 	then
 		VALOR=`eval echo $LINEA_CONFIGURACION | cut -d\= -f2`                
- 		setArraySimulado 'CONFIGURACION' $VARIABLE $VALOR
+ 		setArraySimulado 'CONFIGURACION' "$VARIABLE" "$VALOR"
 	else
 		ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No existe la variable $VARIABLE en la configuracion"
 	fi
@@ -166,7 +166,7 @@ getArraySimulado 'CONFIGURACION' 'GRUPO' GRUPO
 for (( aux=0; aux<${#DIRECTORIOS[@]}; aux++)); 
 do
 	DIRECTORIO=${DIRECTORIOS[$aux]}
-	LINEA_CONFIGURACION=`cat $ARCHIVO_CONFIGURACION | grep -v "^[ ]*#.*$" | grep $DIRECTORIO`
+	LINEA_CONFIGURACION=`cat $ARCHIVO_CONFIGURACION | grep $DIRECTORIO`
 	
 	VARIABLE=`echo $LINEA_CONFIGURACION | cut -d\= -f1`
 	VALOR=`eval echo $LINEA_CONFIGURACION | cut -d\= -f2`
@@ -175,7 +175,7 @@ do
 	then
 		if [ -d "$GRUPO/$VALOR" ]
 		then
-			setArraySimulado 'DIRECTORIOS_EXISTENTES' $VARIABLE $VALOR
+			setArraySimulado 'DIRECTORIOS_EXISTENTES' "$VARIABLE" "$VALOR"
 		else
 			ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No existe el directorio ${VARIABLE} en ${VALOR}"
 		fi
@@ -250,7 +250,7 @@ then
 	for ((aux=0; aux<CANT_VARIABLES; aux++));
 	do
 		getArraySimulado 'CONFIGURACION' "${CONF[$aux]}" 'VALOR_CONF'
-		eval "${CONF[$aux]}=${VALOR_CONF}; export ${CONF[$aux]}"
+		eval "${CONF[$aux]}='${VALOR_CONF}'; export ${CONF[$aux]}"
 	done
 fi
 
