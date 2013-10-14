@@ -217,8 +217,8 @@ do
    if ([ $ENACEPDIR -gt 0 ]) then
       RESERVARA_PID=`chequeaProceso Reservar_A.sh $$`
       if [ -z "$RESERVARA_PID" ]; then
-#	  bash Reservar_A.sh &
-	  x=1	  
+	  bash Reservar_A.sh &
+#	  x=1	  
       else
           echo "Reservar_A ya ejecutado bajo PID: <$RESERVARA_PID>" 
       fi
