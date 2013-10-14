@@ -27,13 +27,13 @@
 
 
 
-debug=true
+debug=false
 
 if $debug ; then
-	ACEPDIR="grupo1/aceptados"
-	PROCDIR="grupo1/procesados"
-	RECHDIR="grupo1/rechazados"
-	MAEDIR="grupo1/mae"
+	ACEPDIR="../aceptados"
+	PROCDIR="../procesados"
+	RECHDIR="../rechazados"
+	MAEDIR="../mae"
 fi
 
 function cantidadArchivos() {
@@ -68,10 +68,10 @@ function obtenerNombre() {
 	if [ $1 -eq 0 ]
 	then
 		#SALAS
-		match=$(grep "^$1;.*$" $MAEDIR/salas.mae)
+		match=$(LANG=C grep "^$1;.*$" $MAEDIR/salas.mae)
 	else
 		#OBRAS
-		match=$(grep "^$1;.*$" $MAEDIR/obras.mae)
+		match=$(LANG=C grep "^$1;.*$" $MAEDIR/obras.mae)
 	fi
 	IFS=';' read -ra CAMPOS_MAE <<< "$match"
 	# 0: id
