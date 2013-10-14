@@ -4,13 +4,13 @@
 #					#
 #	Sistemas Operativos 75.08	#
 #	Grupo: 	1			#
-#	Nombre:	StopD.sh		#
+#	Nombre:	Stop_A.sh		#
 #					#
 #########################################
 
 
 
-COMANDO="StopD.sh"
+COMANDO="Stop_A.sh"
 
 chequeaProceso(){
 
