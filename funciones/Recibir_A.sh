@@ -91,7 +91,7 @@ ESPERA=1
 SALAS="$GRUPO/$MAEDIR"'/salas.mae'
 OBRAS="$GRUPO/$MAEDIR"'/obras.mae'
 HASTA=2
-#cd cd path="Logs"
+#path="Logs"
 
 if ([ ! -d "$GRUPO/$ARRIDIR/" ]) then
 #  llamar con bash al loguear
