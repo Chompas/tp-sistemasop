@@ -91,7 +91,6 @@ SALAS="$MAEDIR"'salas.mae'
 OBRAS="$MAEDIR"'obras.mae'
 HASTA=2
 path="./Logs/"
-LOGDIR=$path
 
 if ([ ! -d "$ARRIDIR" ]) then
 #  llamar con bash al loguear
@@ -130,10 +129,10 @@ if ( [ ! -f "$OBRAS" ] ) then
 fi
 
 
-while ([ $CANT_LOOP -lt $HASTA ])
-#while ([ $CANT_LOOP ])
+#while ([ $CANT_LOOP -lt $HASTA ])
+while ([ $CANT_LOOP ])
 do
-   echo "LOOP: $CANT_LOOP"
+   bash Grabar_L.sh "$comando" -t i "Comienzo de ciclo: $CANT_LOOP"
    if ([ -d $ARRIDIR ]) then
 	IFS="
 "
@@ -214,7 +213,8 @@ do
    if ([ $ENACEPDIR -gt 0 ]) then
       RESERVARA_PID=`chequeaProceso Reservar_A.sh $$`
       if [ -z "$RESERVARA_PID" ]; then
-	  bash Reservar_A.sh &
+#	  bash Reservar_A.sh &
+	  x=1	  
       else
           echo "Reservar_A ya ejecutado bajo PID: <$RESERVARA_PID>" 
       fi
