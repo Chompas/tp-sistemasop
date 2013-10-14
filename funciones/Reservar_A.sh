@@ -145,7 +145,7 @@ function reservarEvento() {
 	
 	#Parametros:
 	# ${CAMPOS_FILENAME[0]} ${CAMPOS[1]} ${CAMPOS[2]} ${CAMPOS[5]} $numeroEvento ${CAMPOS[0]} ${CAMPOS_FILENAME[1]}
-	
+		
 	idEvento=$5
 	dispSolicitada=$4
 	index=0
@@ -200,7 +200,7 @@ function reservarEvento() {
 		fechaGrabacion=$(date +"%Y/%m/%d") #FORMATO A DETERMINAR
 		
 		nuevoRegistro="$idObra;$nombreObra;$fechaFuncion;$horaFuncion;$idSala;$nombreSala;$cantidadButacasConf;$idCombo;$refInterna;$cantidadButacasSolic;$correo;$user;$date"
-		echo $nuevoRegistro >> $PROCDIR/reservas.ok
+		echo $nuevoRegistro >> $GRUPO/$PROCDIR/reservas.ok
 		
 		cantidadOK=$((cantidadOK+1))
 		
