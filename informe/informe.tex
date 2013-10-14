@@ -1,0 +1,133 @@
+%% LyX 2.0.2 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[spanish]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\pagestyle{empty}
+\usepackage{babel}
+\addto\shorthandsspanish{\spanishdeactivate{~<>}}
+
+\usepackage{float}
+\usepackage[unicode=true,
+ bookmarks=true,bookmarksnumbered=false,bookmarksopen=false,
+ breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=false]
+ {hyperref}
+\hypersetup{pdftitle={Sistemas Operativos},
+ pdfauthor={Maria Ines Parnisari}}
+
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usepackage{fancyhdr}% http://ctan.org/pkg/fancyhdr
+\fancyhead{}% Clear all headers
+\fancyfoot{}% Clear all footers
+\fancyfoot[R]{\thepage}% Place "num page" in Right of footer
+\fancyfoot[L]{Grupo 2 - Tema A}
+\renewcommand{\headrulewidth}{0pt}% Remove header rule
+%\renewcommand{\footrulewidth}{0pt}% Remove footer rule
+\pagestyle{fancy}% Set page style to "fancy"
+
+\makeatother
+
+\begin{document}
+
+\title{{[}75.08{]} Sistemas Operativos\\
+Trabajo Práctico}
+
+\maketitle
+\tableofcontents{}
+
+\pagebreak{}
+
+
+\section{Hipótesis y Aclaraciones Globales}
+\begin{itemize}
+\item \texttt{Instalar\_TP }
+
+\begin{itemize}
+\item El log de instalación es único. Todas las instalaciones loguearán
+en el mismo archivo dentro de \texttt{\$CONFDIR}.
+\item Recibe un único parámetro con la ruta del GRUPO. Ejemplo: \texttt{./Instalar\_TP.sh
+\textquotedbl{}path/hasta/el/grupo\textquotedbl{}}.
+\end{itemize}
+\item \texttt{Grabar\_L }
+
+\begin{itemize}
+\item Recibe un parámetro opcional \texttt{-i} para invocarlo sólo desde
+el modulo de instalación.
+\item Cuando el archivo de log es muy grande se quitan todas las líneas,
+excepto las últimas 5.
+\item Fecha y hora en formato DD-MM-AA HH:MM:SS (script aparte?)
+\end{itemize}
+\item \texttt{Mover\_A }
+
+\begin{itemize}
+\item El número de secuencia \texttt{nnn} es descentralizado (no es común
+para todo el sistema). Se lo obtiene directamente del directorio de
+duplicados, por eso no es necesario guardarlo.
+\end{itemize}
+\item \texttt{Imprimir\_A}
+
+\begin{itemize}
+\item Se utiliza una estructura de hash para manejar las opciones y las
+funciones a las que están asociadas dichas opciones. 
+\item Si se especifica la opción \textquotedbl{}\texttt{t}\textquotedbl{},
+el archivo se escribe siempre, independientemente de si se especificó
+\textquotedbl{}\texttt{-w}\textquotedbl{} como argumento. El separador
+del archivo escrito es \textquotedbl{};\textquotedbl{}. 
+\end{itemize}
+\end{itemize}
+
+\section{Problemas Relevantes}
+\begin{itemize}
+\item Problema:
+\item Solución:
+\item etc
+\end{itemize}
+
+\section{Archivo README}
+
+\include{/home/maine/Desktop/tp-sistemasop/README}
+
+
+\section{Esquema de ejecución}
+
+TO DO: esquema de secuencia de los comandos. Explicar cómo se vinculan
+entre sí y qué input/output manejan.
+
+
+\section{Nuevas Funciones y/o Comandos Auxiliares}
+\begin{itemize}
+\item Nombre de la función:
+
+\begin{itemize}
+\item Utilizada por:
+\item Uso:
+\end{itemize}
+\end{itemize}
+
+\section{Nuevos Archivos}
+\begin{itemize}
+\item Nombre de archivo:
+
+\begin{itemize}
+\item Temporal/Permanente
+\item Almacenado en:
+\item Utilizado por:
+\item Uso:
+\end{itemize}
+\end{itemize}
+
+\section{Listado de Datos}
+
+TO DO: incluir SALAS, OBRAS, COMBOS, RESERVAS.
+
+
+\section{Hoja de Ruta ``Camino Feliz''}
+
+\pagebreak{}
+
+
+\section*{Apéndice}
+
+(Enunciado)
+\end{document}
