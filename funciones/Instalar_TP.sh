@@ -668,6 +668,15 @@ moverProgramasYFunciones() {
 	cp "./Mover_A.sh" "$GRUPO/$BINDIR/"
 	cp "./Imprimir_A.pl" "$GRUPO/$BINDIR/"
 	cp "./Grabar_L.sh" "$GRUPO/$BINDIR/"
+
+	chmod +x "$GRUPO/$BINDIR/Iniciar_A.sh"	
+	chmod +x "$GRUPO/$BINDIR/Recibir_A.sh"
+	chmod +x "$GRUPO/$BINDIR/Reservar_A.sh"	
+	chmod +x "$GRUPO/$BINDIR/Start_A.sh"	
+	chmod +x "$GRUPO/$BINDIR/Stop_A.sh"	
+	chmod +x "$GRUPO/$BINDIR/Mover_A.sh"
+	chmod +x "$GRUPO/$BINDIR/Imprimir_A.pl"
+	chmod +x "$GRUPO/$BINDIR/Grabar_L.sh"
 }
 
 # 21.5. Actualizar el archivo de configuración mostrando el siguiente mensaje
@@ -676,7 +685,6 @@ actualizarArchivoConfiguracion() {
 	./Grabar_L.sh -i "Instalar_TP" -t i "Actualizando la configuración del sistema"
 	
 	AM_PM=$(date +"%P")
-	AM_PM='pm' # FIXME: SACAR SI ES QUE FUNCIONA
 	AM_PM=`echo $AM_PM | sed "s/\(.\)\(.\)/\1.\2/g"`
 
 	fecha=$(date +"%d/%m/%Y %H:%M")
