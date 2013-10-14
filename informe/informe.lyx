@@ -1351,6 +1351,10 @@ El instalador buscará los archivos 'obras.mae', 'salas.mae' en la carpeta
  Además buscará el archivo 'combos.disp' en la carpeta 'disp'.
 \end_layout
 
+\begin_layout Itemize
+Cuando se graba la variable 'grupo', la graba sin la barra final.
+\end_layout
+
 \end_deeper
 \begin_layout Itemize
 
