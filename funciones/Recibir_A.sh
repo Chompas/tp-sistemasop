@@ -82,16 +82,16 @@ contieneGuion(){
 LOOP=true
 CANT_LOOP=1
 ESPERA=1
-ARRIDIR="ARRIDIR"
-ACEPDIR="ACEPDIR"
-RECHDIR="RECHDIR"
-REPODIR="REPODIR"
-MAEDIR="MAEDIR"
-GRUPO="../TPSSOOMIO"
+#ARRIDIR="ARRIDIR"
+#ACEPDIR="ACEPDIR"
+#RECHDIR="RECHDIR"
+#REPODIR="REPODIR"
+#MAEDIR="MAEDIR"
+#GRUPO="../TPSSOOMIO"
 SALAS="$GRUPO/$MAEDIR"'/salas.mae'
 OBRAS="$GRUPO/$MAEDIR"'/obras.mae'
 HASTA=2
-path="Logs"
+#cd cd path="Logs"
 
 if ([ ! -d "$GRUPO/$ARRIDIR/" ]) then
 #  llamar con bash al loguear
@@ -157,16 +157,19 @@ do
 	    XXX2=`echo "$PARAM" | cut -f 4 -d '-'`
 	    XXXVALIDO=`chequeaXXX $XXX` 
 
-#	    echo "ID: $ID"
-#            echo "MAIL: $MAIL"
-#            echo "XXX: $XXX"
-#	    echo "XXX2: $XXX2"
+	    #echo "ID: $ID"
+            #echo "MAIL: $MAIL"
+            #echo "XXX: $XXX"
+	    #echo "XXX2: $XXX2"
 	    if ([ $XXXVALIDO == "0" ] && [ ! $XXX2 ]) then
 	       #echo "SALAS: $SALAS"
 	       if ( [ -f "$SALAS" ] && [ -f "$OBRAS" ] ) then
-    	          a=`grep "^$ID;.*;.*;.*;.*;$MAIL" -n $SALAS | cut -f1 -d';'`
-    	          b=`grep "^$ID;.*;$MAIL;.*" -n $OBRAS | cut -f1 -d';'`
-    	          c=`grep "^$ID;.*;.*;$MAIL" -n $OBRAS | cut -f1 -d';'`
+    	          a=`LANG=C grep "^$ID;[^;]*;[^;]*;[^;]*;[^;]*;$MAIL" -n $SALAS | cut -f1 -d';'`
+    	          b=`LANG=C grep "^$ID;[^;]*;$MAIL;[^;]*" -n $OBRAS | cut -f1 -d';'`
+    	          c=`LANG=C grep "^$ID;[^;]*;[^;]*;$MAIL" -n $OBRAS | cut -f1 -d';'`
+		  #echo "a: $a"
+		  #echo "b: $b"
+		  #echo "c: $c"
 	          if ([ $a ] || [ $b ] || [ $c ]) then
   	             bash Mover_A.sh "$GRUPO/$ARRIDIR/$PARAM"  "$GRUPO/$ACEPDIR"
 		     bash Grabar_L.sh "$COMANDO" -t i "Archivo $PARAM enviado"  		     

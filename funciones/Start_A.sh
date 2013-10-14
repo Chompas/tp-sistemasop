@@ -10,7 +10,7 @@
 
 
 
-COMANDO="StartD.sh"
+COMANDO="Start_A.sh"
 
 chequeaProceso(){
 
@@ -83,7 +83,7 @@ chequeaDirectorios(){
 
   # Si alguna variable no esta definida error en la instalación
 
-debug=true
+debug=false
 if $debug; then
    CONFDIR="CONFDIR"
    BINDIR="BINDIR"
