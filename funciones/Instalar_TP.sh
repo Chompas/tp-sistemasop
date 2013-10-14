@@ -1,23 +1,18 @@
 #!/bin/bash
 
-if [ "$#" -ne 1 ]
-then
-	echo "Cantidad de parámetros inválida"
-	echo "Modo de uso:"
-	echo "./Instalar_TP.sh \"path/grupo/\""
-	exit 1
-fi
-
 USUARIO=$USER
 
 dir=$(readlink -f $0)
 parentdir="$(dirname "$dir")"
-
-GRUPO="`echo ${parentdir%/*}`/$1"
+GRUPO="`echo ${parentdir%/*}`"
+export GRUPO
 
 # Inicia variables por defecto
 CONFDIR="conf"
 export CONFDIR
+LOGSIZE=400
+export LOGSIZE
+# se exportan para ser utilizadas por el LOG
 
 BINDIR="bin"
 MAEDIR="mae" 
@@ -29,8 +24,7 @@ PROCDIR="proc"
 REPODIR="repo" 
 LOGDIR="log" 
 LOGEXT="log"
-LOGSIZE=400
-export LOGSIZE
+
 
 #FIXME: ver en que ruta buscarlos
 #salas.mae
@@ -51,7 +45,6 @@ grabar_l_file=0
 imprimir_a_file=0
 
 # GENERO LA CARPETA DEL SISTEMA SI ES QUE NO EXISTE
- mkdir -p "$CONFDIR"
  mkdir -p "$GRUPO/$CONFDIR"
 
 # Funciones auxiliares
@@ -138,10 +131,6 @@ verificarExistenciaComponentes(){
 		done
 		# indico si
 
-		# comprobar que esten las faltantes en alguna parte
-		# si no estan --> ERROR
-		# 
-
 		chequearPerl
 		verEstructura
 		confirmarInicio
@@ -199,20 +188,20 @@ verificarInstalacionPrevia() {
 		echo "Librería del sistema: $GRUPO/$CONFDIR"
 		./Grabar_L.sh -i "Instalar_TP" -t i "Librería del sistema: $GRUPO/$CONFDIR"
 		
-		ls $GRUPO/$CONFDIR
-		./Grabar_L.sh -i "Instalar_TP" -t i "`ls $GRUPO/$CONFDIR`"
+		ls "$GRUPO/$CONFDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "`ls "$GRUPO/$CONFDIR"`"
 
 		echo "Ejecutables: $GRUPO/$BINDIR"
 		./Grabar_L.sh -i "Instalar_TP" -t i "Ejecutables: $GRUPO/$BINDIR"
 
-		ls $GRUPO/$BINDIR
-		./Grabar_L.sh -i "Instalar_TP" -t i "`ls $GRUPO/$BINDIR`"
+		ls "$GRUPO/$BINDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "`ls "$GRUPO/$BINDIR"`"
 
 		echo "Archivos Maestros: $GRUPO/$MAEDIR"
 		./Grabar_L.sh -i "Instalar_TP" -t i "Archivos Maestros: $GRUPO/$MAEDIR"
 
-		ls $GRUPO/$MAEDIR
-		./Grabar_L.sh -i "Instalar_TP" -t i "`ls $GRUPO/$MAEDIR`"
+		ls "$GRUPO/$MAEDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "`ls "$GRUPO/$MAEDIR"`"
 
 		echo "Directorio de arribo de archivos externos: $GRUPO/$ARRIDIR"
 		./Grabar_L.sh -i "Instalar_TP" -t i "Directorio de arribo de archivos externos: $GRUPO/$ARRIDIR"
@@ -309,8 +298,8 @@ Perl Version: $chequeo_perl"
 
 # 7. Definir el directorio de instalación de los ejecutables
 definirDirectorioEjecutables() {
-	echo -n "Defina el directorio de instalación de los ejecutables ($GRUPO/bin): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los ejecutables ($GRUPO/bin): "
+	echo -n "Defina el directorio de instalación de los ejecutables ($GRUPO/$BINDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los ejecutables ($GRUPO/$BINDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -326,8 +315,8 @@ definirDirectorioEjecutables() {
 
 # 8. Definir el directorio de instalación de los archivos Maestros
 definirDirectorioMaestros() {
-	echo -n "Defina el directorio de instalación de los archivos maestros ($GRUPO/mae): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los archivos maestros ($GRUPO/mae): "
+	echo -n "Defina el directorio de instalación de los archivos maestros ($GRUPO/$MAEDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los archivos maestros ($GRUPO/$MAEDIR): "
         
 	read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -342,8 +331,8 @@ definirDirectorioMaestros() {
 
 # 9. Definir el directorio de arribo de archivos externos
 definirDirectorioArribos() {
-	echo -n "Defina el directorio de arribo de archivos externos ($GRUPO/arribos): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de arribo de archivos externos ($GRUPO/arribos): "
+	echo -n "Defina el directorio de arribo de archivos externos ($GRUPO/$ARRIDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de arribo de archivos externos ($GRUPO/$ARRIDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -403,8 +392,8 @@ verificarEspacioEnDisco() {
 
 # 12. Definir el directorio de aceptados
 definirDirectorioArribosAceptados() {
-	echo -n "Defina el directorio de grabación de los archivos externos aceptados ($GRUPO/aceptados): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos aceptados ($GRUPO/aceptados): "
+	echo -n "Defina el directorio de grabación de los archivos externos aceptados ($GRUPO/$ACEPDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos aceptados ($GRUPO/$ACEPDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -418,8 +407,8 @@ definirDirectorioArribosAceptados() {
 
 # 13. Definir el directorio de rechazados
 definirDirectorioArribosRechazados() {
-	echo -n "Defina el directorio de grabación de los archivos externos rechazados ($GRUPO/rechazados): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos rechazados ($GRUPO/rechazados): "
+	echo -n "Defina el directorio de grabación de los archivos externos rechazados ($GRUPO/$RECHDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos rechazados ($GRUPO/$RECHDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -433,8 +422,8 @@ definirDirectorioArribosRechazados() {
 
 # 14. Definir el directorio de procesados
 definirDirectorioProcesados() {
-	echo -n "Defina el directorio de grabación de los archivos procesados ($GRUPO/procesados): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos procesados ($GRUPO/procesados): "
+	echo -n "Defina el directorio de grabación de los archivos procesados ($GRUPO/$PROCDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos procesados ($GRUPO/$PROCDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -448,8 +437,8 @@ definirDirectorioProcesados() {
 
 # 15. Definir el directorio de Listados
 definirDirectorioListados() {
-	echo -n "Defina el directorio de los listados de salida ($GRUPO/repo): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de los listados de salida ($GRUPO/repo): "
+	echo -n "Defina el directorio de los listados de salida ($GRUPO/$REPODIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de los listados de salida ($GRUPO/$REPODIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -462,8 +451,8 @@ definirDirectorioListados() {
 
 #16. Definir el directorio de logs para los comandos
 definirDirectorioLogs() {
-	echo -n "Defina el directorio de logs ($GRUPO/log): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de logs ($GRUPO/log): "
+	echo -n "Defina el directorio de logs ($GRUPO/$LOGDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de logs ($GRUPO/$LOGDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -537,7 +526,8 @@ mostrarEstructura() {
 	    if [ $AUX == 'No' ];
 	    then
         	limpiarPantalla
-		definirParametros		
+		definirParametros
+		mostrarEstructura
 	    fi
 
 	    INPUT=$AUX
@@ -632,14 +622,18 @@ moverMaestros() {
 	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Archivos Maestros" 
 
 	if [ -f $OBRAS_FILE ]; then
-		cp "$OBRAS_FILE" "$GRUPO/$MAEDIR"
+		if [ ! -f "$GRUPO/$MAEDIR/$OBRAS_FILE" ]; then
+			cp "$OBRAS_FILE" "$GRUPO/$MAEDIR"
+		fi
 	else
 		echo "No se encontro el archivo de Obras"
 		./Grabar_L.sh -i "Instalar_TP" -t i "No se encontro el archivo de Obras"
 	fi
 
 	if [ -f $SALAS_FILE ]; then
-		cp "$SALAS_FILE" "$GRUPO/$MAEDIR"
+		if [ ! -f "$GRUPO/$MAEDIR/$SALAS_FILE" ]; then
+			cp "$SALAS_FILE" "$GRUPO/$MAEDIR"
+		fi
 	else
 		echo "No se encontro el archivo de Salas"
 		./Grabar_L.sh -i "Instalar_TP" -t i "No se encontro el archivo de Salas"
@@ -652,7 +646,9 @@ moverDisponibilidad() {
 	echo "Instalando Archivo de Disponibilidad"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Archivo de Disponibilidad"
 	if [ -f $COMBOS_FILE ]; then
-		cp "$COMBOS_FILE" "$GRUPO/$PROCDIR"
+		if [ ! -f "$GRUPO/$PROCDIR/$COMBOS_FILE" ]; then
+			cp "$COMBOS_FILE" "$GRUPO/$PROCDIR"
+		fi
 	else
 		echo "No se encontro el archivo de disponibilidad"
 		./Grabar_L.sh -i "Instalar_TP" -t i "No se encontro el archivo de disponibilidad"
