@@ -32,7 +32,8 @@ if [ $# -eq 3 ]; then
 	comando="$3"
 fi	
 dirOrigen="${1%/*}"
-nombreOrigen="${1##/*}"
+nombreOrigen="${1##*/}"
+
 
 # Verificar si el origen y el destino son iguales. Si este fuera el caso, no mover
 if [ $dirOrigen = $dirDestino ]; then
@@ -60,6 +61,8 @@ fi
 if [ -f $dirDestino/$nombreOrigen ]; then
 
     # Archivo duplicado
+    
+    
     
     # Creo directorio dup en caso que no exista
     if [ ! -d "$dirDestino/dup" ]; then

@@ -51,13 +51,14 @@ function horaValida() {
 }
 
 function fechaValida() {
-	#if [[ $1 =~ ^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d{2}$ ]]
-	if [[ $1 =~ ^[0-9][0-9]/[0-9][0-9]/[0-9]{4}$ ]]
-	#if [[ $1 =~ ^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$ ]]
+	IFS='/' read -ra FECHACAMPO <<< "$1"
+	fechaInvertida="${FECHACAMPO[2]}/${FECHACAMPO[1]}/${FECHACAMPO[0]}"
+	fechaRegT=`date --date="$fechaInvertida" +%s`
+	if [ -z $fechaRegT ]
 	then
-		return 0
-	else
 		return 1
+	else
+		return 0
 	fi
 }
 
@@ -255,6 +256,18 @@ cantidadNOK=0
 cant=$(cantidadArchivos $ACEPDIR)
 ./Grabar_L.sh "Reservar_A" -t i "Cantidad de Archivos en $ACEPDIR: $cant"
 
+# Me fijo si ya esta corriendo
+lockFile=/tmp/pIdGrabarLockFile
+cat /dev/null >> $lockFile
+read lastPID < $lockFile
+if [ ! -z "$lastPID" -a -d /proc/$lastPID ] 
+then
+	echo "Reservar_A ya esta corriendo"
+	exit
+else
+	echo $$ > $lockFile
+fi
+
 # Si no hay archivos
 if [ $cant = 0 ]
 then
@@ -291,7 +304,8 @@ do
 	else
 		
 		# Proceso archivo
-		while read reg
+		while read reg || [ -n "$reg" ]
+		#for reg in `cat "$f"`
 		do
 			IFS=';' read -ra CAMPOS <<< "$reg"
 			# 0: (referencia interna)
