@@ -9,7 +9,11 @@ then
 fi
 
 USUARIO=$USER
-GRUPO=$1
+
+dir=$(readlink -f $0)
+parentdir="$(dirname "$dir")"
+
+GRUPO="`echo ${parentdir%/*}`/$1"
 
 # Inicia variables por defecto
 CONFDIR="conf"
