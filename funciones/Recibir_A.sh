@@ -137,7 +137,7 @@ do
    if ([ -d "$GRUPO/$ARRIDIR" ]) then
 	IFS="
 "
-        ARCHIVOS=`ls -p $ARRIDIR | grep -v '/$'`
+        ARCHIVOS=`ls -p "$GRUPO/$ARRIDIR" | grep -v '/$'`
         for PARAM in $ARCHIVOS	
         do  
 	  
@@ -211,7 +211,7 @@ do
 
 
 
-   ENACEPDIR=`ls -1 "$ACEPDIR" | wc -l | awk '{print $1}'`
+   ENACEPDIR=`ls -1 "$GRUPO/$ACEPDIR" | wc -l | awk '{print $1}'`
 
    #echo "ENRECIBIDOS $ENACEPDIR"
    if ([ $ENACEPDIR -gt 0 ]) then

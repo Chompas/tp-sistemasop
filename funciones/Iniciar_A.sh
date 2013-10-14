@@ -322,7 +322,7 @@ else
 	then
 		echo "Demonio corriendo bajo el Nro <$PID_RECIBE>"
 		echo "Proceso de inicializacion finalizado con exito."
-		./Grabar_L.sh "Iniciar_A" -t i "-Demonio corriendo bajo el no.: <$PID_RECIBE>"
+		./Grabar_L.sh "Iniciar_A" -t i "Demonio corriendo bajo el no.: <$PID_RECIBE>"
 	else
 		echo "Proceso de inicializacion concluido sin exito. No se pudo correr el Demonio."
 		./Grabar_L.sh "Iniciar_A" -t e "Inicializacion de Ambiente finalizado con errores."
