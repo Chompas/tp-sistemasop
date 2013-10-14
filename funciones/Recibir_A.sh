@@ -3,7 +3,7 @@
 #########################################
 #					#
 #	Sistemas Operativos 75.08	#
-#	Grupo: 	4			#
+#	Grupo: 	1			#
 #	Nombre:	Recibir_A.sh		#
 #					#
 #########################################
@@ -20,7 +20,7 @@
 
 
 #source global.sh
-COMANDO="Recibir_A"
+COMANDO="Recibir_A.sh"
 
 
 chequeaProceso(){
@@ -90,47 +90,43 @@ MAEDIR="./MAEDIR/"
 SALAS="$MAEDIR"'salas.mae'
 OBRAS="$MAEDIR"'obras.mae'
 HASTA=2
-
+path="./Logs/"
+LOGDIR=$path
 
 if ([ ! -d "$ARRIDIR" ]) then
 #  llamar con bash al loguear
-#   bash Grabar_L.sh "$comando" "-se" "$ARRIDIR no existe"
-   echo Grabar_L.sh "$comando" "-se" "$ARRIDIR no existe"
+   bash Grabar_L.sh "$comando" -t se "$ARRIDIR no existe"
    exit 1
 fi
 
 if ([ ! -d "$ACEPDIR" ]) then
-#  llamar con bash al loguear
-   echo Grabar_L.sh "$comando" "-se" "$ACEPDIR no existe"
+   bash Grabar_L.sh "$comando" -t se "$ACEPDIR no existe"
    exit 1
 fi
 
 if ([ ! -d $RECHDIR ]) then
-#  llamar con bash al loguear
-   echo Grabar_L.sh "$comando" "-se" "$RECHDIR no existe"
+   bash Grabar_L.sh "$comando" -t se "$RECHDIR no existe"
    exit 1
 fi
 
 if ([ ! -d "$REPODIR" ]) then
-#  llamar con bash al loguear
-   echo Grabar_L.sh "$comando" "-se" "$REPODIR no existe"
+   bash Grabar_L.sh "$comando" -t se "$REPODIR no existe"
    exit 1
 fi
 
 if ([ ! -d "$MAEDIR" ]) then
-#  llamar con bash al loguear
-   echo Grabar_L.sh "$comando" "-se" "$ARRIDIR no existe"
+   bash Grabar_L.sh "$comando" -t se "$ARRIDIR no existe"
    exit 1
 fi
 
 if ( [ ! -f "$SALAS" ] ) then
-   echo Grabar_L.sh "$comando" '-se' "No existe el archivo maestro $SALAS"
-#   exit 1
+   bash Grabar_L.sh "$comando" -t se "No existe el archivo maestro $SALAS"
+   exit 1
 fi
 
 if ( [ ! -f "$OBRAS" ] ) then
-   echo Grabar_L.sh "$comando" -se "No existe el archivo maestro $OBRAS"
-#   exit 1
+   bash Grabar_L.sh "$comando" -t se "No existe el archivo maestro $OBRAS"
+   exit 1
 fi
 
 
@@ -161,31 +157,29 @@ do
 	    XXX2=`echo "$PARAM" | cut -f 4 -d '-'`
 	    XXXVALIDO=`chequeaXXX $XXX` 
 
-	    echo "ID: $ID"
-            echo "MAIL: $MAIL"
-            echo "XXX: $XXX"
-	    echo "XXX2: $XXX2"
+#	    echo "ID: $ID"
+#            echo "MAIL: $MAIL"
+#            echo "XXX: $XXX"
+#	    echo "XXX2: $XXX2"
 	    if ([ $XXXVALIDO == "0" ] && [ ! $XXX2 ]) then
 	       echo "SALAS: $SALAS"
 	       if ( [ -f "$SALAS" ] && [ -f "$OBRAS" ] ) then
- 	          a=0
-#    	          a=`cut -f1,6 -d';' $SALAS | grep "$ID;.*;.*;.*;.*;$MAIL" -n $SALAS | cut -f1 -d':'`
-    	          a=`grep "$ID;.*;.*;.*;.*;$MAIL" -n $SALAS | cut -f1 -d';'`
-    	          b=`grep "$ID;.*;$MAIL;.*" -n $OBRAS | cut -f1 -d';'`
-    	          c=`grep "$ID;.*;.*;$MAIL" -n $OBRAS | cut -f1 -d';'`
+    	          a=`grep "^$ID;.*;.*;.*;.*;$MAIL" -n $SALAS | cut -f1 -d';'`
+    	          b=`grep "^$ID;.*;$MAIL;.*" -n $OBRAS | cut -f1 -d';'`
+    	          c=`grep "^$ID;.*;.*;$MAIL" -n $OBRAS | cut -f1 -d';'`
 	          if ([ $a ] || [ $b ] || [ $c ]) then
-  	             echo Mover_A.sh "$ARRIDIR$PARAM"  "$PROCDIR"
-		     echo Grabar_L.sh "$COMANDO" "-I" "Archivo $PARAM enviado"  
+  	             bash Mover_A.sh "$ARRIDIR$PARAM"  "$ACEPDIR"
+		     bash Grabar_L.sh "$COMANDO" -t i "Archivo $PARAM enviado"  		     
                   else
-		     echo Mover_A.sh "$ARRIDIR$PARAM"  "$RECHDIR"
-	 	     echo LoguearW5.sh "$COMANDO" -E "$PARAM rechazado por no existir combinación de ID-MAIL en los maestros"
+#		     bash Mover_A.sh "$ARRIDIR$PARAM"  "$RECHDIR"
+	 	     bash Grabar_L.sh "$COMANDO" -t e "$PARAM rechazado por no existir combinación de ID-MAIL en los maestros"
                   fi
                else
-                 echo Grabar_L.sh "$COMANDO" "-se" "No existe el archivo maestro de salas o de obras"
+                 bash Grabar_L.sh "$COMANDO" -t se "No existe el archivo maestro de salas o de obras"
                fi
 	    else
-	      echo Mover_A.sh "$ARRIDIR$PARAM"  "$RECHDIR"	
-	      echo Grabar_L.sh "$COMANDO" -e "$PARAM es rechazado porque XXX contiene guiones o blancos"
+	      bash Mover_A.sh "$ARRIDIR$PARAM"  "$RECHDIR"	
+	      bash Grabar_L.sh "$COMANDO" -t e "$PARAM es rechazado porque XXX contiene guiones o blancos"
 	    fi
           fi
 
@@ -193,17 +187,17 @@ do
 		XXX=`echo "$PARAM" | cut -f 1 -d '.'`
 		XXXVALIDO=`chequeaXXX $XXX` 
 	    	if ([ $XXXVALIDO == "0" ]) then
-  	             echo Mover_A.sh "$ARRIDIR$PARAM"  "$REPODIR"
-		     echo Grabar_L.sh "$COMANDO" "-i" "Archivo $PARAM enviado"  
+  	             bash Mover_A.sh "$ARRIDIR$PARAM"  "$REPODIR"
+		     bash Grabar_L.sh "$COMANDO" -t i "Archivo $PARAM enviado"  
                   else
-		     echo Mover_A.sh "$ARRIDIR$PARAM"  "$RECHDIR/"
-	 	     echo Grabar_L.sh "$COMANDO" -e "$PARAM rechazado por nombre inválido"
+		     bash Mover_A.sh "$ARRIDIR$PARAM"  "$RECHDIR/"
+	 	     bash Grabar_L.sh "$COMANDO" -t e "$PARAM rechazado por nombre inválido"
 		fi 
 	  fi 
 
 	  if ([ "$VALNAME" = "incorrecto" ]) then
-             echo Mover_A.sh "$ARRIDIR$PARAM"  "$RECHDIR/"
-	     echo Grabar_L.sh "$COMANDO" "-i" "Archivo $PARAM rechazado por nombre inválido"  
+             bash Mover_A.sh "$ARRIDIR$PARAM"  "$RECHDIR/"
+	     bash Grabar_L.sh "$COMANDO" -t i "Archivo $PARAM rechazado por nombre inválido"  
 	  fi 
         done
    else
@@ -214,16 +208,15 @@ do
 
 
 
-   ENRECIBIDOS=`ls -1 "$ACEPDIR" | wc -l | awk '{print $1}'`
+   ENACEPDIR=`ls -1 "$ACEPDIR" | wc -l | awk '{print $1}'`
 
-   #echo "ENRECIBIDOS $ENRECIBIDOS"
-   if ([ $ENRECIBIDOS -gt 0 ]) then
+   #echo "ENRECIBIDOS $ENACEPDIR"
+   if ([ $ENACEPDIR -gt 0 ]) then
       RESERVARA_PID=`chequeaProceso Reservar_A.sh $$`
       if [ -z "$RESERVARA_PID" ]; then
 	  bash Reservar_A.sh &
       else
           echo "Reservar_A ya ejecutado bajo PID: <$RESERVARA_PID>" 
-#          exit 1
       fi
    fi
 
