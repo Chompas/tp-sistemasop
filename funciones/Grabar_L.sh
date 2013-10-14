@@ -86,8 +86,8 @@ mensaje="$2"
 
 # ------- FIN PROCESAMIENTO DE ARGUMENTOS -------- 
 
-directorio=$LOGDIR
-extension=$LOGEXT
+directorio="$LOGDIR"
+extension="$LOGEXT"
 if $esLogInstalacion ; then
 	comando="Instalar_TP"
 	directorio="$GRUPO/$CONFDIR"
@@ -126,10 +126,10 @@ fi
 if [ "$tamanioArchivo" -ge "$tamanioMaximoLog" ]; then
 	if ! $esLogInstalacion ; then
 		escribe_header_log >> ${path}_tmp
-		tail --lines=$cantidadLineasADejar $path >> ${path}_tmp
+		tail --lines=$cantidadLineasADejar "$path" >> ${path}_tmp
 		rm $path
-		mv ${path}_tmp $path
-		echo "Log Excedido" >> $path
+		mv ${path}_tmp "$path"
+		echo "Log Excedido" >> "$path"
 	fi
 fi
 

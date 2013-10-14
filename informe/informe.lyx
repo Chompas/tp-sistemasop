@@ -1495,7 +1495,7 @@ Esquema de ejecución
 \end_layout
 
 \begin_layout Standard
-TO DO: esquema de secuencia de los comandos.
+FIXME: esquema de secuencia de los comandos.
  Explicar cómo se vinculan entre sí y qué input/output manejan.
 \end_layout
 
@@ -1503,20 +1503,10 @@ TO DO: esquema de secuencia de los comandos.
 Nuevas Funciones y/o Comandos Auxiliares
 \end_layout
 
-\begin_layout Itemize
-Nombre de la función:
+\begin_layout Standard
+Ninguno.
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-Utilizada por:
-\end_layout
-
-\begin_layout Itemize
-Uso:
-\end_layout
-
-\end_deeper
 \begin_layout Section
 Nuevos Archivos
 \end_layout
@@ -1548,7 +1538,7 @@ Listado de Datos
 \end_layout
 
 \begin_layout Standard
-TO DO: incluir SALAS, OBRAS, COMBOS, RESERVAS.
+FIXME: incluir SALAS, OBRAS, COMBOS, RESERVAS.
 \end_layout
 
 \begin_layout Section
@@ -1561,6 +1551,10 @@ Camino Feliz
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+FIXME
 \end_layout
 
 \begin_layout Standard

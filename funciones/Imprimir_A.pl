@@ -11,6 +11,9 @@ if ($debug == 0)
 	$REPODIR = ".";
 }
 
+# Archivo que se usa para no permitir mas de una instancia en ejecucion del programa
+$fnamepid="/tmp/Imprimir_A.PID";
+
 # Archivos de input
 $in_salas = "$MAEDIR/"."salas.mae";	#id (n° par);nombre;capacidad;direccion;telefono;email
 $in_obras = "$MAEDIR/"."obras.mae";	#id (n° impar);nombre;email produccion general;email produccion ejecutiva
@@ -19,8 +22,7 @@ $in_reservas_no_confirmadas = "$PROCDIR/"."reservas.nok";   #ref int;fecha;hora;
 $in_disponibilidad = "$PROCDIR/"."combos.dis"; #id combo;id obra;fecha;hora;id sala;butacas habilitadas;butacas disp;requisitos especiales
 
 sub end {
-    close ($fpid);
-    unlink "Imprimir_A.PID" or warn "ERROR: no se pudo borrar Imprimir_A.PID.";
+    unlink $fpid;
 }
 
 # ---------- INICIO COMPROBACIONES DE RUTINA ------------
@@ -30,13 +32,22 @@ if ($INICIAR_A_EJECUTADO_EXITOSAMENTE == 1)
 	exit(1);
 }
 
-if (-e "Imprimir_A.PID") 
+if (-e "$fnamepid") 
 {
-	print "ERROR: hay otra instancia del script en ejecución. \n";
-	exit(1);
+	open ($fpid, "<$fnamepid");
+	$pid_existente=<$fpid>;
+	$cantidad=`ps ax | grep -c "^ $pid_existente"`;
+	close ($fpid);
+	if ($cantidad >= 1)
+	{
+		print "ERROR: hay otra instancia del script en ejecución. \n";
+		exit(1);
+	}
 }
 
-open ($fpid, '>', "Imprimir_A.PID");
+open ($fpid, ">$fnamepid");
+print $fpid $$;		# Escribo el pid del proceso en el archivo
+close ($fpid);
 
 # ---------- FIN COMPROBACIONES DE RUTINA ------------
 
@@ -58,13 +69,13 @@ elsif (($num_argv == 2) && ($ARGV[0] eq "-w"))
 	if ( exists($opciones{$ARGV[1]}) )	#Si existe la opcion
 	{
 		&{$opciones{$ARGV[1]}};		#Llamo a la funcion correspondiente
-		&end;
+		&end;exit(0);
 	}
 }
 elsif (($num_argv == 1) && (exists($opciones{$ARGV[0]}))) 
 {
 	&{$opciones{$ARGV[0]}};
-	&end;
+	&end;exit(0);
 }
 else {
 	print "ERROR: parámetros incorrectos.\n";
