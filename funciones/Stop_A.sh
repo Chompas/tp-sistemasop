@@ -10,7 +10,7 @@
 
 
 
-COMANDO="StopD.sh"
+COMANDO="Stop_A.sh"
 
 chequeaProceso(){
 

@@ -1,26 +1,16 @@
 TP
 ===================
-**Materia**: [75.08] Sistemas Operativos
-
-**Fecha**: Segundo Cuatrimestre de 2013
-
-**Grupo**: 1
-
-**Tema**: "A"
-
-**Integrantes**:
-
-* Lucas Tarcetti
-
-* Sergio Zelechowsky
-
-* Maria  Ines Parnisari
-
-* Javier Lara
-
-* Pablo Castarataro
-
-* Emiliano Viscarra
+**Materia**: [75.08] Sistemas Operativos  
+**Fecha**: Segundo Cuatrimestre de 2013  
+**Grupo**: 1  
+**Tema**: "A"  
+**Integrantes**:  
+   * Lucas Tarcetti  
+   * Sergio Zelechowsky  
+   * Maria Ines Parnisari  
+   * Javier Lara  
+   * Pablo Castarataro  
+   * Emiliano Viscarra
 
 
 Requisitos de instalación
