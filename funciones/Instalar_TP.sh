@@ -1,19 +1,17 @@
 #!/bin/bash
 
-if [ "$#" -ne 1 ]
-then
-	echo "Cantidad de parámetros inválida"
-	echo "Modo de uso:"
-	echo "./Instalar_TP.sh \"path/grupo/\""
-	exit 1
-fi
-
 USUARIO=$USER
-GRUPO=$1
+
+dir=$(readlink -f $0)
+parentdir="$(dirname "$dir")"
+GRUPO="`echo ${parentdir%/*}`"
 
 # Inicia variables por defecto
 CONFDIR="conf"
 export CONFDIR
+LOGSIZE=400
+export LOGSIZE
+# se exportan para ser utilizadas por el LOG
 
 BINDIR="bin"
 MAEDIR="mae" 
@@ -25,8 +23,7 @@ PROCDIR="proc"
 REPODIR="repo" 
 LOGDIR="log" 
 LOGEXT="log"
-LOGSIZE=400
-export LOGSIZE
+
 
 #FIXME: ver en que ruta buscarlos
 #salas.mae
@@ -134,10 +131,6 @@ verificarExistenciaComponentes(){
 		done
 		# indico si
 
-		# comprobar que esten las faltantes en alguna parte
-		# si no estan --> ERROR
-		# 
-
 		chequearPerl
 		verEstructura
 		confirmarInicio
@@ -195,20 +188,20 @@ verificarInstalacionPrevia() {
 		echo "Librería del sistema: $GRUPO/$CONFDIR"
 		./Grabar_L.sh -i "Instalar_TP" -t i "Librería del sistema: $GRUPO/$CONFDIR"
 		
-		ls $GRUPO/$CONFDIR
-		./Grabar_L.sh -i "Instalar_TP" -t i "`ls $GRUPO/$CONFDIR`"
+		ls "$GRUPO/$CONFDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "`ls "$GRUPO/$CONFDIR"`"
 
 		echo "Ejecutables: $GRUPO/$BINDIR"
 		./Grabar_L.sh -i "Instalar_TP" -t i "Ejecutables: $GRUPO/$BINDIR"
 
-		ls $GRUPO/$BINDIR
-		./Grabar_L.sh -i "Instalar_TP" -t i "`ls $GRUPO/$BINDIR`"
+		ls "$GRUPO/$BINDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "`ls "$GRUPO/$BINDIR"`"
 
 		echo "Archivos Maestros: $GRUPO/$MAEDIR"
 		./Grabar_L.sh -i "Instalar_TP" -t i "Archivos Maestros: $GRUPO/$MAEDIR"
 
-		ls $GRUPO/$MAEDIR
-		./Grabar_L.sh -i "Instalar_TP" -t i "`ls $GRUPO/$MAEDIR`"
+		ls "$GRUPO/$MAEDIR"
+		./Grabar_L.sh -i "Instalar_TP" -t i "`ls "$GRUPO/$MAEDIR"`"
 
 		echo "Directorio de arribo de archivos externos: $GRUPO/$ARRIDIR"
 		./Grabar_L.sh -i "Instalar_TP" -t i "Directorio de arribo de archivos externos: $GRUPO/$ARRIDIR"
@@ -533,7 +526,8 @@ mostrarEstructura() {
 	    if [ $AUX == 'No' ];
 	    then
         	limpiarPantalla
-		definirParametros		
+		definirParametros
+		mostrarEstructura
 	    fi
 
 	    INPUT=$AUX
@@ -628,14 +622,18 @@ moverMaestros() {
 	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Archivos Maestros" 
 
 	if [ -f $OBRAS_FILE ]; then
-		cp "$OBRAS_FILE" "$GRUPO/$MAEDIR"
+		if [ ! -f "$GRUPO/$MAEDIR/$OBRAS_FILE" ]; then
+			cp "$OBRAS_FILE" "$GRUPO/$MAEDIR"
+		fi
 	else
 		echo "No se encontro el archivo de Obras"
 		./Grabar_L.sh -i "Instalar_TP" -t i "No se encontro el archivo de Obras"
 	fi
 
 	if [ -f $SALAS_FILE ]; then
-		cp "$SALAS_FILE" "$GRUPO/$MAEDIR"
+		if [ ! -f "$GRUPO/$MAEDIR/$SALAS_FILE" ]; then
+			cp "$SALAS_FILE" "$GRUPO/$MAEDIR"
+		fi
 	else
 		echo "No se encontro el archivo de Salas"
 		./Grabar_L.sh -i "Instalar_TP" -t i "No se encontro el archivo de Salas"
@@ -648,7 +646,9 @@ moverDisponibilidad() {
 	echo "Instalando Archivo de Disponibilidad"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Archivo de Disponibilidad"
 	if [ -f $COMBOS_FILE ]; then
-		cp "$COMBOS_FILE" "$GRUPO/$PROCDIR"
+		if [ ! -f "$GRUPO/$PROCDIR/$COMBOS_FILE" ]; then
+			cp "$COMBOS_FILE" "$GRUPO/$PROCDIR"
+		fi
 	else
 		echo "No se encontro el archivo de disponibilidad"
 		./Grabar_L.sh -i "Instalar_TP" -t i "No se encontro el archivo de disponibilidad"
