@@ -62,15 +62,15 @@ function getArraySimuladoClaves {
 function MOSTRAR_RESUMEN() {
 	getArraySimulado 'CONFIGURACION' CONFDIR 'CONFDIR'
 	echo "- Libreria del Sistema: ${CONFDIR}"
-	ls -1 ${CONFDIR}
+	ls -1 "$GRUPO/${CONFDIR}"
 	
 	getArraySimulado 'CONFIGURACION' BINDIR 'BINDIR'
 	echo "- Ejecutables: ${BINDIR}"
-	ls -1 ${BINDIR}
+	ls -1 "$GRUPO/${BINDIR}"
 	
 	getArraySimulado 'CONFIGURACION' MAEDIR 'MAEDIR'
 	echo "- Archivos maestros: ${MAEDIR}"
-	ls -1 ${MAEDIR}
+	ls -1 "$GRUPO/${MAEDIR}"
 
 	getArraySimulado 'CONFIGURACION' ARRIDIR 'ARRIDIR'
 	echo "- Directorio de arribo de archivos externos: ${ARRIDIR}"
@@ -122,46 +122,29 @@ VARIABLES_FALTANTES=( )
 
 # Archivo de configuracion
 NUMERO_GRUPO="01"
-ARCHIVO_CONFIGURACION="${HOME}/.grupo${NUMERO_GRUPO}/Instalar_TP.conf"
+ARCHIVO_CONFIGURACION="../conf/Instalar_TP.conf"
 
 # Arrays asociativos para futura validación de instalación exitosa
 DIRECTORIOS=( 'CONFDIR' 'BINDIR' 'MAEDIR' 'ARRIDIR' 'ACEPDIR' 'RECHDIR' 'REPODIR' 'PROCDIR' 'LOGDIR' )
 DIRECTORIOS_ESCRITURA=( 'CONFDIR' 'ARRIDIR' 'ACEPDIR' 'RECHDIR' 'REPODIR' 'PROCDIR' 'LOGDIR' )
 VARIABLES=('GRUPO' 'CONFDIR' 'BINDIR' 'MAEDIR' 'ARRIDIR' 'ACEPDIR' 'RECHDIR' 'REPODIR' 'PROCDIR' 'LOGDIR' 'LOGEXT' 'LOGSIZE' 'DATASIZE')
-ARCHIVOS_MAESTROS=( 'salas' 'obras' )
+ARCHIVOS_MAESTROS=( 'salas.mae' 'obras.mae' )
 COMANDOS_SISTEMA=( 'Grabar_L.sh' 'Mover_A.sh' 'Recibir_A.sh' 'Start_A.sh' 'Stop_A.sh' 'Reservar_A.sh' 'Imprimir_A.pl' )
 
 #########################################################################
 # Validacion de existencia del archivo de configuracion
 if [ ! -f "$ARCHIVO_CONFIGURACION" ]
 then
-	./Grabar_L.sh "Iniciar_A" -t e "No se pudo iniciar el entorno. No se hallo el archivo de configuracion."
+	#exporto unas variables necesarias para el correcto funcionamiento del Grabar en esta instancia
+	CONFDIR="conf"
+	LOGSIZE=400
+	export CONFDIR	
+	export LOGSIZE
+
+	./Grabar_L.sh -i "Iniciar_A" -t e "No se pudo iniciar el entorno. No se hallo el archivo de configuracion."
 	echo "No se pudo encontrar el archivo de configuracion"
 	exit 1
 fi
-
-#########################################################################
-# Verificacion de existencia de los directorios
-for (( aux=0; aux<${#DIRECTORIOS[@]}; aux++)); 
-do
-	DIRECTORIO=${DIRECTORIOS[$aux]}
-	LINEA_CONFIGURACION=`cat $ARCHIVO_CONFIGURACION | grep -v "^[ ]*#.*$" | grep $DIRECTORIO`
-	
-	VARIABLE=`echo $LINEA_CONFIGURACION | cut -d\= -f1`
-	VALOR=`eval echo $LINEA_CONFIGURACION | cut -d\= -f2`
-
-	if [ "$LINEA_CONFIGURACION" ]
-	then
-		if [ -d $VALOR ]
-		then
-			setArraySimulado 'DIRECTORIOS_EXISTENTES' $VARIABLE $VALOR
-		else
-			ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No existe el directorio ${VARIABLE} en ${VALOR}"
-		fi
-	else
-	    VARIABLES_FALTANTES[${#VARIABLES_FALTANTES[@]}]=$DIRECTORIO	
-	fi
-done
 
 ##########################################################################
 # Chequeo variables de la configuracion
@@ -180,13 +163,37 @@ do
 done
 
 #########################################################################
+# Verificacion de existencia de los directorios
+getArraySimulado 'CONFIGURACION' 'GRUPO' GRUPO
+for (( aux=0; aux<${#DIRECTORIOS[@]}; aux++)); 
+do
+	DIRECTORIO=${DIRECTORIOS[$aux]}
+	LINEA_CONFIGURACION=`cat $ARCHIVO_CONFIGURACION | grep -v "^[ ]*#.*$" | grep $DIRECTORIO`
+	
+	VARIABLE=`echo $LINEA_CONFIGURACION | cut -d\= -f1`
+	VALOR=`eval echo $LINEA_CONFIGURACION | cut -d\= -f2`
+
+	if [ "$LINEA_CONFIGURACION" ]
+	then
+		if [ -d "$GRUPO/$VALOR" ]
+		then
+			setArraySimulado 'DIRECTORIOS_EXISTENTES' $VARIABLE $VALOR
+		else
+			ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No existe el directorio ${VARIABLE} en ${VALOR}"
+		fi
+	else
+	    VARIABLES_FALTANTES[${#VARIABLES_FALTANTES[@]}]=$DIRECTORIO	
+	fi
+done
+
+#########################################################################
 # Chequeo permisos de escritura en directorios de salida
 for (( aux=0; aux<${#DIRECTORIOS_ESCRITURA[@]}; aux++));      
 do
 	getArraySimulado 'DIRECTORIOS_EXISTENTES' ${DIRECTORIOS_ESCRITURA[$aux]} 'DIRECTORIO'
-	if [ -d $DIRECTORIO ]
+	if [ -d "$GRUPO/$DIRECTORIO" ]
 	then
-		if [ ! -w $DIRECTORIO ]
+		if [ ! -w "$GRUPO/$DIRECTORIO" ]
 		then
 			ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No hay permisos de escritura en el directorio $DIRECTORIO"
 		fi
@@ -196,17 +203,17 @@ done
 #########################################################################
 # Chequeo permisos de archivos
 getArraySimulado 'CONFIGURACION' 'MAEDIR' DIRECTORIO_MAESTROS
-if [ -d $DIRECTORIO_MAESTROS ]
+if [ -d "$GRUPO/$DIRECTORIO_MAESTROS" ]
 then
         for ((aux=0; aux<${#ARCHIVOS_MAESTROS[@]}; aux++));
         do
-		if [ ! -f ${DIRECTORIO_MAESTROS}"/"${ARCHIVOS_MAESTROS[${aux}]} ]
+		if [ ! -f "$GRUPO/${DIRECTORIO_MAESTROS}/${ARCHIVOS_MAESTROS[${aux}]}" ]
                 then
-                        ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No existe el archivo maestro: ${DIRECTORIO_MAESTROS}${ARCHIVOS_MAESTROS[${aux}]}"
+                        ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No existe el archivo maestro: ${DIRECTORIO_MAESTROS}/${ARCHIVOS_MAESTROS[${aux}]}"
 
-		elif [ ! -r ${DIRECTORIO_MAESTROS}"/"${ARCHIVOS_MAESTROS[${aux}]} ]
+		elif [ ! -r "$GRUPO/${DIRECTORIO_MAESTROS}/${ARCHIVOS_MAESTROS[${aux}]}" ]
                 then
-                        ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No hay permisos sobre el archivo maestro: ${DIRECTORIO_MAESTROS}${ARCHIVOS_MAESTROS[${aux}]}"
+                        ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No hay permisos sobre el archivo maestro: ${DIRECTORIO_MAESTROS}/${ARCHIVOS_MAESTROS[${aux}]}"
                 fi
         done
 fi
@@ -215,15 +222,15 @@ fi
 # Verificacion de exitencias de los comandos
 
 getArraySimulado 'CONFIGURACION' 'BINDIR' DIRECTORIO_EJECUTABLES
-if [ -d $DIRECTORIO_EJECUTABLES ]
+if [ -d "$GRUPO/$DIRECTORIO_EJECUTABLES" ]
 then
 	for ((aux=0; aux<${#COMANDOS_SISTEMA[@]}; aux++));
 	do
-		if [ ! -f ${DIRECTORIO_EJECUTABLES}"/"${COMANDOS_SISTEMA[${aux}]} ]
+		if [ ! -f "$GRUPO/${DIRECTORIO_EJECUTABLES}/${COMANDOS_SISTEMA[${aux}]}" ]
 		then
-			ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No existe el comando: ${DIRECTORIO_EJECUTABLES}${COMANDOS_SISTEMA[${aux}]}"
+			ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No existe el comando: ${DIRECTORIO_EJECUTABLES}/${COMANDOS_SISTEMA[${aux}]}"
 		
-		elif [ ! -x ${DIRECTORIO_EJECUTABLES}"/"${COMANDOS_SISTEMA[${aux}]} ]
+		elif [ ! -x "$GRUPO/${DIRECTORIO_EJECUTABLES}/${COMANDOS_SISTEMA[${aux}]}" ]
 		then	
 			ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No hay permisos de ejecucion del comando: ${DIRECTORIO_EJECUTABLES}/${COMANDOS_SISTEMA[${aux}]}"
 		fi
@@ -234,9 +241,20 @@ fi
 # Seteo variable PATH, solo si se encuentra en la configuracion
 
 getArraySimulado 'CONFIGURACION' 'BINDIR' DIRECTORIO_EJECUTABLES
-if [ -d ${DIRECTORIO_EJECUTABLES} ] 
+if [ -d "$GRUPO/${DIRECTORIO_EJECUTABLES}" ] 
 then
-	PATH=$PATH:${DIRECTORIO_EJECUTABLES}
+	PATH=$PATH:"$GRUPO/${DIRECTORIO_EJECUTABLES}"
+
+	CONF=( )
+	getArraySimuladoClaves 'CONFIGURACION' CONF
+
+	CANT_VARIABLES=${#CONF[@]}
+	for ((aux=0; aux<CANT_VARIABLES; aux++));
+	do
+		getArraySimulado 'CONFIGURACION' "${CONF[$aux]}" 'VALOR_CONF'
+		eval "${CONF[$aux]}=${VALOR_CONF}; export ${CONF[$aux]}"
+		echo "se exporto: ${CONF[$aux]} ---- ${VALOR_CONF}"
+	done
 fi
 
 ##########################################################################
@@ -253,20 +271,20 @@ then
 	done
 
 	getArraySimulado 'CONFIGURACION' 'BINDIR' DIRECTORIO_EJECUTABLES
-	if [ -d DIRECTORIO_EJECUTABLES ]
+	if [ -d "$GRUPO/$DIRECTORIO_EJECUTABLES" ]
 	then
 		echo " "
 		echo "Componentes existentes:"
 		echo "- Ejecutables:"
-		ls -1 ${DIRECTORIO_EJECUTABLES}
+		ls -1 "$GRUPO/${DIRECTORIO_EJECUTABLES}"
 	fi
 
 	getArraySimulado 'CONFIGURACION' 'MAEDIR' DIRECTORIO_MAESTROS
-	if [ -d $DIRECTORIO_MAESTROS ] 
+	if [ -d "$GRUPO/$DIRECTORIO_MAESTROS" ] 
 	then
 		echo " "
 		echo "- Archivos Maestros:"
-		ls -1 ${DIRECTORIO_MAESTROS}	
+		ls -1 "$GRUPO/${DIRECTORIO_MAESTROS}"		
 	fi
 	
 	exit 3
@@ -289,17 +307,7 @@ then
 	echo "El proceso Recibir_A ya se esta ejecutando con el PID $PID_RECIBE"
 	./Grabar_L.sh "Iniciar_A" -t e "No se puede arrancar el demonio. Ya existe otro demonio en ejecucion."
 
-else
-	CONF=( )
-	getArraySimuladoClaves 'CONFIGURACION' CONF
-
-	CANT_VARIABLES=${#CONF[@]}
-	for ((aux=0; aux<CANT_VARIABLES; aux++));
-	do
-		getArraySimulado 'CONFIGURACION' "${CONF[$aux]}" 'VALOR_CONF'
-		eval "${CONF[$aux]}=${VALOR_CONF}; export ${CONF[$aux]}"
-	done
-	
+else	
 	# Flag de ejecucion de Iniciar_A exitoso, para chequeo en scripts subsiguientes, de ser necesario
 	INICIAR_A_EJECUTADO_EXITOSAMENTE=1
 	export INICIAR_A_EJECUTADO_EXITOSAMENTE
@@ -309,15 +317,14 @@ else
 	sleep 0.4 
         
 	PID_RECIBE=$(ps ax | grep Recibir_A | grep -v Grabar_L | grep -v grep | awk '{print $1}')
-	let pid=$PID_RECIBE
 
-	if [ $pid -gt 0 ]
+	if [ ! -z "$PID_RECIBE" ]
 	then
 		echo "Demonio corriendo bajo el Nro <$PID_RECIBE>"
 		echo "Proceso de inicializacion finalizado con exito."
 		./Grabar_L.sh "Iniciar_A" -t i "-Demonio corriendo bajo el no.: <$PID_RECIBE>"
 	else
-		echo "Proceso de inicializacion concluido sin exito."
+		echo "Proceso de inicializacion concluido sin exito. No se pudo correr el Demonio."
 		./Grabar_L.sh "Iniciar_A" -t e "Inicializacion de Ambiente finalizado con errores."
 	fi
 fi
