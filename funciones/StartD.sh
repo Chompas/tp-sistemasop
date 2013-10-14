@@ -3,14 +3,14 @@
 #########################################
 #					#
 #	Sistemas Operativos 75.08	#
-#	Grupo: 	4			#
+#	Grupo: 	1			#
 #	Nombre:	startD.sh		#
 #					#
 #########################################
 
 
 
-COMANDO="StartD"
+COMANDO="StartD.sh"
 
 chequeaProceso(){
 
@@ -90,13 +90,13 @@ chequeaDirectorios(){
   #CHEQUEAR INSTALACION
 
   if [ `chequeaDirectorios` -eq 1 ] ; then
-    echo Grabar_L.sh "$COMANDO" "SE" "Directorios necesarios no creados en la instalacion o no disponibles" 
+    bash Grabar_L.sh "$COMANDO" -t se "Directorios necesarios no creados en la instalacion o no disponibles" 
     echo "Error: Directorios necesarios no creados en la instalacion o no disponibles"
     exit 1
   fi
   
   if [ `chequeaArchivosMaestros` -eq 1 ] ; then
-    echo Grabar_L.sh "$COMANDO" "SE" "Archivos maestros no accesibles/disponibles"
+    bash Grabar_L.sh "$COMANDO" -t se "Archivos maestros no accesibles/disponibles"
     echo "Error: Archivos maestros no accesibles/disponibles"
     exit 1
   fi
@@ -106,9 +106,9 @@ chequeaDirectorios(){
   if [ -z "$RECIBIR_PID" ]; then
   
     bash Recibir_A.sh &
-    echo Recibir_A.sh "$COMANDO" "I" "Demonio Recibir_A corriendo bajo el numero de proceso: <`chequeaProceso Recibir_A.sh $$`>" 
+    echo Grabar_L.sh "$COMANDO" -t i "Demonio Recibir_A corriendo bajo el numero de proceso: <`chequeaProceso Recibir_A.sh $$`>" 
   else
-    echo Recibir_A.sh "$COMANDO" "E" "Demonio Recibir_A ya ejecutado bajo PID: <`chequeaProceso Recibir_A.sh $$`>" 
+    bash Grabar_L.sh "$COMANDO" -t e "Demonio Recibir_A ya ejecutado bajo PID: <`chequeaProceso Recibir_A.sh $$`>" 
     echo "Error: Demonio Recibir_A ya ejecutado bajo PID: <`chequeaProceso Recibir_A.sh $$`>"
     exit 1
   fi
