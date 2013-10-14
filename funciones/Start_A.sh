@@ -4,13 +4,13 @@
 #					#
 #	Sistemas Operativos 75.08	#
 #	Grupo: 	1			#
-#	Nombre:	Start_A.sh		#
+#	Nombre:	startD.sh		#
 #					#
 #########################################
 
 
 
-COMANDO="Start_A.sh"
+COMANDO="StartD.sh"
 
 chequeaProceso(){
 
