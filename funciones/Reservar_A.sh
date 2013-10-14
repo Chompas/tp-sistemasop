@@ -68,10 +68,10 @@ function obtenerNombre() {
 	if [ $1 -eq 0 ]
 	then
 		#SALAS
-		match=$(LANG=C grep "^$1;.*$" $MAEDIR/salas.mae)
+		match=$(LANG=C grep "^$1;.*$" "$GRUPO/$MAEDIR/salas.mae")
 	else
 		#OBRAS
-		match=$(LANG=C grep "^$1;.*$" $MAEDIR/obras.mae)
+		match=$(LANG=C grep "^$1;.*$" "$GRUPO/$MAEDIR/obras.mae")
 	fi
 	IFS=';' read -ra CAMPOS_MAE <<< "$match"
 	# 0: id
@@ -88,11 +88,11 @@ function existeEvento() {
 	if [ $rem -eq 0 ]
 	then
 		#SALAS
-		match=$(grep "^[^;]*;[^;]*;$2;$3;$1;.*$" $PROCDIR/combos.dis)
+		match=$(grep "^[^;]*;[^;]*;$2;$3;$1;.*$" "$GRUPO/$PROCDIR/combos.dis")
 		idSala=$filename
 	else
 		#OBRAS
-		match=$(grep "^[^;]*;$1;$2;$3;.*$" $PROCDIR/combos.dis)
+		match=$(grep "^[^;]*;$1;$2;$3;.*$" "$GRUPO/$PROCDIR/combos.dis")
 		idObra=$filename
 	fi
 		
@@ -237,7 +237,7 @@ function rechazar() {
     date=$(date +"%Y/%m/%d") #FORMATO A DETERMINAR
     
     nuevoRegistro="$refInt;$fecha;$hora;$fila;$butaca;$cantSolicitada;$seccion;$motivo;$sala;$obra;$correo;$user;$date"
-    echo $nuevoRegistro >> $PROCDIR/reservas.nok
+    echo $nuevoRegistro >> "$GRUPO/$PROCDIR/reservas.nok"
         
     cantidadNOK=$((cantidadNOK+1))
     
@@ -255,8 +255,8 @@ cantidadNOK=0
 
 # 1. Inicializar log
 ./Grabar_L.sh "Reservar_A" -t i "Inicio de Reservar"
-cant=$(cantidadArchivos $ACEPDIR)
-./Grabar_L.sh "Reservar_A" -t i "Cantidad de Archivos en $ACEPDIR: $cant"
+cant=$(cantidadArchivos "$GRUPO/$ACEPDIR")
+./Grabar_L.sh "Reservar_A" -t i "Cantidad de Archivos en $GRUPO/$ACEPDIR: $cant"
 
 # Me fijo si ya esta corriendo
 lockFile=/tmp/pIdGrabarLockFile
@@ -279,7 +279,7 @@ fi
 
 
 # Recorro archivos a procesar
-ACEPFILES="$ACEPDIR/*"
+ACEPFILES="$GRUPO/$ACEPDIR/*"
 # 2. Procesar Un Archivo
 for f in $ACEPFILES
 do
@@ -293,16 +293,16 @@ do
 	# Verifico que el archivo no fue procesado
 	# 3. Verificar que no sea un archivo duplicado
 	
-	if [ -f $PROCDIR/${f##*/} ]
+	if [ -f "$GRUPO/$PROCDIR/${f##*/}" ]
 	then
 		# Archivo ya existe. Lo rechazo
 		./Grabar_L.sh "Reservar_A" -t w "Se rechaza el archivo por estar DUPLICADO"
-		./Mover_A.sh $f $RECHDIR "Reservar_A"
+		./Mover_A.sh $f "$GRUPO/$RECHDIR" "Reservar_A"
 	elif [ ! -s $f ]
 	then
 		# 4. Archivo vacio. Lo rechazo
 		./Grabar_L.sh "Reservar_A" -t w "Se rechaza el archivo por estar VACIO"
-		./Mover_A.sh $f $RECHDIR "Reservar_A"
+		./Mover_A.sh $f "$GRUPO/$RECHDIR" "Reservar_A"
 	else
 		
 		# Proceso archivo
@@ -361,7 +361,7 @@ do
 				fi
 			fi
 		done < $f
-		./Mover_A.sh $f $PROCDIR "Reservar_A"
+		./Mover_A.sh $f "$GRUPO/$PROCDIR" "Reservar_A"
 	fi
 done
 
@@ -372,7 +372,7 @@ index=0
 for id in "${IDS_FUNCIONES[@]}"
 do
 	dispId=${DISP_FUNCIONES[$index]}
-	sed -i "s-\(^$id;[^;]*;[^;]*;[^;]*;[^;]*;[^;]*;\)[0-9]*\(;[^;]*$\)-\1$dispId\2-g" $PROCDIR/combos.dis
+	sed -i "s-\(^$id;[^;]*;[^;]*;[^;]*;[^;]*;[^;]*;\)[0-9]*\(;[^;]*$\)-\1$dispId\2-g" "$GRUPO/$PROCDIR/combos.dis"
 	
 index=$(expr $index + 1)
 done
