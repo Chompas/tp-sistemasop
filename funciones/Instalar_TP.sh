@@ -5,6 +5,7 @@ USUARIO=$USER
 dir=$(readlink -f $0)
 parentdir="$(dirname "$dir")"
 GRUPO="`echo ${parentdir%/*}`"
+export GRUPO
 
 # Inicia variables por defecto
 CONFDIR="conf"
@@ -44,7 +45,6 @@ grabar_l_file=0
 imprimir_a_file=0
 
 # GENERO LA CARPETA DEL SISTEMA SI ES QUE NO EXISTE
- mkdir -p "$CONFDIR"
  mkdir -p "$GRUPO/$CONFDIR"
 
 # Funciones auxiliares
@@ -298,8 +298,8 @@ Perl Version: $chequeo_perl"
 
 # 7. Definir el directorio de instalación de los ejecutables
 definirDirectorioEjecutables() {
-	echo -n "Defina el directorio de instalación de los ejecutables ($GRUPO/bin): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los ejecutables ($GRUPO/bin): "
+	echo -n "Defina el directorio de instalación de los ejecutables ($GRUPO/$BINDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los ejecutables ($GRUPO/$BINDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -315,8 +315,8 @@ definirDirectorioEjecutables() {
 
 # 8. Definir el directorio de instalación de los archivos Maestros
 definirDirectorioMaestros() {
-	echo -n "Defina el directorio de instalación de los archivos maestros ($GRUPO/mae): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los archivos maestros ($GRUPO/mae): "
+	echo -n "Defina el directorio de instalación de los archivos maestros ($GRUPO/$MAEDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los archivos maestros ($GRUPO/$MAEDIR): "
         
 	read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -331,8 +331,8 @@ definirDirectorioMaestros() {
 
 # 9. Definir el directorio de arribo de archivos externos
 definirDirectorioArribos() {
-	echo -n "Defina el directorio de arribo de archivos externos ($GRUPO/arribos): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de arribo de archivos externos ($GRUPO/arribos): "
+	echo -n "Defina el directorio de arribo de archivos externos ($GRUPO/$ARRIDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de arribo de archivos externos ($GRUPO/$ARRIDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -392,8 +392,8 @@ verificarEspacioEnDisco() {
 
 # 12. Definir el directorio de aceptados
 definirDirectorioArribosAceptados() {
-	echo -n "Defina el directorio de grabación de los archivos externos aceptados ($GRUPO/aceptados): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos aceptados ($GRUPO/aceptados): "
+	echo -n "Defina el directorio de grabación de los archivos externos aceptados ($GRUPO/$ACEPDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos aceptados ($GRUPO/$ACEPDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -407,8 +407,8 @@ definirDirectorioArribosAceptados() {
 
 # 13. Definir el directorio de rechazados
 definirDirectorioArribosRechazados() {
-	echo -n "Defina el directorio de grabación de los archivos externos rechazados ($GRUPO/rechazados): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos rechazados ($GRUPO/rechazados): "
+	echo -n "Defina el directorio de grabación de los archivos externos rechazados ($GRUPO/$RECHDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos rechazados ($GRUPO/$RECHDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -422,8 +422,8 @@ definirDirectorioArribosRechazados() {
 
 # 14. Definir el directorio de procesados
 definirDirectorioProcesados() {
-	echo -n "Defina el directorio de grabación de los archivos procesados ($GRUPO/procesados): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos procesados ($GRUPO/procesados): "
+	echo -n "Defina el directorio de grabación de los archivos procesados ($GRUPO/$PROCDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos procesados ($GRUPO/$PROCDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -437,8 +437,8 @@ definirDirectorioProcesados() {
 
 # 15. Definir el directorio de Listados
 definirDirectorioListados() {
-	echo -n "Defina el directorio de los listados de salida ($GRUPO/repo): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de los listados de salida ($GRUPO/repo): "
+	echo -n "Defina el directorio de los listados de salida ($GRUPO/$REPODIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de los listados de salida ($GRUPO/$REPODIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -451,8 +451,8 @@ definirDirectorioListados() {
 
 #16. Definir el directorio de logs para los comandos
 definirDirectorioLogs() {
-	echo -n "Defina el directorio de logs ($GRUPO/log): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de logs ($GRUPO/log): "
+	echo -n "Defina el directorio de logs ($GRUPO/$LOGDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de logs ($GRUPO/$LOGDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
