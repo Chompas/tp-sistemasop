@@ -82,39 +82,40 @@ contieneGuion(){
 LOOP=true
 CANT_LOOP=1
 ESPERA=1
-ARRIDIR="./ARRIDIR/"
-ACEPDIR="./ACEPDIR/"
-RECHDIR="./RECHDIR/"
-REPODIR="./REPODIR/"
-MAEDIR="./MAEDIR/"
-SALAS="$MAEDIR"'salas.mae'
-OBRAS="$MAEDIR"'obras.mae'
+ARRIDIR="ARRIDIR"
+ACEPDIR="ACEPDIR"
+RECHDIR="RECHDIR"
+REPODIR="REPODIR"
+MAEDIR="MAEDIR"
+GRUPO="../TPSSOOMIO"
+SALAS="$GRUPO/$MAEDIR"'/salas.mae'
+OBRAS="$GRUPO/$MAEDIR"'/obras.mae'
 HASTA=2
-path="./Logs/"
+path="Logs"
 
-if ([ ! -d "$ARRIDIR" ]) then
+if ([ ! -d "$GRUPO/$ARRIDIR/" ]) then
 #  llamar con bash al loguear
-   bash Grabar_L.sh "$comando" -t se "$ARRIDIR no existe"
+   bash Grabar_L.sh "$comando" -t se "$GRUPO/$ARRIDIR/ no existe"
    exit 1
 fi
 
-if ([ ! -d "$ACEPDIR" ]) then
-   bash Grabar_L.sh "$comando" -t se "$ACEPDIR no existe"
+if ([ ! -d "$GRUPO/$ACEPDIR/" ]) then
+   bash Grabar_L.sh "$comando" -t se "$GRUPO/$ACEPDIR/ no existe"
    exit 1
 fi
 
-if ([ ! -d $RECHDIR ]) then
-   bash Grabar_L.sh "$comando" -t se "$RECHDIR no existe"
+if ([ ! -d "$GRUPO/$RECHDIR/" ]) then
+   bash Grabar_L.sh "$comando" -t se "$GRUPO/$RECHDIR/ no existe"
    exit 1
 fi
 
-if ([ ! -d "$REPODIR" ]) then
-   bash Grabar_L.sh "$comando" -t se "$REPODIR no existe"
+if ([ ! -d "$GRUPO/$REPODIR/" ]) then
+   bash Grabar_L.sh "$comando" -t se "$GRUPO/$REPODIR/ no existe"
    exit 1
 fi
 
-if ([ ! -d "$MAEDIR" ]) then
-   bash Grabar_L.sh "$comando" -t se "$ARRIDIR no existe"
+if ([ ! -d "$GRUPO/$MAEDIR/" ]) then
+   bash Grabar_L.sh "$comando" -t se "$GRUPO/$ARRIDIR/ no existe"
    exit 1
 fi
 
@@ -133,14 +134,14 @@ fi
 while ([ $CANT_LOOP ])
 do
    bash Grabar_L.sh "$comando" -t i "Comienzo de ciclo: $CANT_LOOP"
-   if ([ -d $ARRIDIR ]) then
+   if ([ -d "$GRUPO/$ARRIDIR" ]) then
 	IFS="
 "
         ARCHIVOS=`ls -p $ARRIDIR | grep -v '/$'`
         for PARAM in $ARCHIVOS	
         do  
 	  
-	  echo "PARAM: $PARAM"
+	  #echo "PARAM: $PARAM"
           case "$PARAM" in 
 	  *-*-*) VALNAME=`echo "RESERVA"`;;
 	  *.inv) VALNAME=`echo "INVITADO"`;;
@@ -149,7 +150,7 @@ do
 
 	  if ([ "$VALNAME" = "RESERVA" ]) then
 
-	    echo "RESERVA"         
+	    #echo "RESERVA"         
             ID=`echo "$PARAM" | cut -f 1 -d '-'`
             MAIL=`echo "$PARAM" | cut -f 2 -d '-'`
             XXX=`echo "$PARAM" | cut -f 3 -d '-'`
@@ -161,23 +162,23 @@ do
 #            echo "XXX: $XXX"
 #	    echo "XXX2: $XXX2"
 	    if ([ $XXXVALIDO == "0" ] && [ ! $XXX2 ]) then
-	       echo "SALAS: $SALAS"
+	       #echo "SALAS: $SALAS"
 	       if ( [ -f "$SALAS" ] && [ -f "$OBRAS" ] ) then
     	          a=`grep "^$ID;.*;.*;.*;.*;$MAIL" -n $SALAS | cut -f1 -d';'`
     	          b=`grep "^$ID;.*;$MAIL;.*" -n $OBRAS | cut -f1 -d';'`
     	          c=`grep "^$ID;.*;.*;$MAIL" -n $OBRAS | cut -f1 -d';'`
 	          if ([ $a ] || [ $b ] || [ $c ]) then
-  	             bash Mover_A.sh "$ARRIDIR$PARAM"  "$ACEPDIR"
+  	             bash Mover_A.sh "$GRUPO/$ARRIDIR/$PARAM"  "$GRUPO/$ACEPDIR"
 		     bash Grabar_L.sh "$COMANDO" -t i "Archivo $PARAM enviado"  		     
                   else
-#		     bash Mover_A.sh "$ARRIDIR$PARAM"  "$RECHDIR"
+		     bash Mover_A.sh "$GRUPO/$ARRIDIR/$PARAM"  "$GRUPO/$RECHDIR"
 	 	     bash Grabar_L.sh "$COMANDO" -t e "$PARAM rechazado por no existir combinación de ID-MAIL en los maestros"
                   fi
                else
                  bash Grabar_L.sh "$COMANDO" -t se "No existe el archivo maestro de salas o de obras"
                fi
 	    else
-	      bash Mover_A.sh "$ARRIDIR$PARAM"  "$RECHDIR"	
+	      bash Mover_A.sh "$GRUPO/$ARRIDIR/$PARAM"  "$GRUPO/$RECHDIR"	
 	      bash Grabar_L.sh "$COMANDO" -t e "$PARAM es rechazado porque XXX contiene guiones o blancos"
 	    fi
           fi
@@ -186,16 +187,16 @@ do
 		XXX=`echo "$PARAM" | cut -f 1 -d '.'`
 		XXXVALIDO=`chequeaXXX $XXX` 
 	    	if ([ $XXXVALIDO == "0" ]) then
-  	             bash Mover_A.sh "$ARRIDIR$PARAM"  "$REPODIR"
+  	             bash Mover_A.sh "$GRUPO/$ARRIDIR/$PARAM"  "$GRUPO/$REPODIR"
 		     bash Grabar_L.sh "$COMANDO" -t i "Archivo $PARAM enviado"  
                   else
-		     bash Mover_A.sh "$ARRIDIR$PARAM"  "$RECHDIR/"
+		     bash Mover_A.sh "$GRUPO/$ARRIDIR/$PARAM"  "$GRUPO/$RECHDIR"
 	 	     bash Grabar_L.sh "$COMANDO" -t e "$PARAM rechazado por nombre inválido"
 		fi 
 	  fi 
 
 	  if ([ "$VALNAME" = "incorrecto" ]) then
-             bash Mover_A.sh "$ARRIDIR$PARAM"  "$RECHDIR/"
+             bash Mover_A.sh "$GRUPO/$ARRIDIR/$PARAM"  "$GRUPO/$RECHDIR"
 	     bash Grabar_L.sh "$COMANDO" -t i "Archivo $PARAM rechazado por nombre inválido"  
 	  fi 
         done

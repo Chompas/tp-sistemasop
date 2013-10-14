@@ -53,7 +53,9 @@ function horaValida() {
 function fechaValida() {
 	IFS='/' read -ra FECHACAMPO <<< "$1"
 	fechaInvertida="${FECHACAMPO[2]}/${FECHACAMPO[1]}/${FECHACAMPO[0]}"
-	fechaRegT=`date --date="$fechaInvertida" +%s`
+	
+	fechaRegT=`date --date="$fechaInvertida" +%s 2> /dev/null`
+	
 	if [ -z $fechaRegT ]
 	then
 		return 1
@@ -304,7 +306,8 @@ do
 	else
 		
 		# Proceso archivo
-		while read reg
+		while read reg || [ -n "$reg" ]
+		#for reg in `cat "$f"`
 		do
 			IFS=';' read -ra CAMPOS <<< "$reg"
 			# 0: (referencia interna)
