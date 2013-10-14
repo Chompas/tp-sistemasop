@@ -70,8 +70,9 @@ chequeaArchivosMaestros(){
 chequeaDirectorios(){
 
   # Chequeo que existan los directorios
-  if ([ ! -d "$GRUPO" ] || [ ! -d "$BINDIR" ] || [ ! -d "$MAEDIR" ] || [ ! -d "$ARRIDIR" ] || [ ! -d "$ACEPDIR" ] || [ ! -d "$RECHDIR" ] || 
-      [ ! -d "$REPODIR" ] || [ ! -d "$PROCDIR" ] || [ ! -d "$LOGDIR" ] || [ ! -d "$GRUPO" ] || [ ! -d "$LOGEXT" ]) then
+  if ([ ! -d "$GRUPO" ] || [ ! -d "$GRUPO/$BINDIR" ] || [ ! -d "$GRUPO/$MAEDIR" ] || [ ! -d "$GRUPO/$ARRIDIR" ] || 
+      [ ! -d "$GRUPO/$ACEPDIR" ] || [ ! -d "$GRUPO/$RECHDIR" ] || [ ! -d "$GRUPO/$REPODIR" ] || [ ! -d "$GRUPO/$PROCDIR" ] || 
+      [ ! -d "$GRUPO/$LOGDIR" ] || [ ! -d "$GRUPO/$GRUPO" ] || [ ! -d "$GRUPO/$LOGEXT" ]) then
     echo 1
     return
   fi
@@ -84,21 +85,21 @@ chequeaDirectorios(){
 
 debug=true
 if $debug; then
-   CONFDIR="./CONFDIR/"
-   BINDIR="./BINDIR/"
-   MAEDIR="./MAEDIR/"
-   ARRIDIR="./ARRIDIR/"
-   ACEPDIR="./ACEPDIR/"
-   RECHDIR="./RECHDIR/"
-   REPODIR="./REPODIR/"
-   PROCDIR="./PROCDIR/"
-   LOGDIR="./LOGDIR/"
-   GRUPO="./GRUPO1/"
-   LOGEXT="./LOGEXT/"
+   CONFDIR="CONFDIR"
+   BINDIR="BINDIR"
+   MAEDIR="MAEDIR"
+   ARRIDIR="ARRIDIR"
+   ACEPDIR="ACEPDIR"
+   RECHDIR="RECHDIR"
+   REPODIR="REPODIR"
+   PROCDIR="PROCDIR"
+   LOGDIR="LOGDIR"
+   GRUPO="../TPSSOOMIO"
+   LOGEXT="LOGEXT"
    LOGSIZE=1000
    DATASIZE=1000
-   SALAS="$MAEDIR/salas.mae"
-   OBRAS="$MAEDIR/obras.mae"
+   SALAS="$GRUPO/$MAEDIR/salas.mae"
+   OBRAS="$GRUPO/$MAEDIR/obras.mae"
 fi
 
   if [ `chequeaVariables` -eq 1 ] ; then
