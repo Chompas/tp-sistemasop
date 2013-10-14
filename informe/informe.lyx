@@ -1533,6 +1533,50 @@ Uso: permitir solo una instancia en ejecución del programa.
 \end_layout
 
 \end_deeper
+\begin_layout Itemize
+Nombre de archivo: pidgrabarlogfile
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Temporal
+\end_layout
+
+\begin_layout Itemize
+Almacenado en: /tmp
+\end_layout
+
+\begin_layout Itemize
+Utilizado por: Reservar_A
+\end_layout
+
+\begin_layout Itemize
+Uso: permitir solo una instancia en ejecución del programa.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Nombre de archivo: configuracion.conf.tmp
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Temporal
+\end_layout
+
+\begin_layout Itemize
+Almacenado en: /funciones
+\end_layout
+
+\begin_layout Itemize
+Utilizado en: /tmp
+\end_layout
+
+\begin_layout Itemize
+Uso: almacenar el contenido del archivo temporalmente por seguridad.
+\end_layout
+
+\end_deeper
 \begin_layout Section
 Listado de Datos
 \end_layout
