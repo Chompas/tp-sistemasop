@@ -29,7 +29,7 @@ chequeaProceso(){
 chequeaVariables(){
   if ( [ "$CONFDIR" != "" ] && [ "$BINDIR" != "" ] && [ "$MAEDIR" != "" ] && [ "$ARRIDIR" != "" ] && [ "$ACEPDIR" != "" ] && 
        [ "$RECHDIR" != "" ] && [ "$REPODIR" != "" ] && [ "$PROCDIR" != "" ] && [ "$LOGDIR" != "" ] && [ "$GRUPO" != "" ] &&
-       [ "$LOGEXT" != "" ] &&[ "$LOGSIZE" != "" ] &&  [ "$DATASIZE" != "" ] &&  [ "$SALAS" != "" ] &&  [ "$OBRAS" != "" ] ) then
+       [ "$LOGEXT" != "" ] &&[ "$LOGSIZE" != "" ] &&  [ "$DATASIZE" != "" ] ) then
     echo 0
   else
     echo 1
