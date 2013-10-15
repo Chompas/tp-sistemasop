@@ -622,7 +622,7 @@ moverMaestros() {
 	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Archivos Maestros" 
 
 	if [ -f $OBRAS_FILE ]; then
-		if [ ! -f "$GRUPO/$MAEDIR/$OBRAS_FILE" ]; then
+		if [ ! -f "$GRUPO/$MAEDIR/obras.mae" ]; then
 			cp "$OBRAS_FILE" "$GRUPO/$MAEDIR"
 		fi
 	else
@@ -631,7 +631,7 @@ moverMaestros() {
 	fi
 
 	if [ -f $SALAS_FILE ]; then
-		if [ ! -f "$GRUPO/$MAEDIR/$SALAS_FILE" ]; then
+		if [ ! -f "$GRUPO/$MAEDIR/salas.mae" ]; then
 			cp "$SALAS_FILE" "$GRUPO/$MAEDIR"
 		fi
 	else
@@ -646,7 +646,7 @@ moverDisponibilidad() {
 	echo "Instalando Archivo de Disponibilidad"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Archivo de Disponibilidad"
 	if [ -f $COMBOS_FILE ]; then
-		if [ ! -f "$GRUPO/$PROCDIR/$COMBOS_FILE" ]; then
+		if [ ! -f "$GRUPO/$PROCDIR/combos.dis" ]; then
 			cp "$COMBOS_FILE" "$GRUPO/$PROCDIR"
 		fi
 	else
