@@ -75,7 +75,7 @@ Primeros pasos
 --------------------
 
 1. Ir al directorio de instalación de los ejecutables `-bin`.
-2. Ejecutar el comando `./Iniciar_A.sh`.
+2. Ejecutar el comando `. ./Iniciar_A.sh`.
 2. FIXME
 
 
