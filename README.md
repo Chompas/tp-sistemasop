@@ -16,6 +16,7 @@ TP
 Requisitos de instalación
 --------------------
 Perl v5 o mayor.
+Bash v4 o mayor.
 Si no lo tiene instalado, ejecute el siguiente comando:  `sudo apt-get install perl`
 
 
@@ -73,17 +74,6 @@ Además en la carpeta `tp2013g1` hay una carpeta `conf` donde está el log del i
 
 Primeros pasos
 --------------------
-
-1. Ir al directorio de instalación de los ejecutables `-bin`.
+1. Ir al directorio de instalación de los ejecutables `bin`.
 2. Ejecutar el comando `./Iniciar_A.sh`.
-2. FIXME
-
-
-Comprobaciones iniciales
---------------------
-FIXME
-
-
-Cómo frenar la ejecución de comandos
---------------------
-FIXME
+3. Correr el demonio eligiendo `Si` al final de la ejecución del `Iniciar_A`, o corriendo `./Start_A.sh`

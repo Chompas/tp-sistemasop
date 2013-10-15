@@ -1369,6 +1369,11 @@ Antes de verificar que la configuración esté correcta, se escribe en el
  Luego, se escribe en el log común.
 \end_layout
 
+\begin_layout Itemize
+El archivo de configuración debe estar en la carpeta correcta y con el nombre
+ correcto.
+\end_layout
+
 \end_deeper
 \begin_layout Itemize
 
@@ -1391,7 +1396,7 @@ Cuando el archivo de log es muy grande se quitan todas las líneas, excepto
 \end_layout
 
 \begin_layout Itemize
-Fecha y hora en formato DD-MM-AA HH:MM:SS (script aparte?)
+Fecha y hora en formato DD-MM-AA HH:MM:SS.
 \end_layout
 
 \end_deeper
@@ -1465,17 +1470,71 @@ Problemas Relevantes
 \end_layout
 
 \begin_layout Itemize
-Problema: manejo de fechas
+Problema: manejo de fechas en Reservar_A.
 \end_layout
 
+\begin_deeper
 \begin_layout Itemize
-Solución:
+Solución: se leen las fechas y se pasan a formato YYYY/MM/DD al usar la
+ función 
+\family typewriter
+date
+\family default
+, para evitar problemas entre día y mes o mes y día.
 \end_layout
 
+\end_deeper
 \begin_layout Itemize
-etc
+Problema: formato de archivos de entrada es incompatible con Unix.
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+Solución: se convirtieron los archivos que estaban en formato Windows a
+ formato Unix utilizando la herramienta 
+\family typewriter
+dos2unix
+\family default
+, ya que generaba problemas con los anclajes en las expresiones regulares.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Problema: caracteres especiales en los archivos de entrada causaban problemas
+ con las expresiones regulares.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Solución: se agregó 
+\family typewriter
+LANG=C
+\family default
+ al usar los comandos 
+\family typewriter
+grep
+\family default
+.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Problema: las variables de ambiente no se estaban seteando para todos los
+ comandos.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Solución: no correr el comando Iniciar_A como un subproceso, correrlo como
+ 
+\family typewriter
+.
+ ./Iniciar_A
+\family default
+.
+\end_layout
+
+\end_deeper
 \begin_layout Section
 Archivo README
 \end_layout
@@ -1500,11 +1559,11 @@ FIXME: esquema de secuencia de los comandos.
 \end_layout
 
 \begin_layout Section
-Nuevas Funciones y/o Comandos Auxiliares
+Listado de Nuevas Funciones y/o Comandos Auxiliares 
 \end_layout
 
 \begin_layout Standard
-Ninguno.
+NINGUNA.
 \end_layout
 
 \begin_layout Section
