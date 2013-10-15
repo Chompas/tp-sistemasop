@@ -193,7 +193,8 @@ do
 	then
 		if [ ! -w "$GRUPO/$DIRECTORIO" ]
 		then
-			ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No hay permisos de escritura en el directorio $DIRECTORIO"
+			chmod +w "$GRUPO/$DIRECTORIO"
+			echo "Fueron seteados permisos. No habia permisos de escritura en el directorio $DIRECTORIO"
 		fi
 	fi
 done
@@ -211,7 +212,8 @@ then
 
 		elif [ ! -r "$GRUPO/${DIRECTORIO_MAESTROS}/${ARCHIVOS_MAESTROS[${aux}]}" ]
                 then
-                        ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No hay permisos sobre el archivo maestro: ${DIRECTORIO_MAESTROS}/${ARCHIVOS_MAESTROS[${aux}]}"
+                        chmod +r "$GRUPO/${DIRECTORIO_MAESTROS}/${ARCHIVOS_MAESTROS[${aux}]}"
+                      	echo "Fueron seteados permisos. No habia permisos de lectura sobre el archivo maestro: ${DIRECTORIO_MAESTROS}/${ARCHIVOS_MAESTROS[${aux}]}"
                 fi
         done
 fi
@@ -230,7 +232,8 @@ then
 		
 		elif [ ! -x "$GRUPO/${DIRECTORIO_EJECUTABLES}/${COMANDOS_SISTEMA[${aux}]}" ]
 		then	
-			ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No hay permisos de ejecucion del comando: ${DIRECTORIO_EJECUTABLES}/${COMANDOS_SISTEMA[${aux}]}"
+			chmod +x "$GRUPO/${DIRECTORIO_EJECUTABLES}/${COMANDOS_SISTEMA[${aux}]}"
+			echo "Fueron seteados permisos. No habia permisos de ejecucion del comando: ${DIRECTORIO_EJECUTABLES}/${COMANDOS_SISTEMA[${aux}]}"
 		fi
 	done
 fi
@@ -294,6 +297,38 @@ fi
 MOSTRAR_RESUMEN
 
 ##########################################################################
+#Funcion para preguntar que accion tomar frente al iniciar Demonio
+funcPreguntarPorDemonio(){
+while true; do
+	echo "¿Desea efectuar la activacion de Recibir_A? Si – No" 
+     	read respuesta
+     	case $respuesta in
+        Si) 
+	# Ejecucion del demonio Recibir_A
+	bash ./Recibir_A.sh &
+	sleep 0.4 
+        
+	PID_RECIBE=$(ps ax | grep Recibir_A | grep -v Grabar_L | grep -v grep | awk '{print $1}')
+
+	if [ ! -z "$PID_RECIBE" ]
+	then
+		echo "Demonio corriendo bajo el Nro <$PID_RECIBE>"
+		echo "Proceso de inicializacion finalizado con exito."
+		echo "Si desea detener el demonio hagalo con el comando Stop_A.sh"
+		./Grabar_L.sh "Iniciar_A" -t i "Demonio corriendo bajo el no.: <$PID_RECIBE>"
+	else
+		echo "Proceso de inicializacion concluido sin exito. No se pudo correr el Demonio."
+		./Grabar_L.sh "Iniciar_A" -t e "Inicializacion de Ambiente finalizado con errores."
+	fi
+	return 0;;
+        No) echo "Si desea ejecutar el demonio hagalo con el comando Start_A.sh"
+	 return 0;;
+        *) echo -e "\nPor favor introduzca Si o No \n";;
+   	 esac
+done
+}
+
+##########################################################################
 # Instalacion correctamente finalizada. Chequeo si Recibir_A no esta corriendo actualmente
 
 PID_RECIBE=`ps ax | grep Recibir_A | grep -v Grabar_L | grep -v grep | awk '{print $1}'`
@@ -305,26 +340,9 @@ then
 	./Grabar_L.sh "Iniciar_A" -t e "No se puede arrancar el demonio. Ya existe otro demonio en ejecucion."
 
 else	
+	funcPreguntarPorDemonio
+
 	# Flag de ejecucion de Iniciar_A exitoso, para chequeo en scripts subsiguientes, de ser necesario
-	INICIAR_A_EJECUTADO_EXITOSAMENTE=1
-	export INICIAR_A_EJECUTADO_EXITOSAMENTE
-
-	# Ejecucion del demonio Recibir_A
-	bash ./Recibir_A.sh &
-	sleep 0.4 
-        
-	PID_RECIBE=$(ps ax | grep Recibir_A | grep -v Grabar_L | grep -v grep | awk '{print $1}')
-
-	if [ ! -z "$PID_RECIBE" ]
-	then
-		echo "Demonio corriendo bajo el Nro <$PID_RECIBE>"
-		echo "Proceso de inicializacion finalizado con exito."
-		./Grabar_L.sh "Iniciar_A" -t i "Demonio corriendo bajo el no.: <$PID_RECIBE>"
-	else
-		echo "Proceso de inicializacion concluido sin exito. No se pudo correr el Demonio."
-		./Grabar_L.sh "Iniciar_A" -t e "Inicializacion de Ambiente finalizado con errores."
-	fi
+	export INICIAR_A_EJECUTADO_EXITOSAMENTE=1
 fi
-
-exit 0
 
