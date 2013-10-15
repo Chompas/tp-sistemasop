@@ -86,7 +86,7 @@ mensaje="$2"
 
 # ------- FIN PROCESAMIENTO DE ARGUMENTOS -------- 
 
-directorio="$LOGDIR"
+directorio="$GRUPO/$LOGDIR"
 extension="$LOGEXT"
 if $esLogInstalacion ; then
 	comando="Instalar_TP"

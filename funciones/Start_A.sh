@@ -29,7 +29,7 @@ chequeaProceso(){
 chequeaVariables(){
   if ( [ "$CONFDIR" != "" ] && [ "$BINDIR" != "" ] && [ "$MAEDIR" != "" ] && [ "$ARRIDIR" != "" ] && [ "$ACEPDIR" != "" ] && 
        [ "$RECHDIR" != "" ] && [ "$REPODIR" != "" ] && [ "$PROCDIR" != "" ] && [ "$LOGDIR" != "" ] && [ "$GRUPO" != "" ] &&
-       [ "$LOGEXT" != "" ] &&[ "$LOGSIZE" != "" ] &&  [ "$DATASIZE" != "" ] &&  [ "$SALAS" != "" ] &&  [ "$OBRAS" != "" ] ) then
+       [ "$LOGEXT" != "" ] &&[ "$LOGSIZE" != "" ] &&  [ "$DATASIZE" != "" ] ) then
     echo 0
   else
     echo 1
@@ -72,7 +72,7 @@ chequeaDirectorios(){
   # Chequeo que existan los directorios
   if ([ ! -d "$GRUPO" ] || [ ! -d "$GRUPO/$BINDIR" ] || [ ! -d "$GRUPO/$MAEDIR" ] || [ ! -d "$GRUPO/$ARRIDIR" ] || 
       [ ! -d "$GRUPO/$ACEPDIR" ] || [ ! -d "$GRUPO/$RECHDIR" ] || [ ! -d "$GRUPO/$REPODIR" ] || [ ! -d "$GRUPO/$PROCDIR" ] || 
-      [ ! -d "$GRUPO/$LOGDIR" ] || [ ! -d "$GRUPO/$GRUPO" ] || [ ! -d "$GRUPO/$LOGEXT" ]) then
+      [ ! -d "$GRUPO/$LOGDIR" ] || [ ! -d "$GRUPO/$LOGEXT" ]) then
     echo 1
     return
   fi
@@ -101,6 +101,9 @@ if $debug; then
    SALAS="$GRUPO/$MAEDIR/salas.mae"
    OBRAS="$GRUPO/$MAEDIR/obras.mae"
 fi
+
+   SALAS="$GRUPO/$MAEDIR/salas.mae"
+   OBRAS="$GRUPO/$MAEDIR/obras.mae"
 
   if [ `chequeaVariables` -eq 1 ] ; then
     bash Grabar_L.sh "$COMANDO" -t e "No se hayan inicializadas las variables necesarias. No se puede llamar al Recibir_A"

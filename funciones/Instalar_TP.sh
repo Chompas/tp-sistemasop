@@ -14,16 +14,32 @@ LOGSIZE=400
 export LOGSIZE
 # se exportan para ser utilizadas por el LOG
 
-BINDIR="bin"
-MAEDIR="mae" 
-ARRIDIR="arribos" 
-DATASIZE=100  
-ACEPDIR="aceptados" 
-RECHDIR="rechazados" 
-PROCDIR="proc" 
-REPODIR="repo" 
-LOGDIR="log" 
-LOGEXT="log"
+# si no hay instalacion previa -> seteo las variables con valores default
+if [ ! -f "$GRUPO/$CONFDIR/Instalar_TP.conf" ]; then
+	BINDIR="bin"
+	MAEDIR="mae" 
+	ARRIDIR="arribos" 
+	DATASIZE=100  
+	ACEPDIR="aceptados" 
+	RECHDIR="rechazados" 
+	PROCDIR="proc" 
+	REPODIR="repo" 
+	LOGDIR="log" 
+	LOGEXT="log"
+else
+# si hay una instalacion previa completo las variables con el contenido del archivo	
+	GRUPO=`grep "^GRUPO=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+	BINDIR=`grep "^BINDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+	MAEDIR=`grep "^MAEDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+	ARRIDIR=`grep "^ARRIDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`	
+	DATASIZE=`grep "^DATASIZE=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`	
+	ACEPDIR=`grep "^ACEPDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+	RECHDIR=`grep "^RECHDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+	PROCDIR=`grep "^PROCDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+	REPODIR=`grep "^REPODIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+	LOGDIR=`grep "^LOGDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+	LOGEXT=`grep "^LOGEXT=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+fi
 
 
 #FIXME: ver en que ruta buscarlos
@@ -303,7 +319,7 @@ definirDirectorioEjecutables() {
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"bin"'-'`
+	AUX=`echo $INPUT | sed 's-^$-'"$BINDIR"'-'`
 	
 	#Reservar este path en la variable BINDIR
 	BINDIR=$AUX
@@ -622,7 +638,7 @@ moverMaestros() {
 	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Archivos Maestros" 
 
 	if [ -f $OBRAS_FILE ]; then
-		if [ ! -f "$GRUPO/$MAEDIR/$OBRAS_FILE" ]; then
+		if [ ! -f "$GRUPO/$MAEDIR/obras.mae" ]; then
 			cp "$OBRAS_FILE" "$GRUPO/$MAEDIR"
 		fi
 	else
@@ -631,7 +647,7 @@ moverMaestros() {
 	fi
 
 	if [ -f $SALAS_FILE ]; then
-		if [ ! -f "$GRUPO/$MAEDIR/$SALAS_FILE" ]; then
+		if [ ! -f "$GRUPO/$MAEDIR/salas.mae" ]; then
 			cp "$SALAS_FILE" "$GRUPO/$MAEDIR"
 		fi
 	else
@@ -646,7 +662,7 @@ moverDisponibilidad() {
 	echo "Instalando Archivo de Disponibilidad"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Archivo de Disponibilidad"
 	if [ -f $COMBOS_FILE ]; then
-		if [ ! -f "$GRUPO/$PROCDIR/$COMBOS_FILE" ]; then
+		if [ ! -f "$GRUPO/$PROCDIR/combos.dis" ]; then
 			cp "$COMBOS_FILE" "$GRUPO/$PROCDIR"
 		fi
 	else

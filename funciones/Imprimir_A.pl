@@ -4,7 +4,7 @@
 $debug = 0;						# Debuggeando? 0=no, 1=si
 $write = 0;						# Va a escribir en archivo? 0=no, 1=si
 
-if ($debug == 0)
+if ($debug == 1)
 {
 	$MAEDIR = ".";
 	$PROCDIR = ".";
@@ -15,11 +15,11 @@ if ($debug == 0)
 $fnamepid="/tmp/Imprimir_A.PID";
 
 # Archivos de input
-$in_salas = "$MAEDIR/"."salas.mae";	#id (n° par);nombre;capacidad;direccion;telefono;email
-$in_obras = "$MAEDIR/"."obras.mae";	#id (n° impar);nombre;email produccion general;email produccion ejecutiva
-$in_reservas_confirmadas = "$PROCDIR/"."reservas.ok";	#id obra;nombre;fecha;hora;id sala;nombre sala;cant butacas confir;id combo[;ref int];cant butacas solicitadas;email;usuario;fecha grabacion
-$in_reservas_no_confirmadas = "$PROCDIR/"."reservas.nok";   #ref int;fecha;hora;numero fila;numero butaca;cant butacas solicitadas;seccion;motivo;id sala;id obra;email;usuario;fecha grabacion
-$in_disponibilidad = "$PROCDIR/"."combos.dis"; #id combo;id obra;fecha;hora;id sala;butacas habilitadas;butacas disp;requisitos especiales
+$in_salas = "$ENV{'GRUPO'}/$ENV{'MAEDIR'}/"."salas.mae";	#id (n° par);nombre;capacidad;direccion;telefono;email
+$in_obras = "$ENV{'GRUPO'}/$ENV{'MAEDIR'}/"."obras.mae";	#id (n° impar);nombre;email produccion general;email produccion ejecutiva
+$in_reservas_confirmadas = "$ENV{'GRUPO'}/$ENV{'PROCDIR'}/"."reservas.ok";	#id obra;nombre;fecha;hora;id sala;nombre sala;cant butacas confir;id combo[;ref int];cant butacas solicitadas;email;usuario;fecha grabacion
+$in_reservas_no_confirmadas = "$ENV{'GRUPO'}/$ENV{'PROCDIR'}/"."reservas.nok";   #ref int;fecha;hora;numero fila;numero butaca;cant butacas solicitadas;seccion;motivo;id sala;id obra;email;usuario;fecha grabacion
+$in_disponibilidad = "$ENV{'GRUPO'}/$ENV{'PROCDIR'}/"."combos.dis"; #id combo;id obra;fecha;hora;id sala;butacas habilitadas;butacas disp;requisitos especiales
 
 sub end {
     unlink $fpid;
@@ -115,7 +115,7 @@ sub generar_listado_eventos_candidatos {
 	%eventos_candidatos = ();		#id evento => datos evento
 	%referencias_internas = ();		#referencia interna => id evento
 	
-	# $in_reservas_confirmadas = "$PROCDIR/"."reservas.ok";	
+	# $in_reservas_confirmadas = "$ENV{'GRUPO'}/$ENV{'PROCDIR'}/"."reservas.ok";	
 	#	id obra;nombre;fecha;hora;id sala;nombre sala;cant butacas confir;id combo[;ref int];cant butacas solicitadas;email;usuario;fecha grabacion
 	open($reservas, '<', $in_reservas_confirmadas) or die "No se pudo abrir '$in_reservas_confirmadas' $!\n";
 	while ($linea = <$reservas>) 
@@ -198,7 +198,7 @@ sub generar_disponibilidad_por_rango_sala {
 }
 
 sub escribir_listado_disponibilidad {
-	local $out_disponibilidad = "$REPODIR"."/"."$_[0]".".dis";
+	local $out_disponibilidad = "$ENV{'GRUPO'}/$ENV{'REPODIR'}"."/"."$_[0]".".dis";
 	if ($write == 1)
 	{
 		open (MYFILE, ">>$out_disponibilidad");		#Modo append
@@ -208,7 +208,7 @@ sub escribir_listado_disponibilidad {
 }
 
 sub escribir_listado_invitados {
-	local $out_invitados_confirmados = "$REPODIR"."/"."$evento".".inv";
+	local $out_invitados_confirmados = "$ENV{'GRUPO'}/$ENV{'REPODIR'}"."/"."$evento".".inv";
 	local $archivo;
 	
 	# Escribo el listado en la consola
@@ -230,7 +230,7 @@ sub escribir_listado_invitados {
 #Parametro 0: id_combo
 #Parametro 1: array de tickets
 sub escribir_listado_tickets {
-	local $out_tickets = "$REPODIR"."/"."$_[0]".".tck";
+	local $out_tickets = "$ENV{'GRUPO'}/$ENV{'REPODIR'}"."/"."$_[0]".".tck";
 	open (MYFILE, ">$out_tickets");				#Modo overwrite
 	
 	local $tickets = $_[1];
@@ -246,7 +246,7 @@ sub escribir_ranking {
 	local $linea = $_[0];
 	
 	# Extension autoincremental del archivo
-	$nnn=`ls "$REPODIR" | grep "^ranking" | sed s/ranking\.//g | sort -r | head -n 1`;
+	$nnn=`ls "$ENV{'GRUPO'}/$ENV{'REPODIR'}" | grep "^ranking" | sed s/ranking\.//g | sort -r | head -n 1`;
 
     # En caso de no existir un archivo "ranking.*" inicializo nnn en 0
 	if ($nnn eq "") {
@@ -256,7 +256,7 @@ sub escribir_ranking {
 	$nnn += 1;
 	if ($debug == 1) {print "nnn = $nnn\n";}
 	
-	$out_ranking = "$REPODIR"."/ranking."."$nnn";
+	$out_ranking = "$ENV{'GRUPO'}/$ENV{'REPODIR'}"."/ranking."."$nnn";
 	if ($write == 1)
 	{
 		open (MYFILE, ">>$out_ranking");	#Modo append
@@ -292,7 +292,7 @@ sub fInvitados {
 			local $total_acumulado = 0;
 			push(@out,"$ref_int \n");
 			
-			local $nom_archivo_invitados = "$REPODIR/"."$ref_int".".inv";
+			local $nom_archivo_invitados = "$ENV{'GRUPO'}/$ENV{'REPODIR'}/"."$ref_int".".inv";
 			
 			# No existe archivo de invitados
 			if (! -e $nom_archivo_invitados) 
@@ -332,7 +332,7 @@ sub fInvitados {
 }
 
 sub fDisp {
-	#$in_disponibilidad = "$PROCDIR"."/combos.dis"; #id combo;id obra;fecha;hora;id sala;butacas habilitadas;butacas disp;requisitos especiales
+	#$in_disponibilidad = "$ENV{'GRUPO'}/$ENV{'PROCDIR'}"."/combos.dis"; #id combo;id obra;fecha;hora;id sala;butacas habilitadas;butacas disp;requisitos especiales
 	local %opciones_fdisp = (1, "ID OBRA", 2, "ID SALA", 3, "RANGO de ID OBRA", 4, "RANGO de ID SALA");
 	local $opcion_elegida = "";
 	
@@ -416,7 +416,7 @@ sub fDisp {
 }
 
 sub fRanking {
-	#$in_reservas_confirmadas = "$PROCDIR/"."reservas.ok";	
+	#$in_reservas_confirmadas = "$ENV{'GRUPO'}/$ENV{'PROCDIR'}/"."reservas.ok";	
 	#id obra;nombre;fecha;hora;id sala;nombre sala;cant butacas confir;id combo[;ref int];cant butacas solicitadas;email;usuario;fecha grabacion
 	$cantidad = 10;
 	# Ordeno en orden descendente (r) por el 7mo campo (n-numerico) con delimitador ";"
@@ -446,7 +446,7 @@ sub fTickets {
 	}
 	print "ID de combo válido.\n";
 	
-	#$in_reservas_confirmadas = "$PROCDIR/"."reservas.ok";	
+	#$in_reservas_confirmadas = "$ENV{'GRUPO'}/$ENV{'PROCDIR'}/"."reservas.ok";	
 	#id obra;nombre;fecha;hora;id sala;nombre sala;cant butacas confir;id combo;ref int;cant butacas solicitadas;email;usuario;fecha grabacion
 	
 	#Examino el archivo de reservas linea por linea
