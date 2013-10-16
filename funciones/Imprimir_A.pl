@@ -22,7 +22,7 @@ $in_reservas_no_confirmadas = "$ENV{'GRUPO'}/$ENV{'PROCDIR'}/"."reservas.nok";  
 $in_disponibilidad = "$ENV{'GRUPO'}/$ENV{'PROCDIR'}/"."combos.dis"; #id combo;id obra;fecha;hora;id sala;butacas habilitadas;butacas disp;requisitos especiales
 
 sub end {
-    unlink $fpid;
+    unlink $fpid;	#Borro el archivo
 }
 
 # ---------- INICIO COMPROBACIONES DE RUTINA ------------
@@ -117,7 +117,7 @@ sub generar_listado_eventos_candidatos {
 	
 	# $in_reservas_confirmadas = "$ENV{'GRUPO'}/$ENV{'PROCDIR'}/"."reservas.ok";	
 	#	id obra;nombre;fecha;hora;id sala;nombre sala;cant butacas confir;id combo[;ref int];cant butacas solicitadas;email;usuario;fecha grabacion
-	open($reservas, '<', $in_reservas_confirmadas) or die "No se pudo abrir '$in_reservas_confirmadas' $!\n";
+	open($reservas, '<', $in_reservas_confirmadas);
 	while ($linea = <$reservas>) 
 	{
 		chomp($linea);
@@ -266,6 +266,12 @@ sub escribir_ranking {
 }
 
 sub fInvitados {
+	# Archivo necesario: in_reservas_confirmadas
+	if (! -e $in_reservas_confirmadas)
+	{
+		print "ERROR: no se encontró el archivo $in_reservas_confirmadas.\n";
+		exit(1);
+	}
 	&generar_listado_eventos_candidatos;
 	
 	foreach $key (keys(%eventos_candidatos)) {
@@ -290,14 +296,14 @@ sub fInvitados {
 		if ($referencias_internas{$ref_int} eq $evento)
 		{
 			local $total_acumulado = 0;
-			push(@out,"$ref_int \n");
+			push(@out,"Referencia interna: $ref_int \n");
 			
 			local $nom_archivo_invitados = "$ENV{'GRUPO'}/$ENV{'REPODIR'}/"."$ref_int".".inv";
 			
 			# No existe archivo de invitados
 			if (! -e $nom_archivo_invitados) 
 			{
-				push (@out, "Sin listado de invitados.\n");
+				push (@out, "\t Sin listado de invitados.\n");
 			}
 			
 			else {
@@ -318,13 +324,13 @@ sub fInvitados {
 						$cant_acomp = $campos[1];
 					}
 					$total_acumulado+=1 + $cant_acomp;
-					$linea = "$campos[0]".", "."$cant_acomp".", "."$total_acumulado"."\n";
+					$linea = "\t $campos[0]".", "."$cant_acomp".", "."$total_acumulado"."\n";
 					push(@out, "$linea");
 				}
 				close ($arch_invitados);				
 			}
-			push(@out,&sumar_reservas_confirmadas($ref_int)."\n");
-			push(@out,"$total_acumulado \n");
+			push(@out,"\t \t Total reservas confirmadas: ".&sumar_reservas_confirmadas($ref_int)."\n");
+			push(@out,"\t \t Total acumulado: "."$total_acumulado \n");
 		}		
 	}
 	
@@ -332,7 +338,15 @@ sub fInvitados {
 }
 
 sub fDisp {
-	#$in_disponibilidad = "$ENV{'GRUPO'}/$ENV{'PROCDIR'}"."/combos.dis"; #id combo;id obra;fecha;hora;id sala;butacas habilitadas;butacas disp;requisitos especiales
+	# Archivos necesarios: in_salas, in_obras, in_disponibilidad
+	if ((! -e $in_salas) || (! -e $in_obras) || (! -e $in_disponibilidad))
+	{
+		print "ERROR: falta alguno de los siguientes archivos: ";
+		print "$in_salas, $in_obras, $in_disponibilidad.\n";
+		exit(1);
+	}
+	
+	
 	local %opciones_fdisp = (1, "ID OBRA", 2, "ID SALA", 3, "RANGO de ID OBRA", 4, "RANGO de ID SALA");
 	local $opcion_elegida = "";
 	
@@ -418,6 +432,14 @@ sub fDisp {
 sub fRanking {
 	#$in_reservas_confirmadas = "$ENV{'GRUPO'}/$ENV{'PROCDIR'}/"."reservas.ok";	
 	#id obra;nombre;fecha;hora;id sala;nombre sala;cant butacas confir;id combo[;ref int];cant butacas solicitadas;email;usuario;fecha grabacion
+	
+	# Archivo necesario: in_reservas_confirmadas	
+	if (! -e $in_reservas_confirmadas)
+	{
+		print "ERROR: no se encontró el archivo $in_reservas_confirmadas.\n";
+		exit(1);
+	}
+	
 	$cantidad = 10;
 	# Ordeno en orden descendente (r) por el 7mo campo (n-numerico) con delimitador ";"
 	# Y luego muestro solo las primeras 10 lineas
@@ -437,6 +459,14 @@ sub fRanking {
 }
 
 sub fTickets {
+	
+	# Archivos necesarios: in_disponibilidad, in_reservas_confirmadas	
+	if ((! -e $in_disponibilidad) || (! -e $in_reservas_confirmadas))
+	{
+		print "ERROR: no se encontraron los archivos $in_disponibilidad y $in_reservas_confirmadas.\n";
+		exit(1);
+	}
+	
 	pideIDcombo: print "Ingrese ID del combo: ";
 	$id_combo = <STDIN>; chomp($id_combo);
 	while (&existeIDcombo($id_combo) == 0)
@@ -450,7 +480,7 @@ sub fTickets {
 	#id obra;nombre;fecha;hora;id sala;nombre sala;cant butacas confir;id combo;ref int;cant butacas solicitadas;email;usuario;fecha grabacion
 	
 	#Examino el archivo de reservas linea por linea
-	open($reservas, '<', $in_reservas_confirmadas) or die "No se pudo abrir '$in_reservas_confirmadas' $!\n";
+	open($reservas, '<', $in_reservas_confirmadas);
 	@tickets = ();
 	while ($linea = <$reservas>) {
 		chomp($linea);

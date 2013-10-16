@@ -1973,11 +1973,9 @@ Esquema de ejecución
 \end_layout
 
 \begin_layout Standard
-\noindent
-\align center
 \begin_inset Graphics
 	filename Activity Diagram0.png
-	scale 59
+	scale 55
 
 \end_inset
 
