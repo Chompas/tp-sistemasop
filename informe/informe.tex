@@ -3,14 +3,26 @@
 \documentclass[spanish]{article}
 \usepackage[T1]{fontenc}
 \usepackage[latin9]{inputenc}
+\usepackage{listings}
+\lstset{basicstyle={\footnotesize\ttfamily},
+commentstyle={\color{blue}},
+emph={si, //,{,}, +,=,<, >, para, cada, devolver, continuar, en, de},
+keywordstyle={\color{red}},
+language={bash},
+stepnumber=1,
+tabsize=2}
 \usepackage{geometry}
 \geometry{verbose,tmargin=3cm,bmargin=3cm,lmargin=3cm,rmargin=3cm}
 \pagestyle{empty}
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
+\usepackage{color}
 \usepackage{babel}
 \addto\shorthandsspanish{\spanishdeactivate{~<>}}
 
 \usepackage{array}
 \usepackage{float}
+\usepackage{graphicx}
 \usepackage[unicode=true,
  bookmarks=true,bookmarksnumbered=false,bookmarksopen=false,
  breaklinks=false,pdfborder={0 0 1},backref=false,colorlinks=false]
@@ -39,7 +51,7 @@
 
 \begin{document}
 
-\title{Trabajo Práctico de Sistemas Operativos}
+\title{\textbf{Trabajo Práctico de Sistemas Operativos}}
 
 \maketitle
 \textbf{\large{Tema}}{\large{: A}}{\large \par}
@@ -203,54 +215,135 @@ PID del proceso corriendo.
 
 \section{Problemas Relevantes}
 \begin{itemize}
-\item Problema: manejo de fechas en Reservar\_A.
+\item \textbf{Problema}: manejo de fechas en Reservar\_A.
 
 \begin{itemize}
-\item Solución: se leen las fechas y se pasan a formato YYYY/MM/DD al usar
-la función \texttt{date}, para evitar problemas entre día y mes o
-mes y día.
+\item \textbf{Solución}: se leen las fechas y se pasan a formato YYYY/MM/DD
+al usar la función \texttt{date}, para evitar problemas entre día
+y mes o mes y día.
 \end{itemize}
-\item Problema: formato de archivos de entrada es incompatible con Unix.
+\item \textbf{Problema}: formato de archivos de entrada es incompatible
+con Unix.
 
 \begin{itemize}
-\item Solución: se convirtieron los archivos que estaban en formato Windows
-a formato Unix utilizando la herramienta \texttt{dos2unix}, ya que
-generaba problemas con los anclajes en las expresiones regulares.
+\item \textbf{Solución}: se convirtieron los archivos que estaban en formato
+Windows a formato Unix utilizando la herramienta \texttt{dos2unix},
+ya que generaba problemas con los anclajes en las expresiones regulares.
 \end{itemize}
-\item Problema: caracteres especiales en los archivos de entrada causaban
-problemas con las expresiones regulares.
+\item \textbf{Problema}: caracteres especiales en los archivos de entrada
+causaban problemas con las expresiones regulares.
 
 \begin{itemize}
-\item Solución: se agregó \texttt{LANG=C} al usar los comandos \texttt{grep}.
+\item \textbf{Solución}: se agregó \texttt{LANG=C} al usar los comandos
+\texttt{grep}.
 \end{itemize}
-\item Problema: las variables de ambiente no se estaban seteando para todos
-los comandos.
+\item \textbf{Problema}: las variables de ambiente no se estaban seteando
+para todos los comandos.
 
 \begin{itemize}
-\item Solución: no correr el comando Iniciar\_A como un subproceso, correrlo
-como \texttt{. ./Iniciar\_A}.
+\item \textbf{Solución}: no correr el comando Iniciar\_A como un subproceso,
+correrlo como \texttt{. ./Iniciar\_A}.
 \end{itemize}
 \end{itemize}
 
 \section{Archivo README}
 
-\include{/home/maine/Desktop/tp-sistemasop/README}
+\begin{lstlisting}
+Trabajo Práctico
+===================
+**Materia**: [75.08] Sistemas Operativos 
+**Fecha**: Segundo Cuatrimestre de 2013 
+**Grupo**: 1 
+**Tema**: "A" 
+**Integrantes**: 
+* Lucas Tarcetti 
+* Sergio Zelechowsky 
+* Maria Ines Parnisari 
+* Javier Lara 
+* Pablo Castarataro 
+* Emiliano Viscarra
+Requisitos de instalación
+--------------------
+- Perl v5 o mayor. Si no lo tiene instalado, 
+ejecute el siguiente comando: `sudo apt-get install perl`
+- Bash v4 o mayor.
+Cómo copiar desde un medio externo
+--------------------
+1. Insertar el dispositivo de almacenamiento que contiene el trabajo práctico.
+2. Crear un directorio donde se desea copiar el contenido del trabajo práctico: 
+`mkdir tp2013g1`
+3. Copiar el archivo `.tgz` en el directorio recién creado: 
+`cp /media/<NOMBRE_PENDRIVE>/<NOMBRE_ARCHIVO>.tgz tp2013g1`
+4. Descomprimir y extrar el archivo `.tgz`: 
+`tar -zxf <NOMBRE_ARCHIVO>.tgz`
+Instalación
+--------------------
+1. Navegar hasta la carpeta donde se encuentran las funciones: 
+`cd funciones`
+2. Darle permisos de ejecución al script `Instalar_TP.sh`: 
+`chmod +x Instalar_TP.sh`
+3. Ejecutar el script pasando como parámetro la ruta donde 
+se desee realizar las instalación: 
+`./Instalar_TP.sh`
+4. Seguir los pasos indicados.
+Estructura post instalación
+--------------------
+Luego de la instalación se creará la siguiente estructura dentro de la carpeta
+donde instalamos (en este ejemplo, `instalacion1`).
+`-> aceptados 
+-> arribos 
+-> bin 
+-> Grabar_L.sh 
+-> Iniciar_A.sh 
+-> Recibir_A.sh 
+-> Imprimir_A.pl 
+-> Mover_A.sh 
+-> Reservar_A.sh 
+-> Start_A.sh 
+-> Stop_A.sh 
+-> conf 
+-> Instalar_TP.conf 
+-> disp 
+-> funciones 
+-> log 
+-> mae 
+-> obras.mae 
+-> salas.mae 
+-> procesados 
+-> combos.dis 
+-> rechazados 
+-> repo 
+`
+Los nombres de las carpetas pueden variar según lo que ingrese el usuario. 
+Estos valores son los valores por defecto de la instalación.
+Además en la carpeta `tp2013g1` hay una carpeta `conf` donde está el log del instalador.
+Primeros pasos
+--------------------
+1. Ir al directorio de instalación de los ejecutables `bin`.
+2. Ejecutar el comando `./Iniciar_A.sh`.
+3. Correr el demonio eligiendo `Si` al final de la ejecución del `Iniciar_A`, 
+o corriendo `./Start_A.sh`
+\end{lstlisting}
+
 
 
 \section{Esquema de ejecución}
 
-FIXME: esquema de secuencia de los comandos. Explicar cómo se vinculan
-entre sí y qué input/output manejan.
+\noindent \begin{center}
+\includegraphics[scale=0.59]{\string"Activity Diagram0\string".png}
+\par\end{center}
 
 
 \section{Listado de Nuevas Funciones y/o Comandos Auxiliares }
 
-NINGUNA.
-
+FIXME
+\begin{itemize}
+\item Desinstalar\_TP.sh
+\end{itemize}
 
 \section{Nuevos Archivos}
 \begin{itemize}
-\item Nombre de archivo: Imprimir\_A.PID
+\item Nombre de archivo: \texttt{Imprimir\_A.PID}
 
 \begin{itemize}
 \item Temporal
@@ -258,7 +351,7 @@ NINGUNA.
 \item Utilizado por: Imprimir\_A
 \item Uso: permitir solo una instancia en ejecución del programa.
 \end{itemize}
-\item Nombre de archivo: pidgrabarlogfile
+\item Nombre de archivo:\texttt{ pidgrabarlogfile}
 
 \begin{itemize}
 \item Temporal
@@ -266,7 +359,7 @@ NINGUNA.
 \item Utilizado por: Reservar\_A
 \item Uso: permitir solo una instancia en ejecución del programa.
 \end{itemize}
-\item Nombre de archivo: configuracion.conf.tmp
+\item Nombre de archivo: \texttt{configuracion.conf.tmp}
 
 \begin{itemize}
 \item Temporal
