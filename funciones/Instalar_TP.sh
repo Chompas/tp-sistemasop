@@ -14,6 +14,22 @@ LOGSIZE=400
 export LOGSIZE
 # se exportan para ser utilizadas por el LOG
 
+function auxValidaDirectorio() {
+	var=`echo "$1"  | grep "^[-_ /a-zA-Z0-9]*$" | grep "^[^/].*"`
+	if [ "$var" ] ; then
+		var1="`echo "$var" | grep "^.*//.*"`"
+		if [ "$var1" ] ; then
+			echo "Invalido"
+			return 1;
+		fi
+			echo "Valido"
+			return 0;
+	else
+		echo "Invalido"
+		return 1;
+	fi
+}
+
 # si no hay instalacion previa -> seteo las variables con valores default
 if [ ! -f "$GRUPO/$CONFDIR/Instalar_TP.conf" ]; then
 	BINDIR="bin"
@@ -320,7 +336,15 @@ definirDirectorioEjecutables() {
         read INPUT
 	# Si no ingresa nada se toma el valor por default
 	AUX=`echo $INPUT | sed 's-^$-'"$BINDIR"'-'`
-	
+	aux=`auxValidaDirectorio "$AUX"`
+	while [ "$aux" == "Invalido" ]; do
+		echo "Directorio inválido. Ingrese nuevamente"
+		# Loguear
+		read AUX
+		aux=`auxValidaDirectorio "$AUX"`
+	done
+	echo "$AUX"
+
 	#Reservar este path en la variable BINDIR
 	BINDIR=$AUX
 	
