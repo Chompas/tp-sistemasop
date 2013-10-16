@@ -1,4 +1,4 @@
-TP
+Trabajo Práctico
 ===================
 **Materia**: [75.08] Sistemas Operativos  
 **Fecha**: Segundo Cuatrimestre de 2013  
@@ -15,14 +15,12 @@ TP
 
 Requisitos de instalación
 --------------------
-Perl v5 o mayor.
-Bash v4 o mayor.
-Si no lo tiene instalado, ejecute el siguiente comando:  `sudo apt-get install perl`
+- Perl v5 o mayor. Si no lo tiene instalado, ejecute el siguiente comando:  `sudo apt-get install perl`
+- Bash v4 o mayor.
 
 
 Cómo copiar desde un medio externo
 --------------------
-
 1. Insertar el dispositivo de almacenamiento que contiene el trabajo práctico.
 2. Crear un directorio donde se desea copiar el contenido del trabajo práctico: `mkdir tp2013g1`
 3. Copiar el archivo `.tgz` en el directorio recien creado: `cp /media/<NOMBRE_PENDRIVE>/<NOMBRE_ARCHIVO>.tgz tp2013g1`
@@ -47,23 +45,23 @@ Luego de la instalación se creará la siguiente estructura dentro de la carpeta
 		-> Grabar_L.sh  
 		-> Iniciar_A.sh  
 		-> Recibir_A.sh  
-		-> Imprimir_A.pl   
+		-> Imprimir_A.pl  
 		-> Mover_A.sh  
 		-> Reservar_A.sh  
 		-> Start_A.sh  
 		-> Stop_A.sh  
 	-> conf  
 		-> Instalar_TP.conf  
-    -> disp
-    -> funciones
+    -> disp  
+    -> funciones  
     -> log  
 	-> mae  
 		-> obras.mae  
-		-> salas.mae
-	-> procesados
-		-> combos.dis
+		-> salas.mae  
+	-> procesados  
+		-> combos.dis  
 	-> rechazados  
-	-> repo
+	-> repo  
 `
 
 Los nombres de las carpetas pueden variar según lo que ingrese el usuario. 
