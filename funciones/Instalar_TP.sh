@@ -338,8 +338,8 @@ definirDirectorioEjecutables() {
 	AUX=`echo $INPUT | sed 's-^$-'"$BINDIR"'-'`
 	aux=`auxValidaDirectorio "$AUX"`
 	while [ "$aux" == "Invalido" ]; do
-		echo "Directorio inválido. Ingrese nuevamente"
-		# Loguear
+		echo "Directorio: $AUX es inválido. Ingrese nuevamente"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Directorio: $AUX es inválido. Ingrese nuevamente"
 		read AUX
 		aux=`auxValidaDirectorio "$AUX"`
 	done
@@ -361,7 +361,15 @@ definirDirectorioMaestros() {
 	read INPUT
 	# Si no ingresa nada se toma el valor por default
 	AUX=`echo $INPUT | sed 's-^$-'"mae"'-'`
-	
+
+	aux=`auxValidaDirectorio "$AUX"`
+	while [ "$aux" == "Invalido" ]; do
+		echo "Directorio: $AUX es inválido. Ingrese nuevamente"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Directorio: $AUX es inválido. Ingrese nuevamente"
+		read AUX
+		aux=`auxValidaDirectorio "$AUX"`
+	done	
+
 	#Reservar este path en la variable MAEDIR
 	MAEDIR=$AUX
 
@@ -377,6 +385,14 @@ definirDirectorioArribos() {
         read INPUT
 	# Si no ingresa nada se toma el valor por default
 	AUX=`echo $INPUT | sed 's-^$-'"arribos"'-'`
+
+	aux=`auxValidaDirectorio "$AUX"`
+	while [ "$aux" == "Invalido" ]; do
+		echo "Directorio: $AUX es inválido. Ingrese nuevamente"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Directorio: $AUX es inválido. Ingrese nuevamente"
+		read AUX
+		aux=`auxValidaDirectorio "$AUX"`
+	done
 
 	ARRIDIR=$AUX
 	echo "$GRUPO/$ARRIDIR"
@@ -439,6 +455,14 @@ definirDirectorioArribosAceptados() {
 	# Si no ingresa nada se toma el valor por default
 	AUX=`echo $INPUT | sed 's-^$-'"aceptados"'-'`
 	
+	aux=`auxValidaDirectorio "$AUX"`
+	while [ "$aux" == "Invalido" ]; do
+		echo "Directorio: $AUX es inválido. Ingrese nuevamente"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Directorio: $AUX es inválido. Ingrese nuevamente"
+		read AUX
+		aux=`auxValidaDirectorio "$AUX"`
+	done
+
 	ACEPDIR=$AUX
 
 	echo "$GRUPO/$ACEPDIR"
@@ -454,6 +478,14 @@ definirDirectorioArribosRechazados() {
 	# Si no ingresa nada se toma el valor por default
 	AUX=`echo $INPUT | sed 's-^$-'"rechazados"'-'`
 	
+	aux=`auxValidaDirectorio "$AUX"`
+	while [ "$aux" == "Invalido" ]; do
+		echo "Directorio: $AUX es inválido. Ingrese nuevamente"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Directorio: $AUX es inválido. Ingrese nuevamente"
+		read AUX
+		aux=`auxValidaDirectorio "$AUX"`
+	done
+
 	RECHDIR=$AUX
 
 	echo "$GRUPO/$RECHDIR"
@@ -468,7 +500,15 @@ definirDirectorioProcesados() {
         read INPUT
 	# Si no ingresa nada se toma el valor por default
 	AUX=`echo $INPUT | sed 's-^$-'"procesados"'-'`
-	
+		
+	aux=`auxValidaDirectorio "$AUX"`
+	while [ "$aux" == "Invalido" ]; do
+		echo "Directorio: $AUX es inválido. Ingrese nuevamente"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Directorio: $AUX es inválido. Ingrese nuevamente"
+		read AUX
+		aux=`auxValidaDirectorio "$AUX"`
+	done
+
 	PROCDIR=$AUX
 
 	echo "$GRUPO/$PROCDIR"
@@ -484,6 +524,14 @@ definirDirectorioListados() {
 	# Si no ingresa nada se toma el valor por default
 	AUX=`echo $INPUT | sed 's-^$-'"repo"'-'`
 	
+	aux=`auxValidaDirectorio "$AUX"`
+	while [ "$aux" == "Invalido" ]; do
+		echo "Directorio: $AUX es inválido. Ingrese nuevamente"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Directorio: $AUX es inválido. Ingrese nuevamente"
+		read AUX
+		aux=`auxValidaDirectorio "$AUX"`
+	done
+
 	REPODIR=$AUX
 	echo "$GRUPO/$REPODIR"
 	./Grabar_L.sh -i "Instalar_TP" -t i "$GRUPO/$REPODIR"
@@ -498,6 +546,14 @@ definirDirectorioLogs() {
 	# Si no ingresa nada se toma el valor por default
 	AUX=`echo $INPUT | sed 's-^$-'"log"'-'`
 	
+	aux=`auxValidaDirectorio "$AUX"`
+	while [ "$aux" == "Invalido" ]; do
+		echo "Directorio: $AUX es inválido. Ingrese nuevamente"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Directorio: $AUX es inválido. Ingrese nuevamente"
+		read AUX
+		aux=`auxValidaDirectorio "$AUX"`
+	done
+
 	LOGDIR=$AUX
 
 	echo "$GRUPO/$LOGDIR"
@@ -661,22 +717,28 @@ moverMaestros() {
 	echo "Instalando Archivos Maestros"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Archivos Maestros" 
 
-	if [ -f $OBRAS_FILE ]; then
+	if [ -f "$OBRAS_FILE" ]; then
 		if [ ! -f "$GRUPO/$MAEDIR/obras.mae" ]; then
 			cp "$OBRAS_FILE" "$GRUPO/$MAEDIR"
 		fi
 	else
 		echo "No se encontro el archivo de Obras"
+		echo "Verifique que la instalación tenga el archivo mae/obras.mae"
 		./Grabar_L.sh -i "Instalar_TP" -t i "No se encontro el archivo de Obras"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Verifique que la instalación tenga el archivo mae/obras.mae"
+		fin
 	fi
 
-	if [ -f $SALAS_FILE ]; then
+	if [ -f "$SALAS_FILE" ]; then
 		if [ ! -f "$GRUPO/$MAEDIR/salas.mae" ]; then
 			cp "$SALAS_FILE" "$GRUPO/$MAEDIR"
 		fi
 	else
 		echo "No se encontro el archivo de Salas"
+		echo "Verifique que la instalación tenga el archivo mae/salas.mae"
 		./Grabar_L.sh -i "Instalar_TP" -t i "No se encontro el archivo de Salas"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Verifique que la instalación tenga el archivo mae/salas.mae"
+		fin
 	fi
 
 }
@@ -685,13 +747,17 @@ moverMaestros() {
 moverDisponibilidad() {
 	echo "Instalando Archivo de Disponibilidad"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Archivo de Disponibilidad"
-	if [ -f $COMBOS_FILE ]; then
+
+	if [ -f "$COMBOS_FILE" ]; then
 		if [ ! -f "$GRUPO/$PROCDIR/combos.dis" ]; then
 			cp "$COMBOS_FILE" "$GRUPO/$PROCDIR"
 		fi
 	else
 		echo "No se encontro el archivo de disponibilidad"
+		echo "Verifique que la instalación tenga el archivo disp/combos.dis"
 		./Grabar_L.sh -i "Instalar_TP" -t i "No se encontro el archivo de disponibilidad"
+		./Grabar_L.sh -i "Instalar_TP" -t i "Verifique que la instalación tenga el archivo disp/combos.dis"
+		fin
 	fi
 }
 
