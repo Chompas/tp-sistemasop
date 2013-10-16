@@ -65,7 +65,8 @@ function fechaValida() {
 }
 
 function obtenerNombre() {
-	if [ $1 -eq 0 ]
+	rem=$(( $1 % 2 ))
+	if [ $rem -eq 0 ]
 	then
 		#SALAS
 		match=$(LANG=C grep "^$1;.*$" "$GRUPO/$MAEDIR/salas.mae")
