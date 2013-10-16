@@ -36,7 +36,7 @@ nombreOrigen="${1##*/}"
 
 
 # Verificar si el origen y el destino son iguales. Si este fuera el caso, no mover
-if [ $dirOrigen = $dirDestino ]; then
+if [ "$dirOrigen" = "$dirDestino" ]; then
 	if [ $# -eq 3 ]; then
 		./Grabar_L.sh "$comando" -t w "Origen y destino iguales. No se mueve"
 	fi	
@@ -44,21 +44,21 @@ if [ $dirOrigen = $dirDestino ]; then
 fi
 
 # Si el origen no existe o el destino no existe, error. Si este fuera el caso, no mover
-if [ ! -f $origen ]; then
+if [ ! -f "$origen" ]; then
 	if [ $# -eq 3 ]; then
-		./Grabar_L.sh "$comando" -t e "$origen no existe"
+		./Grabar_L.sh "$comando" -t e ""$origen" no existe"
 	fi	
     exit 1
 fi
-if [ ! -d $dirDestino ]; then
+if [ ! -d "$dirDestino" ]; then
 	if [ $# -eq 3 ]; then
-		./Grabar_L.sh "$comando" -t e "$dirDestino no existe"
+		./Grabar_L.sh "$comando" -t e ""$dirDestino" no existe"
 	fi	
     exit 1
 fi
 
 # Verificar si es un archivo duplicado
-if [ -f $dirDestino/$nombreOrigen ]; then
+if [ -f "$dirDestino/$nombreOrigen" ]; then
 
     # Archivo duplicado
     
@@ -75,7 +75,7 @@ if [ -f $dirDestino/$nombreOrigen ]; then
 	
 	# Obtengo nnn del ultimo duplicado almacenado
 
-    nnn=$(ls "$dirDestino/dup" | grep "^$nombreOrigen.[0-9]\{1,3\}$" | sort -r -V | sed s/$nombreOrigen.// | head -n 1)
+    nnn=$(ls "$dirDestino/dup" | grep "^$nombreOrigen.[0-9]\{1,3\}$" | sort -r -V | sed "s/$nombreOrigen.//" | head -n 1)
     
     # En caso de no haber duplicados inicializo nnn
 	if [ "$nnn" == "" ]; then
