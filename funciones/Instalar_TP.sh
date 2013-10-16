@@ -1,19 +1,6 @@
 #!/bin/bash
 
-USUARIO=$USER
-
-dir=$(readlink -f $0)
-parentdir="$(dirname "$dir")"
-GRUPO="`echo ${parentdir%/*}`"
-export GRUPO
-
-# Inicia variables por defecto
-CONFDIR="conf"
-export CONFDIR
-LOGSIZE=400
-export LOGSIZE
-# se exportan para ser utilizadas por el LOG
-
+# Funciones auxiliares
 function auxValidaDirectorio() {
 	var=`echo "$1"  | grep "^[-_ /a-zA-Z0-9]*$" | grep "^[^/].*"`
 	if [ "$var" ] ; then
@@ -30,56 +17,14 @@ function auxValidaDirectorio() {
 	fi
 }
 
-# si no hay instalacion previa -> seteo las variables con valores default
-if [ ! -f "$GRUPO/$CONFDIR/Instalar_TP.conf" ]; then
-	BINDIR="bin"
-	MAEDIR="mae" 
-	ARRIDIR="arribos" 
-	DATASIZE=100  
-	ACEPDIR="aceptados" 
-	RECHDIR="rechazados" 
-	PROCDIR="proc" 
-	REPODIR="repo" 
-	LOGDIR="log" 
-	LOGEXT="log"
-else
-# si hay una instalacion previa completo las variables con el contenido del archivo	
-	GRUPO=`grep "^GRUPO=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
-	BINDIR=`grep "^BINDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
-	MAEDIR=`grep "^MAEDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
-	ARRIDIR=`grep "^ARRIDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`	
-	DATASIZE=`grep "^DATASIZE=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`	
-	ACEPDIR=`grep "^ACEPDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
-	RECHDIR=`grep "^RECHDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
-	PROCDIR=`grep "^PROCDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
-	REPODIR=`grep "^REPODIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
-	LOGDIR=`grep "^LOGDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
-	LOGEXT=`grep "^LOGEXT=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
-fi
+function chequearBash() {
+	bashVersion=`bash --version | grep "^[^,]*, version \([^(]*\).*$" | sed "s/^[^,]*, version \([^(]*\).*$/\1/" | sed "s/^\([^.]\).*$/\1/"`
+	if [ $bashVersion -lt 4 ]; then
+		echo "La versión de bash es inválida. Debe tener instalado Bash 4.x.x o superior."
+		fin
+	fi
+}
 
-
-#FIXME: ver en que ruta buscarlos
-#salas.mae
-SALAS_FILE="../mae/salas.mae"
-#obras.mae
-OBRAS_FILE="../mae/obras.mae"
-#combos.dis
-COMBOS_FILE="../disp/combos.dis"
-
-
-iniciar_a_file=0
-recibir_a_file=0
-reservar_a_file=0
-start_a_file=0
-stop_a_file=0
-mover_a_file=0
-grabar_l_file=0
-imprimir_a_file=0
-
-# GENERO LA CARPETA DEL SISTEMA SI ES QUE NO EXISTE
- mkdir -p "$GRUPO/$CONFDIR"
-
-# Funciones auxiliares
 # 1. Iniciar archivo de log
 iniciarLogDeInstalacion() {
 	# Iniciar el archivo
@@ -880,6 +825,74 @@ definirParametros() {
 	definirTamanioMaximoLog
 }
 
+# se chequea que la version de bash sea 4 o mayor
+chequearBash
+
+# se guarda el nombre del usuario
+USUARIO=$USER
+
+# La variable grupo se completa con el directorio de trabajo
+dir=$(readlink -f $0)
+parentdir="$(dirname "$dir")"
+GRUPO="`echo ${parentdir%/*}`"
+export GRUPO
+
+
+# Inicia variables por defecto
+CONFDIR="conf"
+export CONFDIR
+LOGSIZE=400
+export LOGSIZE
+# se exportan para ser utilizadas por el LOG
+
+# si no hay instalacion previa -> seteo las variables con valores default
+if [ ! -f "$GRUPO/$CONFDIR/Instalar_TP.conf" ]; then
+	BINDIR="bin"
+	MAEDIR="mae" 
+	ARRIDIR="arribos" 
+	DATASIZE=100  
+	ACEPDIR="aceptados" 
+	RECHDIR="rechazados" 
+	PROCDIR="proc" 
+	REPODIR="repo" 
+	LOGDIR="log" 
+	LOGEXT="log"
+else
+# si hay una instalacion previa completo las variables con el contenido del archivo	
+	GRUPO=`grep "^GRUPO=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+	BINDIR=`grep "^BINDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+	MAEDIR=`grep "^MAEDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+	ARRIDIR=`grep "^ARRIDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`	
+	DATASIZE=`grep "^DATASIZE=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`	
+	ACEPDIR=`grep "^ACEPDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+	RECHDIR=`grep "^RECHDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+	PROCDIR=`grep "^PROCDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+	REPODIR=`grep "^REPODIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+	LOGDIR=`grep "^LOGDIR=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+	LOGEXT=`grep "^LOGEXT=.*$" "$GRUPO/$CONFDIR/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
+fi
+
+# Archivos maestros y de disponibilidad
+#salas.mae
+SALAS_FILE="../mae/salas.mae"
+#obras.mae
+OBRAS_FILE="../mae/obras.mae"
+#combos.dis
+COMBOS_FILE="../disp/combos.dis"
+
+# se inician variables
+iniciar_a_file=0
+recibir_a_file=0
+reservar_a_file=0
+start_a_file=0
+stop_a_file=0
+mover_a_file=0
+grabar_l_file=0
+imprimir_a_file=0
+
+# GENERO LA CARPETA DEL SISTEMA SI ES QUE NO EXISTE
+ mkdir -p "$GRUPO/$CONFDIR"
+
 #1
 iniciarLogDeInstalacion
 #2
@@ -904,4 +917,6 @@ confirmarInicio
 instalacionConcluida
 #24
 fin
+
+
 
