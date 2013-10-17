@@ -40,12 +40,12 @@ chequeaVariables(){
 chequeaArchivosMaestros(){
 
   #Chequeo que los archivos existan  
-  if [ ! -f $OBRAS ] ; then
+  if [ ! -f "$OBRAS" ] ; then
       echo 1
       return
   fi
   
-  if [ ! -f $SALAS ] ; then
+  if [ ! -f "$SALAS" ] ; then
     echo 1
     return
   fi
