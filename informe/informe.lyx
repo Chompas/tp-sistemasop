@@ -3591,7 +3591,43 @@ Archivo de Reservas:
 \end_layout
 
 \begin_layout Standard
-FIXME
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+1;Una historia para cartucho;17/10/2013;17:00;18;Teatro Payro;4;C00010018;332;4;
+LEYER_DEMIAN@GMAIL.COM;pablo; 
+\end_layout
+
+\begin_layout Plain Layout
+
+1;Una historia para cartucho;17/10/2013;17:00;18;Teatro Payro;4;C00010018;332;4;
+LEYER_DEMIAN@GMAIL.COM;pablo; 
+\end_layout
+
+\begin_layout Plain Layout
+
+1;Una historia para cartucho;17/10/2013;17:00;18;Teatro Payro;4;C00010018;332;4;
+LEYER_DEMIAN@GMAIL.COM;pablo; 
+\end_layout
+
+\begin_layout Plain Layout
+
+1;Una historia para cartucho;17/10/2013;17:00;18;Teatro Payro;4;C00010018;332;4;
+LEYER_DEMIAN@GMAIL.COM;pablo; 
+\end_layout
+
+\begin_layout Plain Layout
+
+1;Una historia para cartucho;17/10/2013;17:00;18;Teatro Payro;4;C00010018;332;4;
+LEYER_DEMIAN@GMAIL.COM;pablo;
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
