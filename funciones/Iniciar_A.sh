@@ -61,7 +61,7 @@ function getArraySimuladoClaves {
 
 function MOSTRAR_RESUMEN() {
 	getArraySimulado 'CONFIGURACION' CONFDIR 'CONFDIR'
-	echo "- Libreria del Sistema: ${CONFDIR}"
+	echo "- Librería del Sistema: ${CONFDIR}"
 	ls -1 "$GRUPO/${CONFDIR}"
 	
 	getArraySimulado 'CONFIGURACION' BINDIR 'BINDIR'
@@ -88,9 +88,9 @@ function MOSTRAR_RESUMEN() {
 	echo "- Archivos procesados: ${PROCDIR}"
 
 	getArraySimulado 'CONFIGURACION' LOGDIR 'LOGDIR'
-	echo "- Logs de auditoria del Sistema: ${LOGDIR}" 
+	echo "- Logs de auditoría del Sistema: ${LOGDIR}" 
 	echo 
-	echo "Estado del sistema: INICIALIZADO"
+	echo "Estado del sistema: INICIALIZADO."
 }	
 
 ##########################################################################
@@ -104,7 +104,7 @@ echo "TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01"
 if [ $INICIAR_A_EJECUTADO_EXITOSAMENTE ]
 then
 	./Grabar_L.sh "Iniciar_A" -t e "El ambiente ya ha sido inicializado en esta sesion."
-	echo "La iniciacion ya fue ejecutada en esta sesion de usuario."
+	echo "ERROR: La inicialización ya fue ejecutada en esta sesión de usuario."
 	MOSTRAR_RESUMEN
 	exit 2
 fi
@@ -140,7 +140,7 @@ then
 	export LOGSIZE
 
 	./Grabar_L.sh -i "Iniciar_A" -t e "No se pudo iniciar el entorno. No se hallo el archivo de configuracion."
-	echo "No se pudo encontrar el archivo de configuracion"
+	echo "ERROR: No se pudo encontrar el archivo de configuración."
 	exit 1
 fi
 
@@ -177,7 +177,7 @@ do
 		then
 			setArraySimulado 'DIRECTORIOS_EXISTENTES' "$VARIABLE" "$VALOR"
 		else
-			ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No existe el directorio ${VARIABLE} en ${VALOR}"
+			ERRORES_DE_INSTALACION[${#ERRORES_DE_INSTALACION[@]}]="No existe el directorio ${VARIABLE} en ${VALOR}."
 		fi
 	else
 	    VARIABLES_FALTANTES[${#VARIABLES_FALTANTES[@]}]=$DIRECTORIO	
@@ -194,7 +194,7 @@ do
 		if [ ! -w "$GRUPO/$DIRECTORIO" ]
 		then
 			chmod +w "$GRUPO/$DIRECTORIO"
-			echo "Fueron seteados permisos. No habia permisos de escritura en el directorio $DIRECTORIO"
+			echo "Fueron seteados permisos. No había permisos de escritura en el directorio $DIRECTORIO."
 		fi
 	fi
 done
@@ -213,7 +213,7 @@ then
 		elif [ ! -r "$GRUPO/${DIRECTORIO_MAESTROS}/${ARCHIVOS_MAESTROS[${aux}]}" ]
                 then
                         chmod +r "$GRUPO/${DIRECTORIO_MAESTROS}/${ARCHIVOS_MAESTROS[${aux}]}"
-                      	echo "Fueron seteados permisos. No habia permisos de lectura sobre el archivo maestro: ${DIRECTORIO_MAESTROS}/${ARCHIVOS_MAESTROS[${aux}]}"
+                      	echo "Fueron seteados permisos. No habia permisos de lectura sobre el archivo maestro: ${DIRECTORIO_MAESTROS}/${ARCHIVOS_MAESTROS[${aux}]}."
                 fi
         done
 fi
@@ -233,7 +233,7 @@ then
 		elif [ ! -x "$GRUPO/${DIRECTORIO_EJECUTABLES}/${COMANDOS_SISTEMA[${aux}]}" ]
 		then	
 			chmod +x "$GRUPO/${DIRECTORIO_EJECUTABLES}/${COMANDOS_SISTEMA[${aux}]}"
-			echo "Fueron seteados permisos. No habia permisos de ejecucion del comando: ${DIRECTORIO_EJECUTABLES}/${COMANDOS_SISTEMA[${aux}]}"
+			echo "Fueron seteados permisos. No habia permisos de ejecución del comando: ${DIRECTORIO_EJECUTABLES}/${COMANDOS_SISTEMA[${aux}]}"
 		fi
 	done
 fi
@@ -300,7 +300,7 @@ MOSTRAR_RESUMEN
 #Funcion para preguntar que accion tomar frente al iniciar Demonio
 funcPreguntarPorDemonio(){
 while true; do
-	echo "¿Desea efectuar la activacion de Recibir_A? Si – No" 
+	echo "¿Desea efectuar la activación de Recibir_A? Si – No" 
      	read respuesta
      	case $respuesta in
         Si) 
@@ -312,18 +312,18 @@ while true; do
 
 	if [ ! -z "$PID_RECIBE" ]
 	then
-		echo "Demonio corriendo bajo el Nro <$PID_RECIBE>"
-		echo "Proceso de inicializacion finalizado con exito."
-		echo "Si desea detener el demonio hagalo con el comando Stop_A.sh"
-		./Grabar_L.sh "Iniciar_A" -t i "Demonio corriendo bajo el no.: <$PID_RECIBE>"
+		echo "Demonio corriendo bajo el Nro <$PID_RECIBE>."
+		echo "Proceso de inicialización finalizado con éxito."
+		echo "Si desea detener el demonio hagalo con el comando Stop_A.sh."
+		./Grabar_L.sh "Iniciar_A" -t i "Demonio corriendo bajo el no.: <$PID_RECIBE>."
 	else
-		echo "Proceso de inicializacion concluido sin exito. No se pudo correr el Demonio."
-		./Grabar_L.sh "Iniciar_A" -t e "Inicializacion de Ambiente finalizado con errores."
+		echo "Proceso de inicialización concluido sin éxito. No se pudo correr el Demonio."
+		./Grabar_L.sh "Iniciar_A" -t e "Inicialización de ambiente finalizado con errores."
 	fi
 	return 0;;
-        No) echo "Si desea ejecutar el demonio hagalo con el comando Start_A.sh"
+        No) echo "Si desea ejecutar el demonio, hágalo con el comando Start_A.sh."
 	 return 0;;
-        *) echo -e "\nPor favor introduzca Si o No \n";;
+        *) echo -e "\nPor favor introduzca Si o No. \n";;
    	 esac
 done
 }
@@ -336,8 +336,8 @@ PID_RECIBE=`ps ax | grep Recibir_A | grep -v Grabar_L | grep -v grep | awk '{pri
 if [ $PID_RECIBE ]
 then
 	echo " "
-	echo "El proceso Recibir_A ya se esta ejecutando con el PID $PID_RECIBE"
-	./Grabar_L.sh "Iniciar_A" -t e "No se puede arrancar el demonio. Ya existe otro demonio en ejecucion."
+	echo "ERROR: El proceso Recibir_A ya se está ejecutando con el PID $PID_RECIBE."
+	./Grabar_L.sh "Iniciar_A" -t e "No se puede arrancar el demonio. Ya existe otro demonio en ejecución."
 
 else	
 	funcPreguntarPorDemonio

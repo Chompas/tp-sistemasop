@@ -4,13 +4,11 @@
 #					#
 #	Sistemas Operativos 75.08	#
 #	Grupo: 	1			#
-#	Nombre:	StopD.sh		#
+#	Nombre:	Stop_A.sh		#
 #					#
 #########################################
 
-
-
-COMANDO="Stop_A.sh"
+COMANDO="Stop_A"
 
 chequeaProceso(){
 
@@ -30,10 +28,8 @@ RECIBIR_PID=`chequeaProceso Recibir_A.sh $$`
 if ([ $RECIBIR_PID ]) then
     kill -9 $RECIBIR_PID
     bash Grabar_L.sh "$COMANDO" -t i "Se detuvo el demonio de Recibir_A con PID: <$RECIBIR_PID>" 
-    echo "Se detuvo el demonio de Recibir_A con PID: <$RECIBIR_PID>" 
+    echo "Se detuvo el demonio de Recibir_A con PID: <$RECIBIR_PID>." 
 else
    bash Grabar_L.sh "$COMANDO" -t i "No se pudo detener el demonio Recibir_A pues no fue encontrado"
-   echo "No se pudo detener el demonio Recibir_A pues no fue encontrado"
+   echo "ERROR: No se pudo detener el demonio Recibir_A pues no fue encontrado."
 fi
-
-

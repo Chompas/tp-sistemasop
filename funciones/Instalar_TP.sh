@@ -26,7 +26,7 @@ function auxValidaDirectorio() {
 function chequearBash() {
 	bashVersion=`bash --version | grep "^[^,]*, version \([^(]*\).*$" | sed "s/^[^,]*, version \([^(]*\).*$/\1/" | sed "s/^\([^.]\).*$/\1/"`
 	if [ $bashVersion -lt 4 ]; then
-		echo "La versión de bash es inválida. Debe tener instalado Bash 4.x.x o superior."
+		echo "ERROR: La versión de bash es inválida. Debe tener instalado Bash 4.x.x o superior."
 		fin
 	fi
 }
@@ -83,20 +83,20 @@ verificarExistenciaComponentes(){
 
 	if [ $iniciar_a_file -eq 1 ] && [ $recibir_a_file -eq 1 ] && [ $reservar_a_file -eq 1 ] && [ $start_a_file -eq 1 ] && [ $stop_a_file -eq 1 ]  && [ $mover_a_file -eq 1 ] && [ $imprimir_a_file -eq 1 ] && [ $grabar_l_file -eq 1 ] 
 	then
-		echo "Estado de la instalación: COMPLETA"
+		echo "Estado de la instalación: COMPLETA."
 		./Grabar_L.sh -i "Instalar_TP" -t i "Estado de la instalación: COMPLETA"
 
-		echo "Proceso de Instalación Cancelado"
+		echo "Proceso de instalación Cancelado."
 		./Grabar_L.sh -i "Instalar_TP" -t i "Proceso de Instalación Cancelado"
 	else
 		echo "Componentes faltantes:"
 		./Grabar_L.sh -i "Instalar_TP" -t i "Componentes faltantes:"
 
 		imprimirComponentesFaltantes
-		echo "Estado de la instalación: INCOMPLETA"
+		echo "Estado de la instalación: INCOMPLETA."
 		./Grabar_L.sh -i "Instalar_TP" -t i "Estado de la instalación: INCOMPLETA"
 
-		echo "Desea completar la instalación? (Si-No)"
+		echo "¿Desea completar la instalación? (Si-No)"
 		./Grabar_L.sh -i "Instalar_TP" -t i "Desea completar la instalación? (Si-No)"
 
 		INPUT="0"
@@ -212,14 +212,14 @@ verificarInstalacionPrevia() {
 # 5. Aceptar terminos y Condiciones
 aceptarTerminosyCondiciones() {
 	echo "TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01
-A T E N C I O N: Al instalar TP SO7508 Segundo Cuatrimestre 2013 UD. expresa 
+A T E N C I Ó N: Al instalar TP SO7508 Segundo Cuatrimestre 2013 UD. expresa 
 aceptar los términos y Condiciones del \"ACUERDO DE LICENCIA DE SOFTWARE\" 
 incluido en este paquete.
-Acepta? Si – No"
+¿Acepta? Si – No"
 	./Grabar_L.sh -i "Instalar_TP" -t i "TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01"
-	./Grabar_L.sh -i "Instalar_TP" -t i "A T E N C I O N: Al instalar TP SO7508 Segundo Cuatrimestre 2013 UD. expresa
+	./Grabar_L.sh -i "Instalar_TP" -t i "A T E N C I Ó N: Al instalar TP SO7508 Segundo Cuatrimestre 2013 UD. expresa
 aceptar los términos y Condiciones del \"ACUERDO DE LICENCIA DE SOFTWARE\" incluido en este paquete."
-	./Grabar_L.sh -i "Instalar_TP" -t i "Acepta? Si – No"
+	./Grabar_L.sh -i "Instalar_TP" -t i "¿Acepta? Si – No"
 
 	INPUT="0"
 	while [ "$INPUT" != 'No' ] && [ "$INPUT" != 'Si' ]; do  # falla con cadena vacia
@@ -260,7 +260,7 @@ noExistePerl() {
 Para instalar el TP es necesario contar con Perl 5 o superior
 instalado. 
 Efectúe su instalación e inténtelo nuevamente.
-Proceso de Instalación Cancelado"
+Proceso de Instalación Cancelado."
 
 	./Grabar_L.sh -i "Instalar_TP" -t i "TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Para instalar el TP es necesario contar con Perl 5 o superior instalado."
@@ -542,8 +542,8 @@ definirTamanioMaximoLog() {
 	  numero1=`echo "$numero" | grep '^[0-9]*$'`
 	  if [ -z $numero1 ]; then
 	    esNumero=2
-	    echo " \"$numero\" no es numerico. Intente Nuevamente"
-	    ./Grabar_L.sh -i "Instalar_TP" -t i " \"$numero\" no es numerico. Intente Nuevamente"
+	    echo " \"$numero\" no es númerico. Intente nuevamente."
+	    ./Grabar_L.sh -i "Instalar_TP" -t i " \"$numero\" no es númerico. Intente nuevamente."
 	  else
 	    esNumero=1
 	  fi  
@@ -561,7 +561,7 @@ mostrarEstructura() {
 	limpiarPantalla
 	verEstructura
 
-	echo "Los datos ingresados son válidos? (Si/No): "
+	echo "¿Los datos ingresados son válidos? (Si-No): "
 	./Grabar_L.sh -i "Instalar_TP" -t i "Los datos ingresados son válidos? (Si/No): "
 
 	INPUT="0"
@@ -600,7 +600,7 @@ verEstructura() {
 	Reportes de salida: $GRUPO/$REPODIR
 	Logs de auditoria del Sistema: $GRUPO/$LOGDIR/<comando>.$LOGEXT
 	Tamaño máximo para los archivos de log del sistema: $LOGSIZE Kb
-	Estado de la instalacion: LISTA"
+	Estado de la instalacion: LISTA."
 	./Grabar_L.sh -i "Instalar_TP" -t i "TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Librería del Sistema: $GRUPO/$CONFDIR"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Ejecutables: $GRUPO/$BINDIR"
@@ -619,8 +619,8 @@ verEstructura() {
 
 # 20. Confirmar Inicio de Instalación
 confirmarInicio() {
-	echo "Iniciando Instalación. Esta Ud. seguro? (Si-No)"
-	./Grabar_L.sh -i "Instalar_TP" -t i "Iniciando Instalación. Esta Ud. seguro? (Si-No)"
+	echo "Iniciando Instalación. ¿Está seguro? (Si-No)"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Iniciando Instalación. ¿Está seguro? (Si-No)"
 
 	INPUT="0"
 	while [ "$INPUT" != 'No' ] && [ "$INPUT" != 'Si' ]; do  # falla con cadena vacia
@@ -665,7 +665,7 @@ crearEstructuras() {
 
 # 21.2. Mover los archivos maestros al directorio MAEDIR mostrando el siguiente mensaje
 moverMaestros() {
-	echo "Instalando Archivos Maestros"
+	echo "Instalando archivos maestros."
 	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Archivos Maestros" 
 
 	if [ -f "$OBRAS_FILE" ]; then
@@ -673,8 +673,8 @@ moverMaestros() {
 			cp "$OBRAS_FILE" "$GRUPO/$MAEDIR"
 		fi
 	else
-		echo "No se encontro el archivo de Obras"
-		echo "Verifique que la instalación tenga el archivo mae/obras.mae"
+		echo "ERROR: No se encontró el archivo de Obras."
+		echo "Verifique que la instalación tenga el archivo mae/obras.mae."
 		./Grabar_L.sh -i "Instalar_TP" -t i "No se encontro el archivo de Obras"
 		./Grabar_L.sh -i "Instalar_TP" -t i "Verifique que la instalación tenga el archivo mae/obras.mae"
 		fin
@@ -685,8 +685,8 @@ moverMaestros() {
 			cp "$SALAS_FILE" "$GRUPO/$MAEDIR"
 		fi
 	else
-		echo "No se encontro el archivo de Salas"
-		echo "Verifique que la instalación tenga el archivo mae/salas.mae"
+		echo "ERROR: No se encontró el archivo de Salas."
+		echo "Verifique que la instalación tenga el archivo mae/salas.mae."
 		./Grabar_L.sh -i "Instalar_TP" -t i "No se encontro el archivo de Salas"
 		./Grabar_L.sh -i "Instalar_TP" -t i "Verifique que la instalación tenga el archivo mae/salas.mae"
 		fin
@@ -696,7 +696,7 @@ moverMaestros() {
 
 # 21.3.Mover el archivo de disponibilidad al directorio PROCDIR mostrando el siguiente mensaje
 moverDisponibilidad() {
-	echo "Instalando Archivo de Disponibilidad"
+	echo "Instalando archivo de disponibilidad."
 	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Archivo de Disponibilidad"
 
 	if [ -f "$COMBOS_FILE" ]; then
@@ -704,9 +704,9 @@ moverDisponibilidad() {
 			cp "$COMBOS_FILE" "$GRUPO/$PROCDIR"
 		fi
 	else
-		echo "No se encontro el archivo de disponibilidad"
+		echo "ERROR: No se encontró el archivo de disponibilidad."
 		echo "Verifique que la instalación tenga el archivo disp/combos.dis"
-		./Grabar_L.sh -i "Instalar_TP" -t i "No se encontro el archivo de disponibilidad"
+		./Grabar_L.sh -i "Instalar_TP" -t i "No se encontró el archivo de disponibilidad"
 		./Grabar_L.sh -i "Instalar_TP" -t i "Verifique que la instalación tenga el archivo disp/combos.dis"
 		fin
 	fi
@@ -714,7 +714,7 @@ moverDisponibilidad() {
 
 # 21.4. Mover los ejecutables y funciones al directorio BINDIR mostrando el siguiente mensaje
 moverProgramasYFunciones() {
-	echo "Instalando Programas y Funciones"
+	echo "Instalando programas y funciones."
 	./Grabar_L.sh -i "Instalar_TP" -t i "Instalando Programas y Funciones"
 
 	cp "./Iniciar_A.sh" "$GRUPO/$BINDIR/"
@@ -738,8 +738,8 @@ moverProgramasYFunciones() {
 
 # 21.5. Actualizar el archivo de configuración mostrando el siguiente mensaje
 actualizarArchivoConfiguracion() {
-	echo "Actualizando la configuración del sistema"
-	./Grabar_L.sh -i "Instalar_TP" -t i "Actualizando la configuración del sistema"
+	echo "Actualizando la configuración del sistema."
+	./Grabar_L.sh -i "Instalar_TP" -t i "Actualizando la configuración del sistema."
 	
 	AM_PM=$(date +"%P")
 	AM_PM=`echo $AM_PM | sed "s/\(.\)\(.\)/\1.\2/g"`
