@@ -72,7 +72,7 @@ chequeaDirectorios(){
   # Chequeo que existan los directorios
   if ([ ! -d "$GRUPO" ] || [ ! -d "$GRUPO/$BINDIR" ] || [ ! -d "$GRUPO/$MAEDIR" ] || [ ! -d "$GRUPO/$ARRIDIR" ] || 
       [ ! -d "$GRUPO/$ACEPDIR" ] || [ ! -d "$GRUPO/$RECHDIR" ] || [ ! -d "$GRUPO/$REPODIR" ] || [ ! -d "$GRUPO/$PROCDIR" ] || 
-      [ ! -d "$GRUPO/$LOGDIR" ] || [ ! -d "$GRUPO/$LOGEXT" ]) then
+      [ ! -d "$GRUPO/$LOGDIR" ]) then
     echo 1
     return
   fi
