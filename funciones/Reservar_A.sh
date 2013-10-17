@@ -37,7 +37,7 @@ if $debug ; then
 fi
 
 function cantidadArchivos() {
-	echo $(find $1 -type f | wc -l)
+	echo $(find "$1" -type f | wc -l)
 }
 
 function horaValida() {
