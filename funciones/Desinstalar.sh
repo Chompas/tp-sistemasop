@@ -42,18 +42,42 @@ while [ "$INPUT" != 'No' ] && [ "$INPUT" != 'Si' ]; do  # falla con cadena vacia
 	INPUT=$AUX
 done
 
-rm -r "$GRUPO/$BINDIR"
-
-if [ $MAEDIR != "mae" ]; then
-	rm -r "$GRUPO/$MAEDIR"
+if [ -d "$GRUPO/$BINDIR" ]; then
+	rm -r "$GRUPO/$BINDIR"
 fi
 
-rm -r "$GRUPO/$ARRIDIR"
-rm -r "$GRUPO/$ACEPDIR"
-rm -r "$GRUPO/$RECHDIR"
-rm -r "$GRUPO/$PROCDIR"
-rm -r "$GRUPO/$REPODIR"
-rm -r "$GRUPO/$LOGDIR"
-rm -r "$GRUPO/conf"
+if [ $MAEDIR != "mae" ]; then
+	if [ -d "$GRUPO/$MAEDIR" ]; then
+		rm -r "$GRUPO/$MAEDIR"
+	fi
+fi
+
+if [ -d "$GRUPO/$ARRIDIR" ]; then
+	rm -r "$GRUPO/$ARRIDIR"
+fi
+
+if [ -d "$GRUPO/$ACEPDIR" ]; then
+	rm -r "$GRUPO/$ACEPDIR"
+fi
+
+if [ -d "$GRUPO/$RECHDIR" ]; then
+	rm -r "$GRUPO/$RECHDIR"
+fi
+
+if [ -d "$GRUPO/$PROCDIR" ]; then
+	rm -r "$GRUPO/$PROCDIR"
+fi
+
+if [ -d "$GRUPO/$REPODIR" ]; then
+	rm -r "$GRUPO/$REPODIR"
+fi
+
+if [ -d "$GRUPO/$LOGDIR" ]; then
+	rm -r "$GRUPO/$LOGDIR"
+fi
+
+if [ -d "$GRUPO/conf" ]; then
+	rm -r "$GRUPO/conf"
+fi
 
 salir
