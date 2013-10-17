@@ -1,0 +1,176 @@
+# Instalación
+
+> ~/SO/tp-sistemasop/funciones $ ./Instalar_TP.sh 
+Inicio de Ejecución
+Log del Comando Instalar_TP: conf/Instalar_TP.log
+Directorio de Configuración: conf
+TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01
+A T E N C I O N: Al instalar TP SO7508 Segundo Cuatrimestre 2013 UD. expresa 
+aceptar los términos y Condiciones del "ACUERDO DE LICENCIA DE SOFTWARE" 
+incluido en este paquete.
+Acepta? Si – No
+Si
+TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01
+Perl Version: 5
+Defina el directorio de instalación de los ejecutables (/home/pablo/SO/tp-sistemasop/bin): 
+bin
+/home/pablo/SO/tp-sistemasop/bin
+Defina el directorio de instalación de los archivos maestros (/home/pablo/SO/tp-sistemasop/mae): 
+/home/pablo/SO/tp-sistemasop/mae
+Defina el directorio de arribo de archivos externos (/home/pablo/SO/tp-sistemasop/arribos): 
+/home/pablo/SO/tp-sistemasop/arribos
+Defina el espacio mínimo libre para el arribo de archivos externos en Mbytes (100):
+100
+Defina el directorio de grabación de los archivos externos aceptados (/home/pablo/SO/tp-sistemasop/aceptados): 
+/home/pablo/SO/tp-sistemasop/aceptados
+Defina el directorio de grabación de los archivos externos rechazados (/home/pablo/SO/tp-sistemasop/rechazados): 
+/home/pablo/SO/tp-sistemasop/rechazados
+Defina el directorio de grabación de los archivos procesados (/home/pablo/SO/tp-sistemasop/proc): 
+/home/pablo/SO/tp-sistemasop/procesados
+Defina el directorio de los listados de salida (/home/pablo/SO/tp-sistemasop/repo): 
+/home/pablo/SO/tp-sistemasop/repo
+Defina el directorio de logs (/home/pablo/SO/tp-sistemasop/log): 
+/home/pablo/SO/tp-sistemasop/log
+Ingrese la extensión para los archivos de log: (log): 
+log
+Defina el tamaño máximo para los archivos log en Kbytes (400):
+400
+400
+
+TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01
+	Librería del Sistema: /home/pablo/SO/tp-sistemasop/conf
+	Ejecutables: /home/pablo/SO/tp-sistemasop/bin
+	Archivos maestros: /home/pablo/SO/tp-sistemasop/mae
+	Directorio de arribo de archivos externos: /home/pablo/SO/tp-sistemasop/arribos
+	Espacio mínimo libre para arribos: 100 Mb
+	Archivos externos aceptados: /home/pablo/SO/tp-sistemasop/aceptados
+	Archivos externos rechazados: /home/pablo/SO/tp-sistemasop/rechazados
+	Archivos procesados: /home/pablo/SO/tp-sistemasop/procesados
+	Reportes de salida: /home/pablo/SO/tp-sistemasop/repo
+	Logs de auditoria del Sistema: /home/pablo/SO/tp-sistemasop/log/<comando>.log
+	Tamaño máximo para los archivos de log del sistema: 400 Kb
+	Estado de la instalacion: LISTA
+Los datos ingresados son válidos? (Si/No): 
+Si
+Iniciando Instalación. Esta Ud. seguro? (Si-No)
+Si
+Creando Estructuras de directorio. . . .
+Instalando Archivos Maestros
+Instalando Archivo de Disponibilidad
+Instalando Programas y Funciones
+Actualizando la configuración del sistema
+Instalación CONCLUIDA
+
+# se navega hasta la carpeta que contiene los binarios
+> ~/SO/tp-sistemasop/funciones $ cd ../
+> ~/SO/tp-sistemasop $ cd bin
+
+# se inicia el aplicativo
+> ~/SO/tp-sistemasop/bin $ . ./Iniciar_A.sh 
+
+TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01
+ 
+- Libreria del Sistema: conf
+Instalar_TP.conf
+Instalar_TP.log
+- Ejecutables: bin
+Grabar_L.sh
+Imprimir_A.pl
+Iniciar_A.sh
+Mover_A.sh
+Recibir_A.sh
+Reservar_A.sh
+Start_A.sh
+Stop_A.sh
+- Archivos maestros: mae
+obras.mae
+salas.mae
+- Directorio de arribo de archivos externos: arribos
+- Archivos externos aceptados: aceptados
+- Archivos externos rechazados: rechazados
+- Reportes de salida: repo
+- Archivos procesados: procesados
+- Logs de auditoria del Sistema: log
+
+Estado del sistema: INICIALIZADO
+¿Desea efectuar la activacion de Recibir_A? Si – No
+Si
+Demonio corriendo bajo el Nro <9466>
+Proceso de inicializacion finalizado con exito.
+Si desea detener el demonio hagalo con el comando Stop_A.sh
+
+# copiamos algun archivo de reservas en la carpeta arribos
+> ~/SO/tp-sistemasop/procesados $ cd ../
+> ~/SO/tp-sistemasop $ cd arribos/
+> ~/SO/tp-sistemasop/arribos $ cp /home/pablo/Escritorio/DatosTP2013-2C/1-LEYER_DEMIAN@GMAIL.COM-EstrenoenelPayro332 ./
+
+# verificamos en la carpeta procesados que se haya creado el archivo de reservas.ok
+> ~/SO/tp-sistemasop/arribos $ cd ../
+> ~/SO/tp-sistemasop $ cd procesados/
+> ~/SO/tp-sistemasop/procesados $ ls
+1-LEYER_DEMIAN@GMAIL.COM-EstrenoenelPayro332  combos.dis  reservas.ok
+
+# verificamos el contenido del archivo de reservas.
+> ~/SO/tp-sistemasop/procesados $ cat reservas.ok 
+1;Una historia para cartucho;17/10/2013;17:00;18;Teatro Payro;4;C00010018;332;4;LEYER_DEMIAN@GMAIL.COM;pablo;
+1;Una historia para cartucho;17/10/2013;17:00;18;Teatro Payro;4;C00010018;332;4;LEYER_DEMIAN@GMAIL.COM;pablo;
+1;Una historia para cartucho;17/10/2013;17:00;18;Teatro Payro;4;C00010018;332;4;LEYER_DEMIAN@GMAIL.COM;pablo;
+1;Una historia para cartucho;17/10/2013;17:00;18;Teatro Payro;4;C00010018;332;4;LEYER_DEMIAN@GMAIL.COM;pablo;
+1;Una historia para cartucho;17/10/2013;17:00;18;Teatro Payro;4;C00010018;332;4;LEYER_DEMIAN@GMAIL.COM;pablo;
+
+# sacamos un reporte por pantalla
+> ~/SO/tp-sistemasop/bin $ ./Imprimir_A.pl -d
+Opción 1: ID OBRA
+Opción 2: ID SALA
+Opción 3: RANGO de ID OBRA
+Opción 4: RANGO de ID SALA
+Ingrese la opción deseada: 3
+Ingrese el mínimo de ID de obra: 1
+Ingrese el máximo de ID de obra: 18
+Rango ID obra válido. 
+C00010018-1-17/10/2013-17:00-18-920-93
+C00010019-1-18/10/2013-17:00-18-920-0
+C00010020-1-19/10/2013-19:00-18-920-0
+C00010021-1-20/10/2013-16:00-18-920-0
+C00010022-1-24/10/2013-17:00-18-920-0
+C00010023-1-25/10/2013-17:00-18-920-500
+C00010024-1-26/10/2013-19:00-18-920-0
+C00010025-1-27/10/2013-16:00-18-920-0
+C00010026-3-02/11/2013-18:00-12-850-20
+C00010027-3-02/11/2013-21:00-12-850-0
+C00010028-3-03/11/2013-18:00-12-850-0
+C00010029-5-03/11/2013-16:00-6-800-50
+C00010034-7-10/10/2013-20:00-54-600-60
+C00010037-7-17/10/2013-18:00-54-600-60
+C00010040-7-17/10/2013-22:00-54-600-60
+C00010042-9-18/10/2013-19:00-60-630-70
+C00010044-9-18/10/2013-22:00-60-630-70
+C00010048-9-19/10/2013-21:00-60-630-70
+C00010050-11-19/10/2013-23:00-66-630-70
+C00010057-11-25/10/2013-18:00-66-630-90
+C00010066-11-26/10/2013-23:00-66-630-90
+C00010051-13-20/10/2013-18:00-72-400-50
+C00010055-13-24/10/2013-22:00-72-400-50
+C00010067-13-27/10/2013-20:00-72-400-67
+C00010058-15-25/10/2013-18:00-78-400-58
+C00010065-15-26/10/2013-22:00-78-400-58
+C00010072-15-02/11/2013-20:00-78-400-67
+C00010075-17-03/11/2013-20:00-84-400-80
+C00010079-17-09/11/2013-18:00-84-400-80
+C00010080-17-09/11/2013-22:00-84-400-80
+
+# se corta la ejecución
+
+> ~/SO/tp-sistemasop/bin $ ./Stop_A.sh 
+Se detuvo el demonio de Recibir_A con PID: <9466>
+[1]+  Killed                  bash ./Recibir_A.sh
+
+# se desinstala la app
+
+> ~/SO/tp-sistemasop/bin $ cd ../
+> ~/SO/tp-sistemasop $ cd funciones/
+> ~/SO/tp-sistemasop/funciones $ ./Desinstalar.sh 
+Esta seguro que desea desisntalar la app? (Si-No)
+TODOS los datos se perderán
+Si
+
