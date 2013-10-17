@@ -4,13 +4,11 @@
 #					#
 #	Sistemas Operativos 75.08	#
 #	Grupo: 	1			#
-#	Nombre:	startD.sh		#
+#	Nombre:	Start_A.sh		#
 #					#
 #########################################
 
-
-
-COMANDO="Start_A.sh"
+COMANDO="Start_A"
 
 chequeaProceso(){
 
@@ -107,20 +105,20 @@ fi
 
   if [ `chequeaVariables` -eq 1 ] ; then
     bash Grabar_L.sh "$COMANDO" -t e "No se hayan inicializadas las variables necesarias. No se puede llamar al Recibir_A"
-    echo "No se hallan inicializadas las variables necesarias. No se puede llamar al Recibir_A"
+    echo "ERROR: No se hallan inicializadas las variables necesarias. No se puede llamar al Recibir_A."
     exit 1
   fi
 
   #CHEQUEAR INSTALACION
   if [ `chequeaDirectorios` -eq 1 ] ; then
     bash Grabar_L.sh "$COMANDO" -t se "Directorios necesarios no creados en la instalacion o no disponibles" 
-    echo "Error: Directorios necesarios no creados en la instalacion o no disponibles"
+    echo "ERROR: Directorios necesarios no creados en la instalación o no disponibles."
     exit 1
   fi
   
   if [ `chequeaArchivosMaestros` -eq 1 ] ; then
     bash Grabar_L.sh "$COMANDO" -t se "Archivos maestros no accesibles/disponibles"
-    echo "Error: Archivos maestros no accesibles/disponibles"
+    echo "ERROR: Archivos maestros no accesibles/disponibles."
     exit 1
   fi
 
@@ -130,9 +128,9 @@ fi
   
     bash Recibir_A.sh &
     bash Grabar_L.sh "$COMANDO" -t i "Demonio Recibir_A corriendo bajo el numero de proceso: <`chequeaProceso Recibir_A.sh $$`>" 
-    echo "Demonio Recibir_A corriendo bajo el numero de proceso: <`chequeaProceso Recibir_A.sh $$`>" 
+    echo "Demonio Recibir_A corriendo bajo el numero de proceso: <`chequeaProceso Recibir_A.sh $$`>." 
   else
     bash Grabar_L.sh "$COMANDO" -t e "Demonio Recibir_A ya ejecutado bajo PID: <`chequeaProceso Recibir_A.sh $$`>" 
-    echo "Error: Demonio Recibir_A ya ejecutado bajo PID: <`chequeaProceso Recibir_A.sh $$`>"
+    echo "ERROR: Demonio Recibir_A ya ejecutado bajo PID: <`chequeaProceso Recibir_A.sh $$`>."
     exit 1
   fi

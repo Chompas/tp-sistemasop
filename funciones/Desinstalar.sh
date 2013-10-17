@@ -15,7 +15,7 @@ function salir() {
 }
 
 if [ ! -f "../conf/Instalar_TP.conf" ]; then
-	echo "No hay ninguna instalación previa."
+	echo "ERROR: No hay ninguna instalación previa."
 	salir
 fi
 
@@ -29,8 +29,8 @@ PROCDIR=`grep "^PROCDIR=.*$" "../conf/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*
 REPODIR=`grep "^REPODIR=.*$" "../conf/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
 LOGDIR=`grep "^LOGDIR=.*$" "../conf/Instalar_TP.conf" | sed "s~.*=\(.*\)=.*=.*$~\1~"`
 
-echo "Esta seguro que desea desisntalar la app? (Si-No)"
-echo "TODOS los datos se perderán"
+echo "¿Está seguro que desea desisntalar la aplicación? Todos los datos se perderán. (Si-No)"
+echo ""
 INPUT="0"
 while [ "$INPUT" != 'No' ] && [ "$INPUT" != 'Si' ]; do  # falla con cadena vacia
 	read INPUT
