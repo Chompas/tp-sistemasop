@@ -137,9 +137,13 @@ do
    if ([ -d "$GRUPO/$ARRIDIR" ]) then
 	IFS="
 "
+#        ARCHIVOS=`ls -p "$GRUPO/$ARRIDIR" | grep -v '/$'`
+#        for PARAM in $ARCHIVOS	
+#        do  
         ARCHIVOS=`ls -p "$GRUPO/$ARRIDIR" | grep -v '/$'`
         for PARAM in $ARCHIVOS	
         do  
+
 	  
 	  #echo "PARAM: $PARAM"
           case "$PARAM" in 
