@@ -37,12 +37,12 @@ if $debug ; then
 fi
 
 function cantidadArchivos() {
-	echo $(find "$1" -type f | wc -l)
+	echo $(find $1 -type f | wc -l)
 }
 
 function horaValida() {
 	
-	if [[ "$1" =~ "^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$" ]]
+	if [[ $1 =~ ^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$ ]]
 	then
 		return 0
 	else

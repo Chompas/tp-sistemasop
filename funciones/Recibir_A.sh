@@ -81,7 +81,7 @@ contieneGuion(){
 # esto se va a comentar luego. Inicia afuera
 LOOP=true
 CANT_LOOP=1
-ESPERA=1
+ESPERA=10
 #ARRIDIR="ARRIDIR"
 #ACEPDIR="ACEPDIR"
 #RECHDIR="RECHDIR"
