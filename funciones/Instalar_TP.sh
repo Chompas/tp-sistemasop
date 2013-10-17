@@ -9,8 +9,14 @@ function auxValidaDirectorio() {
 			echo "Invalido"
 			return 1;
 		fi
+		var2="`echo "$var1" | grep "^/.*$"`"
+		if [ ! "$var2" ]; then
 			echo "Valido"
 			return 0;
+		else
+			echo "Invalido"
+			return 1;
+		fi
 	else
 		echo "Invalido"
 		return 1;
