@@ -279,6 +279,7 @@ then
 fi
 
 
+IFS=$(echo -en "\n\b")
 # Recorro archivos a procesar
 ACEPFILES="$GRUPO/$ACEPDIR/*"
 # 2. Procesar Un Archivo
