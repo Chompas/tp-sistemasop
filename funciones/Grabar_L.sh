@@ -5,15 +5,15 @@ tipoMensaje=""					# Tipo de mensaje de error
 debug=false
 
 if $debug ; then
+	GRUPO="1"
 	LOGEXT="logext"
 	LOGDIR="dirLogs"
 	CONFDIR="dirLogsInstalacion"
 	LOGSIZE=`echo "4*1024" | bc`
 fi
 
-# Array asociativo con los tipos posibles de mensajes
-declare -A tiposMensajes
-tiposMensajes=([i]=Info [w]=Warning [e]=Error [se]=Severe)
+cte_tiposMensajes=("i" "w" "e" "se")
+cte_mensajes=("Info" "Warning" "Error" "Severe Error")
 
 # Imprime la forma correcta de uso de este script
 function uso() { 
@@ -21,13 +21,14 @@ function uso() {
 	echo "Descripción: Escribe en el archivo de log el <comando> que generó el mensaje, y el <mensaje>."
 	echo "Si el archivo de log no existe, lo crea con el nombre <comando>." 
 	echo "Si existe, escribe en una línea nueva al final del archivo."
-	echo "Si el archivo de log es muy grande, lo trunca y luego escribe."
+	echo "Si el archivo de log es muy grande, lo trunca para dejar $cantidadLineasADejar líneas y luego escribe."
 	echo "Parámetros opcionales:"
-	echo -e "\t-i: El modulo invocante es el instalador del TP."
+	echo -e "\t-i: El módulo invocante es el instalador."
 	echo -e "\t-t: Tipo de mensaje a loggear:"
-	for tipo in "${!tiposMensajes[@]}"
+	
+	for i in ${!cte_tiposMensajes[*]} 
 	do
-		echo -e "\t\t$tipo: ${tiposMensajes[$tipo]}."
+		echo -e "\t\t ${cte_tiposMensajes[$i]}: ${cte_mensajes[$i]}."	
 	done
 	exit 1;
 }
@@ -37,6 +38,13 @@ function escribe_header_log() {
 }
 
 # ------- COMIENZO PROCESAMIENTO DE ARGUMENTOS -------- 
+
+# La cantidad de parámetros debe ser entre 2 y 5
+if [ $# -lt 2 -o $# -gt 5  ]; then
+	uso
+	exit 0
+fi
+
 # Mas info: http://wiki.bash-hackers.org/howto/getopts_tutorial
 # Hay un parametro opcional "-i", y un parámetro opcional "-h"
 while getopts "hi" opt; do
@@ -63,17 +71,18 @@ while getopts "t:" opt; do
         t)
 			s="${OPTARG}"
 			tipoInvalido=true
-			for tipo in "${!tiposMensajes[@]}"
+			# Verifico que sea un tipo de mensaje válido
+			for i in ${!cte_tiposMensajes[*]} 
 			do
-				if [ "$s" == "$tipo" ]; then
+				if [ "$s" == "${cte_tiposMensajes[$i]}" ]; then
 					tipoInvalido=false
+					pos_tipoMensaje=$i
+					tipoMensaje=$s
 				fi
 			done
 			if $tipoInvalido ; then
 				uso
 				return 0
-			else
-				tipoMensaje=$s
 			fi
             ;;
     esac
@@ -86,16 +95,17 @@ mensaje="$2"
 
 # ------- FIN PROCESAMIENTO DE ARGUMENTOS -------- 
 
-directorio="$GRUPO/$LOGDIR"
-extension="$LOGEXT"
 if $esLogInstalacion ; then
 	comando="Instalar_TP"
 	directorio="$GRUPO/$CONFDIR"
 	extension="log"
+else
+	directorio="$GRUPO/$LOGDIR"
+	extension="$LOGEXT"
 fi
+
 tamanioMaximoLog=`echo "$LOGSIZE*1024" | bc`
-nombreArchivoDeLog=${comando}.${extension}
-path=${directorio}/${nombreArchivoDeLog}
+path=${directorio}/${comando}.${extension}
 fecha=$(date +"%d-%m-%y %T")
 usuario=$USER
 
@@ -111,18 +121,19 @@ fi
 if [ ! -f "$path" ]; then
 	# Si el directorio no existe
     if [ ! -d "$directorio" ]; then
-		mkdir -m 775 "$directorio" # Creamos el directorio
+		mkdir "$directorio" # Creamos el directorio
 	fi
 	
 	# Creamos el archivo con el encabezado
 	escribe_header_log >> "$path"
 fi
 
-# Si el archivo es muy grande, y no es el log de instalación, lo truncamos
 tamanioArchivo=$(stat -c '%s' "$path")
 if $debug ; then 
 	echo "tamanio archivo = "$tamanioArchivo
 fi
+
+# Si el archivo es muy grande, y no es el log de instalación, lo truncamos
 if [ "$tamanioArchivo" -ge "$tamanioMaximoLog" ]; then
 	if ! $esLogInstalacion ; then
 		escribe_header_log >> ${path}_tmp
@@ -133,12 +144,6 @@ if [ "$tamanioArchivo" -ge "$tamanioMaximoLog" ]; then
 	fi
 fi
 
-# Obtenemos el tipo de mensaje (completo)
-tipo=""
-if [ "$tipoMensaje" != "" ] ; then
-	tipo=${tiposMensajes[$tipoMensaje]}
-fi
-
 # El mensaje debe tener hasta 120 caracteres
 mensajeTruncado=${mensaje:0:120}
 if $debug ; then
@@ -146,6 +151,6 @@ if $debug ; then
 fi
 
 # Finalmente... escribimos en el archivo de log!!!
-echo -e "$fecha-$usuario-$comando-$tipo-$mensajeTruncado" >> "$path"
+echo -e "$fecha-$usuario-$comando-${cte_mensajes[$pos_tipoMensaje]}-$mensajeTruncado" >> "$path"
 
 exit 0
