@@ -281,8 +281,8 @@ Perl Version: $chequeo_perl"
 
 # 7. Definir el directorio de instalación de los ejecutables
 definirDirectorioEjecutables() {
-	echo -n "Defina el directorio de instalación de los ejecutables ($GRUPO/$BINDIR): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los ejecutables ($GRUPO/$BINDIR): "
+	echo -n "Defina el directorio de instalación de los ejecutables ($BINDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los ejecutables ($BINDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -294,20 +294,19 @@ definirDirectorioEjecutables() {
 		read AUX
 		aux=`auxValidaDirectorio "$AUX"`
 	done
-	echo "$AUX"
 
 	#Reservar este path en la variable BINDIR
 	BINDIR=$AUX
 	
-	echo "$GRUPO/$BINDIR"
-	./Grabar_L.sh -i "Instalar_TP" -t i "$GRUPO/$BINDIR"
+	echo "$BINDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "$BINDIR"
 
 }
 
 # 8. Definir el directorio de instalación de los archivos Maestros
 definirDirectorioMaestros() {
-	echo -n "Defina el directorio de instalación de los archivos maestros ($GRUPO/$MAEDIR): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los archivos maestros ($GRUPO/$MAEDIR): "
+	echo -n "Defina el directorio de instalación de los archivos maestros ($MAEDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los archivos maestros ($MAEDIR): "
         
 	read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -324,14 +323,14 @@ definirDirectorioMaestros() {
 	#Reservar este path en la variable MAEDIR
 	MAEDIR=$AUX
 
-	echo "$GRUPO/$MAEDIR"
-	./Grabar_L.sh -i "Instalar_TP" -t i "$GRUPO/$MAEDIR"
+	echo "$MAEDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "$MAEDIR"
 }
 
 # 9. Definir el directorio de arribo de archivos externos
 definirDirectorioArribos() {
-	echo -n "Defina el directorio de arribo de archivos externos ($GRUPO/$ARRIDIR): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de arribo de archivos externos ($GRUPO/$ARRIDIR): "
+	echo -n "Defina el directorio de arribo de archivos externos ($ARRIDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de arribo de archivos externos ($ARRIDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -346,14 +345,14 @@ definirDirectorioArribos() {
 	done
 
 	ARRIDIR=$AUX
-	echo "$GRUPO/$ARRIDIR"
-	./Grabar_L.sh -i "Instalar_TP" -t i "$GRUPO/$ARRIDIR"
+	echo "$ARRIDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "$ARRIDIR"
 }
 
 #10. Definir espacio minimo libre para el arribo de archivos
 definirEspacioMinimoParaExternos() {
-	echo -n "Defina el espacio mínimo libre para el arribo de archivos externos en Mbytes (100):"
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el espacio mínimo libre para el arribo de archivos externos en Mbytes (100):"
+	echo -n "Defina el espacio mínimo libre para el arribo de archivos externos en Mbytes. Solo se admiten números enteros.(100):"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el espacio mínimo libre para el arribo de archivos externos en Mbytes. Solo se admiten números enteros. (100):"
 
 	esNumero=0
 	numero='X'
@@ -366,8 +365,8 @@ definirEspacioMinimoParaExternos() {
 	  numero1=`echo "$numero" | grep '^[0-9]*$'`
 	  if [ -z $numero1 ]; then
 	    esNumero=2
-	    echo " \"$numero\" no es numerico. Intente Nuevamente"
-	    ./Grabar_L.sh -i "Instalar_TP" -t i " \"$numero\" no es numerico. Intente Nuevamente"
+	    echo " \"$numero\" no es un número entero. Intente Nuevamente"
+	    ./Grabar_L.sh -i "Instalar_TP" -t i " \"$numero\" no es un número entero. Intente Nuevamente"
 	  else
 	    esNumero=1
 	  fi  
@@ -399,8 +398,8 @@ verificarEspacioEnDisco() {
 
 # 12. Definir el directorio de aceptados
 definirDirectorioArribosAceptados() {
-	echo -n "Defina el directorio de grabación de los archivos externos aceptados ($GRUPO/$ACEPDIR): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos aceptados ($GRUPO/$ACEPDIR): "
+	echo -n "Defina el directorio de grabación de los archivos externos aceptados ($ACEPDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos aceptados ($ACEPDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -416,14 +415,14 @@ definirDirectorioArribosAceptados() {
 
 	ACEPDIR=$AUX
 
-	echo "$GRUPO/$ACEPDIR"
-	./Grabar_L.sh -i "Instalar_TP" -t i "$GRUPO/$ACEPDIR"
+	echo "$ACEPDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "$ACEPDIR"
 }
 
 # 13. Definir el directorio de rechazados
 definirDirectorioArribosRechazados() {
-	echo -n "Defina el directorio de grabación de los archivos externos rechazados ($GRUPO/$RECHDIR): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos rechazados ($GRUPO/$RECHDIR): "
+	echo -n "Defina el directorio de grabación de los archivos externos rechazados ($RECHDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos rechazados ($RECHDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -439,14 +438,14 @@ definirDirectorioArribosRechazados() {
 
 	RECHDIR=$AUX
 
-	echo "$GRUPO/$RECHDIR"
-	./Grabar_L.sh -i "Instalar_TP" -t i "$GRUPO/$RECHDIR"
+	echo "$RECHDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "$RECHDIR"
 }
 
 # 14. Definir el directorio de procesados
 definirDirectorioProcesados() {
-	echo -n "Defina el directorio de grabación de los archivos procesados ($GRUPO/$PROCDIR): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos procesados ($GRUPO/$PROCDIR): "
+	echo -n "Defina el directorio de grabación de los archivos procesados ($PROCDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos procesados ($PROCDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -462,14 +461,14 @@ definirDirectorioProcesados() {
 
 	PROCDIR=$AUX
 
-	echo "$GRUPO/$PROCDIR"
-	./Grabar_L.sh -i "Instalar_TP" -t i "$GRUPO/$PROCDIR"
+	echo "$PROCDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "$PROCDIR"
 }
 
 # 15. Definir el directorio de Listados
 definirDirectorioListados() {
-	echo -n "Defina el directorio de los listados de salida ($GRUPO/$REPODIR): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de los listados de salida ($GRUPO/$REPODIR): "
+	echo -n "Defina el directorio de los listados de salida ($REPODIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de los listados de salida ($REPODIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -484,14 +483,14 @@ definirDirectorioListados() {
 	done
 
 	REPODIR=$AUX
-	echo "$GRUPO/$REPODIR"
-	./Grabar_L.sh -i "Instalar_TP" -t i "$GRUPO/$REPODIR"
+	echo "$REPODIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "$REPODIR"
 }
 
 #16. Definir el directorio de logs para los comandos
 definirDirectorioLogs() {
-	echo -n "Defina el directorio de logs ($GRUPO/$LOGDIR): "
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de logs ($GRUPO/$LOGDIR): "
+	echo -n "Defina el directorio de logs ($LOGDIR): "
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de logs ($LOGDIR): "
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -507,8 +506,8 @@ definirDirectorioLogs() {
 
 	LOGDIR=$AUX
 
-	echo "$GRUPO/$LOGDIR"
-	./Grabar_L.sh -i "Instalar_TP" -t i "$GRUPO/$LOGDIR"
+	echo "$LOGDIR"
+	./Grabar_L.sh -i "Instalar_TP" -t i "$LOGDIR"
 }
 
 #17. Definir la extensión para los archivos de log
@@ -527,8 +526,8 @@ definirExtensionLogs() {
 
 # 18. Definir tamaño maximo LOG
 definirTamanioMaximoLog() {
-	echo -n "Defina el tamaño máximo para los archivos $LOGEXT en Kbytes ($LOGSIZE):"
-	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el tamaño máximo para los archivos $LOGEXT en Kbytes ($LOGSIZE):"
+	echo -n "Defina el tamaño máximo para los archivos $LOGEXT en Kbytes. Solpo se admiten números enteros. ($LOGSIZE):"
+	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el tamaño máximo para los archivos $LOGEXT en Kbytes. Solo se admiten numeros enteros. ($LOGSIZE):"
 
 
 	esNumero=0
@@ -542,8 +541,8 @@ definirTamanioMaximoLog() {
 	  numero1=`echo "$numero" | grep '^[0-9]*$'`
 	  if [ -z $numero1 ]; then
 	    esNumero=2
-	    echo " \"$numero\" no es númerico. Intente nuevamente."
-	    ./Grabar_L.sh -i "Instalar_TP" -t i " \"$numero\" no es númerico. Intente nuevamente."
+	    echo " \"$numero\" no es un número entero. Intente nuevamente."
+	    ./Grabar_L.sh -i "Instalar_TP" -t i " \"$numero\" no es un número entero. Intente nuevamente."
 	  else
 	    esNumero=1
 	  fi  
