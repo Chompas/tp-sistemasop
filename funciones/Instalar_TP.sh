@@ -351,7 +351,7 @@ definirDirectorioArribos() {
 
 #10. Definir espacio minimo libre para el arribo de archivos
 definirEspacioMinimoParaExternos() {
-	echo -n "Defina el espacio mínimo libre para el arribo de archivos externos en Mbytes. Solo se admiten números enteros.(100):"
+	echo -n "Defina el espacio mínimo libre para el arribo de archivos externos en Mbytes. Solo se admiten números enteros. (100):"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el espacio mínimo libre para el arribo de archivos externos en Mbytes. Solo se admiten números enteros. (100):"
 
 	esNumero=0
@@ -512,7 +512,7 @@ definirDirectorioLogs() {
 
 #17. Definir la extensión para los archivos de log
 definirExtensionLogs() {
-	echo -n "Ingrese la extensión para los archivos de log: ($LOGEXT): "
+	echo -n "Ingrese la extensión para los archivos de log ($LOGEXT): "
 	./Grabar_L.sh -i "Instalar_TP" -t i "Ingrese la extensión para los archivos de log: ($LOGEXT): "
 
         read INPUT
@@ -526,7 +526,7 @@ definirExtensionLogs() {
 
 # 18. Definir tamaño maximo LOG
 definirTamanioMaximoLog() {
-	echo -n "Defina el tamaño máximo para los archivos $LOGEXT en Kbytes. Solpo se admiten números enteros. ($LOGSIZE):"
+	echo -n "Defina el tamaño máximo para los archivos $LOGEXT en Kbytes. Solo se admiten números enteros. ($LOGSIZE):"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el tamaño máximo para los archivos $LOGEXT en Kbytes. Solo se admiten numeros enteros. ($LOGSIZE):"
 
 
@@ -793,8 +793,8 @@ actualizarArchivoConfiguracion() {
 
 # 23. Instalacion Concluida
 instalacionConcluida() {
-	echo "Instalación CONCLUIDA"
-	./Grabar_L.sh -i "Instalar_TP" -t i "Instalación CONCLUIDA"
+	echo "Instalación FINALIZADA."
+	./Grabar_L.sh -i "Instalar_TP" -t i "Instalación FINALIZADA."
 }
 
 # 24. FIN
