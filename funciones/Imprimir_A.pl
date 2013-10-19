@@ -129,12 +129,14 @@ sub generar_listado_eventos_candidatos {
 	{
 		chomp($linea);
 		#Datos del evento
-		@de = split(";", $linea);
-		if ($#de + 1 == 13) #Hay ref interna del solicitante?
+		@de = split(";", $linea);		
+		$id_evento = $de[7];
+		$ref_int = $de[8];
+		if ($ref_int ne "") #Hay ref interna del solicitante?
 		{
 			$datos_evento = "Evento: $de[7] Obra: $de[0]-$de[1] Fecha y Hora: $de[2]-$de[3] Sala: $de[4]-$de[5]"."\n";
-			$eventos_candidatos{$de[7]} = $datos_evento;
-			$referencias_internas{$de[8]} = $de[7];
+			$eventos_candidatos{$id_evento} = $datos_evento;
+			$referencias_internas{$ref_int} = $id_evento;
 		}
 	}
 	close ($reservas);
@@ -158,6 +160,14 @@ sub es_rango_valido {
 	if ($min < $max) {$result = 1;}	# 1=rango válido
 	else {$result = 0;}				# 0=rango inválido
 	return ($result);
+}
+
+sub esDigito {
+	$res = 1; # 0 es true, 1 es false
+	if ($_[0] =~ /(\d)*/){
+		$res = 0;
+	}
+	return ($res);
 }
 
 sub mostrar_ids_obras {
@@ -390,11 +400,12 @@ sub fInvitados {
 	
 	push(@out,$eventos_candidatos{$evento});
 	
+	local $total_acumulado = 0;
 	foreach $ref_int (keys(%referencias_internas))
 	{
 		if ($referencias_internas{$ref_int} eq $evento)
 		{
-			local $total_acumulado = 0;
+			$total_acumulado_ref_int = 0;
 			push(@out,"Referencia interna: $ref_int \n");
 			
 			local $nom_archivo_invitados = "$ENV{'GRUPO'}/$ENV{'REPODIR'}/"."$ref_int".".inv";
@@ -411,6 +422,7 @@ sub fInvitados {
 				while ($linea = <$arch_invitados>) 
 				{
 					chomp($linea);
+					$linea =~ s/\r//g;
 					@campos = split (";" , $linea); # 0-> invitado (ob), 1 -> empresa (opc), 2-> cantidad acompañantes (opc)
 					local $cant_acomp = 0;
 					if (($#campos + 1 == 3))
@@ -422,14 +434,17 @@ sub fInvitados {
 					{
 						$cant_acomp = $campos[1];
 					}
-					$total_acumulado+=1 + $cant_acomp;
-					$linea = "\t $campos[0]".", "."$cant_acomp".", "."$total_acumulado"."\n";
+					$total_acumulado_ref_int += 1 + $cant_acomp;
+					
+					$linea = "\t $campos[0]".", "."$cant_acomp".", "."$total_acumulado_ref_int"."\n";
 					push(@out, "$linea");
 				}
 				close ($arch_invitados);				
 			}
-			push(@out,"\t \t Total reservas confirmadas: ".&sumar_reservas_confirmadas($ref_int)."\n");
-			push(@out,"\t \t Total acumulado: "."$total_acumulado \n");
+			$cant_reservas_confirmadas = &sumar_reservas_confirmadas($ref_int);
+			$total_acumulado += $cant_reservas_confirmadas;
+			push(@out,"\t \t Total reservas confirmadas: $cant_reservas_confirmadas \n");
+			push(@out,"\t \t \t \t \t \t Total acumulado: $total_acumulado \n");
 		}		
 	}
 	
