@@ -106,9 +106,16 @@ sub existeIDsala {
 }
 
 sub existeIDcombo {
-	local $id_combo = $_[0];
-	# Se retorna el siguiente valor (cuantas lineas tienen el ID de combo)
-	$lineas = `grep -c "^$id_combo;" "$in_disponibilidad"`;
+	local $consulta = $_[0];
+	local @combos_unicos = @_;		# El primer valor (0) será la consulta.
+	local $resultado = 0;
+	for ($i = 1; $i < $#combos_unicos + 1; $i++)
+	{
+		if ("$combos_unicos[$i]" eq $consulta) {
+			$resultado = 1;
+		}
+	}
+	return $resultado;
 }
 
 sub generar_listado_eventos_candidatos {
@@ -153,6 +160,72 @@ sub es_rango_valido {
 	return ($result);
 }
 
+sub mostrar_ids_obras {
+	open ($fh, "<$in_obras");
+	print "Listado de IDs de obras: \n";
+	while ($linea = <$fh>)
+	{
+		chomp($linea);
+		@campos = split (";", $linea);
+		$id_obra = $campos[0];
+		print $id_obra." ";
+	}
+	print "\n";
+	close($fh);	
+}
+
+sub mostrar_ids_salas {
+	open ($fh, "<$in_salas");
+	print "Listado de IDs de salas: \n";
+	while ($linea = <$fh>)
+	{
+		chomp($linea);
+		@campos = split (";", $linea);
+		$id_sala = $campos[0];
+		print $id_sala." ";
+	}
+	print "\n";
+	close($fh);
+}
+
+sub remover_duplicados_de_array {
+	my @array  = $_[0];
+	my %hash   = map { $_ => 1 } @array;
+	my @unique = keys %hash;
+	
+	for ($x = 0; $x < $#unique; $x ++)
+	{
+		print "$unique[$x] ";
+	}
+	
+	return (@unique);
+}
+
+sub mostrar_ids_combos {
+	local @id_combos;
+	open ($fh, "<$in_reservas_confirmadas");
+	
+	while ($linea = <$fh>)
+	{
+		chomp($linea);
+		@campos = split (";", $linea);
+		$id_combo = $campos[7];
+		push(@id_combos,$id_combo);
+	}
+	
+	%hash_id_combos_unicos   = map { $_ => 1 } @id_combos;
+	@id_combos_unicos = keys %hash_id_combos_unicos;
+	
+	print "Listado de IDs de combos que poseen reservas: \n";
+	for ($x = 0; $x < $#id_combos_unicos +1; $x ++)
+	{
+		print "$id_combos_unicos[$x] ";
+	}
+	print "\n";
+	close($fh);
+	
+}
+
 sub generar_disponibilidad_por_obra {
 	local $id_obra = $_[0];
 	
@@ -161,14 +234,34 @@ sub generar_disponibilidad_por_obra {
 	$resultados = `echo -n "$resultados" | grep "^[^-]*-$id_obra-.*"`;	#Selecciono por id de obra (2do campo)	
 	
 	$resultados = `echo -n "$resultados" | cut -d "-" -f 1-7`;	#Quito el ultimo campo
+	
+	$resultados = `echo -n "$resultados" | sed "s/-/\t/g"`;	#Reemplazo "-" por "\t"
+	
 	print "$resultados";
 	&escribir_listado_disponibilidad($nombre_listado);
 	return ($resultados);
 }
 
+sub escribir_titulo_D {
+	$titulo1 = "ID Combo\tID Obra\tFecha\t\tHora\tID sala\tBut Hab\tBut Disp \n";
+	print "$titulo1";
+	$titulo2 = "--------\t-------\t-----\t\t----\t-------\t-------\t-------- \n";
+	print "$titulo2";
+	
+	local $out_disponibilidad = "$ENV{'GRUPO'}/$ENV{'REPODIR'}"."/"."$_[0]".".dis";
+	if ($write == 1)
+	{
+		open ($fh, ">>$out_disponibilidad");		#Modo overwrite
+		print $fh "$titulo1";					#Escribo en el archivo
+		print $fh "$titulo2";					#Escribo en el archivo
+		close ($fh);
+	}
+}
+
 sub generar_disponibilidad_por_rango_obra {
 	local $min = $_[0];
 	local $max = $_[1];
+	
 	for ($i=$min; $i <= $max; $i++)
 	{
 		&generar_disponibilidad_por_obra($i);
@@ -183,6 +276,9 @@ sub generar_disponibilidad_por_sala {
 	$resultados = `echo -n "$resultados" | grep "^[^-]*-[^-]*-[^-]*-[^-]*-$id_sala-"`;	#Selecciono por id de sala (5to campo)
 
 	$resultados = `echo -n "$resultados" | cut -d "-" -f 1-7`;	#Quito el ultimo campo
+	
+	$resultados = `echo -n "$resultados" | sed "s/-/\t/g"`;	#Reemplazo "-" por "\t"
+	
 	print "$resultados";
 	&escribir_listado_disponibilidad($nombre_listado);
 	return ($resultados);
@@ -191,6 +287,7 @@ sub generar_disponibilidad_por_sala {
 sub generar_disponibilidad_por_rango_sala {
 	local $min = $_[0];
 	local $max = $_[1];
+	
 	for ($i=$min; $i <= $max; $i++)
 	{
 		&generar_disponibilidad_por_sala($i);
@@ -201,9 +298,9 @@ sub escribir_listado_disponibilidad {
 	local $out_disponibilidad = "$ENV{'GRUPO'}/$ENV{'REPODIR'}"."/"."$_[0]".".dis";
 	if ($write == 1)
 	{
-		open (MYFILE, ">>$out_disponibilidad");		#Modo append
-		print MYFILE "$resultados";					#Escribo en el archivo
-		close (MYFILE);
+		open ($fh, ">>$out_disponibilidad");		#Modo append
+		print $fh "$resultados";					#Escribo en el archivo
+		close ($fh);
 	}
 }
 
@@ -242,9 +339,7 @@ sub escribir_listado_tickets {
 	
 }
 
-sub escribir_ranking {
-	local $linea = $_[0];
-	
+sub generar_nnn {
 	# Extension autoincremental del archivo
 	$nnn=`ls "$ENV{'GRUPO'}/$ENV{'REPODIR'}" | grep "^ranking" | sed s/ranking\.//g | sort -r | head -n 1`;
 
@@ -254,7 +349,11 @@ sub escribir_ranking {
 	}
 	
 	$nnn += 1;
-	if ($debug == 1) {print "nnn = $nnn\n";}
+}
+
+sub escribir_listado_ranking {
+	local $nnn = $_[0];
+	local $linea = $_[1];
 	
 	$out_ranking = "$ENV{'GRUPO'}/$ENV{'REPODIR'}"."/ranking."."$nnn";
 	if ($write == 1)
@@ -346,7 +445,8 @@ sub fDisp {
 		exit(1);
 	}
 	
-	
+	&mostrar_ids_obras;
+	&mostrar_ids_salas;
 	local %opciones_fdisp = (1, "ID OBRA", 2, "ID SALA", 3, "RANGO de ID OBRA", 4, "RANGO de ID SALA");
 	local $opcion_elegida = "";
 	
@@ -362,6 +462,7 @@ sub fDisp {
 		}
 	}
 
+	print "Generar disponibilidad por... \n";
 	# Paso 2: Pedir un dato inicial
 	while (exists($opciones_fdisp{$opcion_elegida}) == 0)
 	{
@@ -384,6 +485,7 @@ sub fDisp {
 		}
 		
 		print "ID obra encontrado. \n";
+		&escribir_titulo_D($nombre_listado);
 		&generar_disponibilidad_por_obra($id_obra);
 	}
 	elsif ($opciones_fdisp{$opcion_elegida} eq "ID SALA")
@@ -396,6 +498,7 @@ sub fDisp {
 		}
 		
 		print "ID sala encontrado. \n";
+		&escribir_titulo_D($nombre_listado);
 		&generar_disponibilidad_por_sala($id_sala);		
 	}
 	elsif ($opciones_fdisp{$opcion_elegida} eq "RANGO de ID OBRA")
@@ -410,6 +513,7 @@ sub fDisp {
 		}
 		
 		print "Rango ID obra válido. \n";
+		&escribir_titulo_D($nombre_listado);
 		&generar_disponibilidad_por_rango_obra($min_id_obra,$max_id_obra);
 	}
 	elsif ($opciones_fdisp{$opcion_elegida} eq "RANGO de ID SALA")
@@ -424,6 +528,7 @@ sub fDisp {
 		}
 		
 		print "Rango ID sala válido. \n";
+		&escribir_titulo_D($nombre_listado);
 		&generar_disponibilidad_por_rango_sala($min_id_sala,$max_id_sala);
 	}
 	exit(0);	
@@ -444,18 +549,21 @@ sub fRanking {
 	# Ordeno en orden descendente (r) por el 7mo campo (n-numerico) con delimitador ";"
 	# Y luego muestro solo las primeras 10 lineas
 	$top10ordenado = `sort -t';' -k7nr $in_reservas_confirmadas | head -n $cantidad`;
+	
+	$nnn = &generar_nnn;
+	
 	@lineas = split("\n", $top10ordenado);	#Un array con cada linea sin cortar
 	@alarchivo = ();	#Un array con cada linea cortada como se requiere
 	for ($i = 0; $i < $cantidad; $i++)
 	{
 		@campos = split (";", $lineas[$i]);		#Separamos cada linea en sus campos
-		$resultado = "$campos[1], $campos[5], $campos[2], $campos[3], $campos[6]";
+		$resultado = "NOMBRE OBRA: $campos[1], NOMBRE SALA: $campos[5], FECHA: $campos[2], OBRA: $campos[3], CANTIDAD BUTACAS CONFIRMADAS: $campos[6]";
 		print "$resultado\n";
 		push(@alarchivo,$resultado);
 		
 	}
-	$resultado = join("\n", @alarchivo);
-	&escribir_ranking($resultado);
+	$resultado = join("\n", @alarchivo);	
+	&escribir_listado_ranking($nnn, $resultado);
 }
 
 sub fTickets {
@@ -466,15 +574,15 @@ sub fTickets {
 		print "ERROR: no se encontraron los archivos $in_disponibilidad y $in_reservas_confirmadas.\n";
 		exit(1);
 	}
-	
+	&mostrar_ids_combos;
 	pideIDcombo: print "Ingrese ID del combo: ";
 	$id_combo = <STDIN>; chomp($id_combo);
-	while (&existeIDcombo($id_combo) == 0)
+	
+	while (&existeIDcombo($id_combo,@id_combos_unicos) == 0)
 	{
 		print "ERROR: ID de combo inválido.\n";
 		goto pideIDcombo;
 	}
-	print "ID de combo válido.\n";
 	
 	#$in_reservas_confirmadas = "$ENV{'GRUPO'}/$ENV{'PROCDIR'}/"."reservas.ok";	
 	#id obra;nombre;fecha;hora;id sala;nombre sala;cant butacas confir;id combo;ref int;cant butacas solicitadas;email;usuario;fecha grabacion
@@ -488,24 +596,24 @@ sub fTickets {
 		if ($campos[7] eq $id_combo)
 		{
 			$cant_but_confir = $campos[6];
-			if ($debug == 1) {print "Cantidad de tickets a emitir: $cant_but_confir\n";}
+			print "Cantidad de tickets a emitir: $cant_but_confir\n";
 			if ($cant_but_confir <= 2) 
 			{
 				$string = ''; if ($cant_but_confir == 2) {$string = 'S';}
 				$un_ticket= "VALE POR $cant_but_confir ENTRADA$string; $campos[1]; $campos[2]; $campos[3]; $campos[5]; $campos[8]; $campos[10] \n";
-				print "$un_ticket";
+				print "\t $un_ticket";
 				push(@tickets, $un_ticket);
 				
 			}
 			else {
 				local $cant_but_confir_es_impar = $cant_but_confir % 2 == 1; # 0=no, 1=si
-								
+				
 				#Emito los "vale por 2 entradas" que correspondan
 				$cant_vale_por_2 = ($cant_but_confir - $cant_but_confir_es_impar)/2;
 				for ($i = 0; $i < $cant_vale_por_2; $i++)
 				{
 					$un_ticket= "VALE POR 2 ENTRADAS; $campos[1]; $campos[2]; $campos[3]; $campos[5]; $campos[8]; $campos[10] \n";
-					print "$un_ticket";
+					print "\t $un_ticket";
 					push(@tickets, $un_ticket);
 				}
 				
@@ -513,7 +621,7 @@ sub fTickets {
 				if ($cant_but_confir_es_impar == 1)
 				{
 					$un_ticket= "VALE POR 1 ENTRADA; $campos[1]; $campos[2]; $campos[3]; $campos[5]; $campos[8]; $campos[10] \n";
-					print "$un_ticket";
+					print "\t $un_ticket";
 					push(@tickets, $un_ticket);
 				}
 			}
