@@ -23,14 +23,6 @@ function auxValidaDirectorio() {
 	fi
 }
 
-function chequearBash() {
-	bashVersion=`bash --version | grep "^[^,]*, version \([^(]*\).*$" | sed "s/^[^,]*, version \([^(]*\).*$/\1/" | sed "s/^\([^.]\).*$/\1/"`
-	if [ $bashVersion -lt 4 ]; then
-		echo "ERROR: La versión de bash es inválida. Debe tener instalado Bash 4.x.x o superior."
-		fin
-	fi
-}
-
 # 1. Iniciar archivo de log
 iniciarLogDeInstalacion() {
 	# Iniciar el archivo
@@ -286,6 +278,8 @@ definirDirectorioEjecutables() {
 
         read INPUT
 	# Si no ingresa nada se toma el valor por default
+	INGRESO_VALOR=`echo $INPUT | sed 's-^$-'"X"'-'`
+
 	AUX=`echo $INPUT | sed 's-^$-'"$BINDIR"'-'`
 	aux=`auxValidaDirectorio "$AUX"`
 	while [ "$aux" == "Invalido" ]; do
@@ -298,7 +292,10 @@ definirDirectorioEjecutables() {
 	#Reservar este path en la variable BINDIR
 	BINDIR=$AUX
 	
-	echo "$BINDIR"
+	# Muestro por pantalla solo si el usuario no ingreso nada anteriormente
+	if [ "$INGRESO_VALOR" == "X" ]; then
+		echo "$BINDIR"
+	fi
 	./Grabar_L.sh -i "Instalar_TP" -t i "$BINDIR"
 
 }
@@ -307,6 +304,8 @@ definirDirectorioEjecutables() {
 definirDirectorioMaestros() {
 	echo -n "Defina el directorio de instalación de los archivos maestros ($MAEDIR): "
 	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de instalación de los archivos maestros ($MAEDIR): "
+
+	INGRESO_VALOR=`echo $INPUT | sed 's-^$-'"X"'-'`
         
 	read INPUT
 	# Si no ingresa nada se toma el valor por default
@@ -323,7 +322,10 @@ definirDirectorioMaestros() {
 	#Reservar este path en la variable MAEDIR
 	MAEDIR=$AUX
 
-	echo "$MAEDIR"
+	# Muestro por pantalla solo si el usuario no ingreso nada anteriormente
+	if [ "$INGRESO_VALOR" == "X" ]; then
+		echo "$MAEDIR"
+	fi
 	./Grabar_L.sh -i "Instalar_TP" -t i "$MAEDIR"
 }
 
@@ -345,7 +347,11 @@ definirDirectorioArribos() {
 	done
 
 	ARRIDIR=$AUX
-	echo "$ARRIDIR"
+
+	# Muestro por pantalla solo si el usuario no ingreso nada anteriormente
+	if [ "$INGRESO_VALOR" == "X" ]; then
+		echo "$ARRIDIR"
+	fi
 	./Grabar_L.sh -i "Instalar_TP" -t i "$ARRIDIR"
 }
 
@@ -353,13 +359,14 @@ definirDirectorioArribos() {
 definirEspacioMinimoParaExternos() {
 	echo -n "Defina el espacio mínimo libre para el arribo de archivos externos en Mbytes. Solo se admiten números enteros.(100):"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el espacio mínimo libre para el arribo de archivos externos en Mbytes. Solo se admiten números enteros. (100):"
-
+	INGRESO_VALOR="0"
 	esNumero=0
 	numero='X'
 	
 	while [ $esNumero -ne 1 ]; do
 	  read INPUT
   	  numero=`echo "$INPUT"` # mantengo el original en $numero y reviso que sea numerico usando la auxiliar $numero1
+  	  INGRESO_VALOR=`echo "$numero" | sed 's-^$-'"X"'-'` # si no ingresa nada se toma guardo X  en la variable
 	  numero=`echo "$numero" | sed 's-^$-'"$DATASIZE"'-'` # si no ingresa nada se toma el default
 	  numero1=`echo "$numero" | grep '^[0-9]*$' | sed 's-^$-'"$DATASIZE"'-'` 
 	  numero1=`echo "$numero" | grep '^[0-9]*$'`
@@ -373,7 +380,11 @@ definirEspacioMinimoParaExternos() {
 	done
 
 	DATASIZE=$numero
-	echo $DATASIZE
+
+	# Muestro por pantalla solo si el usuario no ingreso nada anteriormente
+	if [ "$INGRESO_VALOR" == "X" ]; then
+		echo $DATASIZE
+	fi
 	./Grabar_L.sh -i "Instalar_TP" -t i "$DATASIZE"
 }
 
@@ -402,6 +413,9 @@ definirDirectorioArribosAceptados() {
 	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos aceptados ($ACEPDIR): "
 
         read INPUT
+
+	INGRESO_VALOR=`echo $INPUT | sed 's-^$-'"X"'-'`
+
 	# Si no ingresa nada se toma el valor por default
 	AUX=`echo $INPUT | sed 's-^$-'"aceptados"'-'`
 	
@@ -415,7 +429,10 @@ definirDirectorioArribosAceptados() {
 
 	ACEPDIR=$AUX
 
-	echo "$ACEPDIR"
+	# Muestro por pantalla solo si el usuario no ingreso nada anteriormente
+	if [ "$INGRESO_VALOR" == "X" ]; then
+		echo "$ACEPDIR"
+	fi
 	./Grabar_L.sh -i "Instalar_TP" -t i "$ACEPDIR"
 }
 
@@ -425,6 +442,8 @@ definirDirectorioArribosRechazados() {
 	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos externos rechazados ($RECHDIR): "
 
         read INPUT
+	INGRESO_VALOR=`echo $INPUT | sed 's-^$-'"X"'-'`
+
 	# Si no ingresa nada se toma el valor por default
 	AUX=`echo $INPUT | sed 's-^$-'"rechazados"'-'`
 	
@@ -438,7 +457,10 @@ definirDirectorioArribosRechazados() {
 
 	RECHDIR=$AUX
 
-	echo "$RECHDIR"
+	# Muestro por pantalla solo si el usuario no ingreso nada anteriormente
+	if [ "$INGRESO_VALOR" == "X" ]; then
+		echo "$RECHDIR"
+	fi
 	./Grabar_L.sh -i "Instalar_TP" -t i "$RECHDIR"
 }
 
@@ -448,8 +470,12 @@ definirDirectorioProcesados() {
 	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de grabación de los archivos procesados ($PROCDIR): "
 
         read INPUT
+	INGRESO_VALOR=`echo $INPUT | sed 's-^$-'"X"'-'`
+
 	# Si no ingresa nada se toma el valor por default
-	AUX=`echo $INPUT | sed 's-^$-'"procesados"'-'`
+	INGRESO_VALOR=`echo $INPUT | sed 's-^$-'"X"'-'`
+
+	AUX=`echo $INPUT | sed 's-^$-'"proc"'-'`
 		
 	aux=`auxValidaDirectorio "$AUX"`
 	while [ "$aux" == "Invalido" ]; do
@@ -461,7 +487,11 @@ definirDirectorioProcesados() {
 
 	PROCDIR=$AUX
 
-	echo "$PROCDIR"
+	# Muestro por pantalla solo si el usuario no ingreso nada anteriormente
+	if [ "$INGRESO_VALOR" == "X" ]; then
+		echo "$PROCDIR"
+	fi
+
 	./Grabar_L.sh -i "Instalar_TP" -t i "$PROCDIR"
 }
 
@@ -471,6 +501,7 @@ definirDirectorioListados() {
 	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de los listados de salida ($REPODIR): "
 
         read INPUT
+	INGRESO_VALOR=`echo $INPUT | sed 's-^$-'"X"'-'`
 	# Si no ingresa nada se toma el valor por default
 	AUX=`echo $INPUT | sed 's-^$-'"repo"'-'`
 	
@@ -483,7 +514,11 @@ definirDirectorioListados() {
 	done
 
 	REPODIR=$AUX
-	echo "$REPODIR"
+
+	# Muestro por pantalla solo si el usuario no ingreso nada anteriormente
+	if [ "$INGRESO_VALOR" == "X" ]; then
+		echo "$REPODIR"
+	fi
 	./Grabar_L.sh -i "Instalar_TP" -t i "$REPODIR"
 }
 
@@ -493,6 +528,7 @@ definirDirectorioLogs() {
 	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el directorio de logs ($LOGDIR): "
 
         read INPUT
+	INGRESO_VALOR=`echo $INPUT | sed 's-^$-'"X"'-'`
 	# Si no ingresa nada se toma el valor por default
 	AUX=`echo $INPUT | sed 's-^$-'"log"'-'`
 	
@@ -506,7 +542,10 @@ definirDirectorioLogs() {
 
 	LOGDIR=$AUX
 
-	echo "$LOGDIR"
+	# Muestro por pantalla solo si el usuario no ingreso nada anteriormente
+	if [ "$INGRESO_VALOR" == "X" ]; then
+		echo "$LOGDIR"
+	fi
 	./Grabar_L.sh -i "Instalar_TP" -t i "$LOGDIR"
 }
 
@@ -526,16 +565,17 @@ definirExtensionLogs() {
 
 # 18. Definir tamaño maximo LOG
 definirTamanioMaximoLog() {
-	echo -n "Defina el tamaño máximo para los archivos $LOGEXT en Kbytes. Solpo se admiten números enteros. ($LOGSIZE):"
+	echo -n "Defina el tamaño máximo para los archivos $LOGEXT en Kbytes. Solo se admiten números enteros. ($LOGSIZE):"
 	./Grabar_L.sh -i "Instalar_TP" -t i "Defina el tamaño máximo para los archivos $LOGEXT en Kbytes. Solo se admiten numeros enteros. ($LOGSIZE):"
 
-
+	INGRESO_VALOR="0"
 	esNumero=0
 	numero='X'
 	
 	while [ $esNumero -ne 1 ]; do
 	  read INPUT
   	  numero=`echo "$INPUT"` # mantengo el original en $numero y reviso que sea numerico usando la auxiliar $numero1
+	  INGRESO_VALOR=`echo "$numero" | sed 's-^$-'"X"'-'` # Guardo en la variable X si no ingreso nada
 	  numero=`echo "$numero" | sed 's-^$-'"$LOGSIZE"'-'` # si no ingresa nada se toma el default
 	  numero1=`echo "$numero" | grep '^[0-9]*$' | sed 's-^$-'"$LOGSIZE"'-'` 
 	  numero1=`echo "$numero" | grep '^[0-9]*$'`
@@ -548,10 +588,12 @@ definirTamanioMaximoLog() {
 	  fi  
 	done
 	
-	echo $numero
-	
 	LOGSIZE=$numero
-	echo $LOGSIZE
+	
+	# Muestro por pantalla solo si el usuario no ingreso nada anteriormente
+	if [ "$INGRESO_VALOR" == "X" ]; then
+		echo $LOGSIZE
+	fi
 	./Grabar_L.sh -i "Instalar_TP" -t i "$LOGSIZE"
 }
 
@@ -830,9 +872,6 @@ definirParametros() {
 	definirTamanioMaximoLog
 }
 
-# se chequea que la version de bash sea 4 o mayor
-chequearBash
-
 # se guarda el nombre del usuario
 USUARIO=$USER
 
@@ -922,6 +961,4 @@ confirmarInicio
 instalacionConcluida
 #24
 fin
-
-
 
