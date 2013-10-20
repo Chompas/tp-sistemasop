@@ -42,6 +42,13 @@ while [ "$INPUT" != 'No' ] && [ "$INPUT" != 'Si' ]; do  # falla con cadena vacia
 	INPUT=$AUX
 done
 
+# Si esta corriendo el demonio se termina ejecución
+PID_RECIBE=`ps ax | grep Recibir_A | grep -v Grabar_L | grep -v grep | awk '{print $1}'`
+if [ $PID_RECIBE ]
+then
+	Stop_A.sh
+fi
+
 if [ -d "$GRUPO/$BINDIR" ]; then
 	rm -r "$GRUPO/$BINDIR"
 fi
