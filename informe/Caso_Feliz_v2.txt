@@ -1,0 +1,291 @@
+# Instalación de la aplicación
+
+maine@notebook:~/Desktop/tp-sistemasop/funciones$ ./Instalar_TP.sh 
+Inicio de Ejecución
+Log del Comando Instalar_TP: conf/Instalar_TP.log
+Directorio de Configuración: conf
+TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01
+A T E N C I Ó N: Al instalar TP SO7508 Segundo Cuatrimestre 2013 UD. expresa 
+aceptar los términos y Condiciones del "ACUERDO DE LICENCIA DE SOFTWARE" 
+incluido en este paquete.
+¿Acepta? Si – No
+Si
+TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01
+Perl Version: 5
+Defina el directorio de instalación de los ejecutables (bin): 
+bin
+Defina el directorio de instalación de los archivos maestros (mae): 
+mae
+Defina el directorio de arribo de archivos externos (arribos): 
+arribos
+Defina el espacio mínimo libre para el arribo de archivos externos en Mbytes. Solo se admiten números enteros. (100):
+100
+Defina el directorio de grabación de los archivos externos aceptados (aceptados): 
+aceptados
+Defina el directorio de grabación de los archivos externos rechazados (rechazados): 
+rechazados
+Defina el directorio de grabación de los archivos procesados (proc): 
+proc
+Defina el directorio de los listados de salida (repo): 
+repo
+Defina el directorio de logs (log): 
+log
+Ingrese la extensión para los archivos de log (log): 
+log
+Defina el tamaño máximo para los archivos log en Kbytes. Solo se admiten números enteros. (400):
+400
+
+TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01
+	Librería del Sistema: /home/maine/Desktop/tp-sistemasop/conf
+	Ejecutables: /home/maine/Desktop/tp-sistemasop/bin
+	Archivos maestros: /home/maine/Desktop/tp-sistemasop/mae
+	Directorio de arribo de archivos externos: /home/maine/Desktop/tp-sistemasop/arribos
+	Espacio mínimo libre para arribos: 100 Mb
+	Archivos externos aceptados: /home/maine/Desktop/tp-sistemasop/aceptados
+	Archivos externos rechazados: /home/maine/Desktop/tp-sistemasop/rechazados
+	Archivos procesados: /home/maine/Desktop/tp-sistemasop/proc
+	Reportes de salida: /home/maine/Desktop/tp-sistemasop/repo
+	Logs de auditoria del Sistema: /home/maine/Desktop/tp-sistemasop/log/<comando>.log
+	Tamaño máximo para los archivos de log del sistema: 400 Kb
+	Estado de la instalacion: LISTA.
+¿Los datos ingresados son válidos? (Si-No): 
+Si
+Iniciando Instalación. ¿Está seguro? (Si-No)
+Si
+Creando Estructuras de directorio. . . .
+Instalando archivos maestros.
+Instalando archivo de disponibilidad.
+Instalando programas y funciones.
+Actualizando la configuración del sistema.
+Instalación FINALIZADA.
+maine@notebook:~/Desktop/tp-sistemasop/funciones$ cd ..
+maine@notebook:~/Desktop/tp-sistemasop$ cd bin/
+
+# Iniciamos la aplicación
+
+maine@notebook:~/Desktop/tp-sistemasop/bin$ . ./Iniciar_A.sh 
+
+TP SO7508 Segundo Cuatrimestre 2013. Tema A Copyright © Grupo 01
+ERROR: La inicialización ya fue ejecutada en esta sesión de usuario.
+- Librería del Sistema: conf
+Instalar_TP.conf
+Instalar_TP.log
+- Ejecutables: bin
+Grabar_L.sh
+Imprimir_A.pl
+Iniciar_A.sh
+Mover_A.sh
+Recibir_A.sh
+Reservar_A.sh
+Start_A.sh
+Stop_A.sh
+- Archivos maestros: mae
+obras.mae
+salas.mae
+- Directorio de arribo de archivos externos: arribos
+- Archivos externos aceptados: aceptados
+- Archivos externos rechazados: rechazados
+- Reportes de salida: repo
+- Archivos procesados: proc
+- Logs de auditoría del Sistema: log
+
+Estado del sistema: INICIALIZADO.
+maine@notebook:~/Desktop/tp-sistemasop/bin$ ./Stop_A.sh 
+ERROR: No se pudo detener el demonio Recibir_A pues no fue encontrado.
+maine@notebook:~/Desktop/tp-sistemasop/bin$ ./Start_A.sh 
+Demonio Recibir_A corriendo bajo el numero de proceso: <8791>.
+
+# Copiamos archivos de entrada a la carpeta "arribos"
+
+maine@notebook:~/Desktop/tp-sistemasop/bin$ cp ../DatosTP2013-2C/* ../arribos/
+maine@notebook:~/Desktop/tp-sistemasop/bin$ ls ../arribos/
+1245.inv
+1246.inv
+1247.inv
+18-Teatro.Payro@reservas.com.ar-PAyro171013a
+18-Teatro.Payro@reservas.com.ar-PAyro181013a
+18-Teatro.Payro@reservas.com.ar-PAyro251013a
+18-Teatro.Payro@reservas.com.ar-PAyro261013a
+1-LEYER_DEMIAN@GMAIL.COM-EstrenoenelPayro332
+1-LEYER_DEMIAN@GMAIL.COM-EstrenoenelPayro333
+1-LEYER_DEMIAN@GMAIL.COM-EstrenoenelPayro334
+1-LEYER_DEMIAN@GMAIL.COM-EstrenoenelPayro335
+1-MORA_ANTONIO@HOTMAIL.COM-UnaHistoria_del27al33
+1-MORA_ANTONIO@HOTMAIL.COM-UnaHistoria_del34al40
+1-MORA_ANTONIO@HOTMAIL.COM-UnaHistoria_del41al47
+1-MORA_ANTONIO@HOTMAIL.COM-UnaHistoria_del48al54
+334.inv
+3-BEIRO_CLAUDIO@GMAIL.COM-NoeTEA_Fila12
+3-BEIRO_CLAUDIO@GMAIL.COM-NoeTEA_Fila13
+3-BEIRO_CLAUDIO@GMAIL.COM-NoeTEA_Fila14
+6-Teatro.Corrientes.Azul@reservas.com.ar-TCA_3Nov13
+combos.dis
+NoeTEA_Fila12.inv
+NoeTEA_Fila13.inv
+NoeTEA_Fila14.inv
+obras.mae
+salas.mae
+TCA_3Nov13.inv
+maine@notebook:~/Desktop/tp-sistemasop/bin$ ls ../arribos/
+
+# Los archivos fueron procesados
+
+maine@notebook:~/Desktop/tp-sistemasop/bin$ ls ../proc/
+18-Teatro.Payro@reservas.com.ar-PAyro171013a
+18-Teatro.Payro@reservas.com.ar-PAyro181013a
+18-Teatro.Payro@reservas.com.ar-PAyro251013a
+18-Teatro.Payro@reservas.com.ar-PAyro261013a
+1-LEYER_DEMIAN@GMAIL.COM-EstrenoenelPayro332
+1-LEYER_DEMIAN@GMAIL.COM-EstrenoenelPayro333
+1-LEYER_DEMIAN@GMAIL.COM-EstrenoenelPayro334
+1-LEYER_DEMIAN@GMAIL.COM-EstrenoenelPayro335
+1-MORA_ANTONIO@HOTMAIL.COM-UnaHistoria_del27al33
+1-MORA_ANTONIO@HOTMAIL.COM-UnaHistoria_del34al40
+1-MORA_ANTONIO@HOTMAIL.COM-UnaHistoria_del41al47
+1-MORA_ANTONIO@HOTMAIL.COM-UnaHistoria_del48al54
+3-BEIRO_CLAUDIO@GMAIL.COM-NoeTEA_Fila12
+3-BEIRO_CLAUDIO@GMAIL.COM-NoeTEA_Fila13
+3-BEIRO_CLAUDIO@GMAIL.COM-NoeTEA_Fila14
+6-Teatro.Corrientes.Azul@reservas.com.ar-TCA_3Nov13
+combos.dis
+reservas.nok
+reservas.ok
+
+# Verificamos el archivo de reservas
+
+maine@notebook:~/Desktop/tp-sistemasop/bin$ cat ../proc/reservas.ok
+1;Una historia para cartucho;25/10/2013;17:00;18;Teatro Payro;4;C00010023;;4;Teatro.Payro@reservas.com.ar;maine;2013/10/20
+1;Una historia para cartucho;25/10/2013;17:00;18;Teatro Payro;4;C00010023;;4;Teatro.Payro@reservas.com.ar;maine;2013/10/20
+1;Una historia para cartucho;25/10/2013;17:00;18;Teatro Payro;4;C00010023;;4;Teatro.Payro@reservas.com.ar;maine;2013/10/20
+1;Una historia para cartucho;25/10/2013;17:00;18;Teatro Payro;4;C00010023;;4;Teatro.Payro@reservas.com.ar;maine;2013/10/20
+1;Una historia para cartucho;25/10/2013;17:00;18;Teatro Payro;4;C00010023;334;4;LEYER_DEMIAN@GMAIL.COM;maine;2013/10/20
+1;Una historia para cartucho;25/10/2013;17:00;18;Teatro Payro;4;C00010023;334;4;LEYER_DEMIAN@GMAIL.COM;maine;2013/10/20
+1;Una historia para cartucho;25/10/2013;17:00;18;Teatro Payro;4;C00010023;334;4;LEYER_DEMIAN@GMAIL.COM;maine;2013/10/20
+1;Una historia para cartucho;25/10/2013;17:00;18;Teatro Payro;4;C00010023;334;4;LEYER_DEMIAN@GMAIL.COM;maine;2013/10/20
+1;Una historia para cartucho;25/10/2013;17:00;18;Teatro Payro;4;C00010023;334;4;LEYER_DEMIAN@GMAIL.COM;maine;2013/10/20
+1;Una historia para cartucho;25/10/2013;17:00;18;Teatro Payro;2;C00010023;1241;2;MORA_ANTONIO@HOTMAIL.COM;maine;2013/10/20
+1;Una historia para cartucho;25/10/2013;17:00;18;Teatro Payro;2;C00010023;1242;2;MORA_ANTONIO@HOTMAIL.COM;maine;2013/10/20
+1;Una historia para cartucho;25/10/2013;17:00;18;Teatro Payro;2;C00010023;1243;2;MORA_ANTONIO@HOTMAIL.COM;maine;2013/10/20
+1;Una historia para cartucho;25/10/2013;17:00;18;Teatro Payro;2;C00010023;1244;2;MORA_ANTONIO@HOTMAIL.COM;maine;2013/10/20
+1;Una historia para cartucho;25/10/2013;17:00;18;Teatro Payro;2;C00010023;1245;2;MORA_ANTONIO@HOTMAIL.COM;maine;2013/10/20
+1;Una historia para cartucho;25/10/2013;17:00;18;Teatro Payro;2;C00010023;1246;2;MORA_ANTONIO@HOTMAIL.COM;maine;2013/10/20
+1;Una historia para cartucho;25/10/2013;17:00;18;Teatro Payro;2;C00010023;1247;2;MORA_ANTONIO@HOTMAIL.COM;maine;2013/10/20
+3;En busca de No�;02/11/2013;18:00;12;Teatro Espacio Abierto;1;C00010026;NoeTEA_Fila12;1;BEIRO_CLAUDIO@GMAIL.COM;maine;2013/10/20
+3;En busca de No�;02/11/2013;18:00;12;Teatro Espacio Abierto;2;C00010026;NoeTEA_Fila12;2;BEIRO_CLAUDIO@GMAIL.COM;maine;2013/10/20
+3;En busca de No�;02/11/2013;18:00;12;Teatro Espacio Abierto;3;C00010026;NoeTEA_Fila12;3;BEIRO_CLAUDIO@GMAIL.COM;maine;2013/10/20
+3;En busca de No�;02/11/2013;18:00;12;Teatro Espacio Abierto;4;C00010026;NoeTEA_Fila13;4;BEIRO_CLAUDIO@GMAIL.COM;maine;2013/10/20
+3;En busca de No�;02/11/2013;18:00;12;Teatro Espacio Abierto;5;C00010026;NoeTEA_Fila13;5;BEIRO_CLAUDIO@GMAIL.COM;maine;2013/10/20
+
+# Generamos un reporte de disponibilidad
+
+maine@notebook:~/Desktop/tp-sistemasop/bin$ ./Imprimir_A.pl -d
+Listado de IDs de obras: 
+1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33 35 37 39 41 43 45 47 49 51 53 55 57 59 61 63 65 67 69 71 73 75 77 79 81 83 85 87 89 91 93 95 97 99 101 103 105 107 109 111 113 115 117 119 121 123 125 127 129 131 133 
+Listado de IDs de salas: 
+2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44 46 48 50 52 54 56 58 60 62 64 66 68 70 72 74 76 78 80 82 84 86 88 90 92 94 96 98 100 102 104 106 108 110 112 114 116 118 120 
+Generar disponibilidad por... 
+Opción 1: ID OBRA
+Opción 2: ID SALA
+Opción 3: RANGO de ID OBRA
+Opción 4: RANGO de ID SALA
+Ingrese la opción deseada: 3
+Ingrese el mínimo de ID de obra: 21
+Ingrese el máximo de ID de obra: 40
+Rango ID obra válido. 
+ID Combo	ID Obra	Fecha		Hora	ID sala	But Hab	But Disp 
+--------	-------	-----		----	-------	-------	-------- 
+C00010031	21	10/10/2013	19:00	50	600	60
+C00010035	21	10/10/2013	22:00	50	600	60
+C00010087	31	15/11/2013	20:00	96	400	100
+C00010091	31	22/11/2013	18:00	96	400	134
+C00010095	31	22/11/2013	22:00	96	400	134
+C00010093	33	22/11/2013	20:00	102	450	150
+C00010097	33	29/11/2013	18:00	102	450	150
+C00010101	33	29/11/2013	22:00	102	450	150
+C00010099	35	29/11/2013	20:00	108	450	150
+C00010103	35	30/11/2013	18:00	108	450	225
+C00010105	35	01/12/2013	22:00	108	450	225
+C00010107	37	05/12/2013	20:00	114	450	270
+C00010109	37	06/12/2013	18:00	114	450	270
+C00010119	37	07/12/2013	22:00	114	450	315
+C00010123	39	08/12/2013	20:00	120	450	315
+C00010127	39	12/12/2013	18:00	120	450	360
+C00010132	39	13/12/2013	22:00	120	450	360
+
+# Generamos un reporte de invitados a un evento
+
+maine@notebook:~/Desktop/tp-sistemasop/bin$ ./Imprimir_A.pl -i
+Evento: C00010026 Obra: 3-En busca de No� Fecha y Hora: 02/11/2013-18:00 Sala: 12-Teatro Espacio Abierto
+Evento: C00010023 Obra: 1-Una historia para cartucho Fecha y Hora: 25/10/2013-17:00 Sala: 18-Teatro Payro
+Ingrese un evento candidato: C00010023
+Evento válido.
+Evento: C00010023 Obra: 1-Una historia para cartucho Fecha y Hora: 25/10/2013-17:00 Sala: 18-Teatro Payro
+Referencia interna: 334 
+	 EUGENIO UCHIMA, 0, 1
+	 ARIEL TASTNY, 0, 2
+	 SERGIO UTHAY, 0, 3
+	 MARCELO BAL, 0, 4
+	 JUAN BIKU, 0, 5
+	 JAVIER BOLDI, 0, 6
+	 DAVID CARELLA, 0, 7
+	 MATIAS CERES, 0, 8
+	 JUAN CHIMA, 0, 9
+	 SEBASTIAN CORSO, 0, 10
+	 EMILIANO GAN, 0, 11
+	 MIGUEL GENDYK, 0, 12
+	 GUILLERMINA KAILO, 0, 13
+	 ANDRES OLAZABAL, 0, 14
+	 CESAR PARLA, 0, 15
+	 MARTIN PEREYRA, 0, 16
+	 ANDRES PESL, 0, 17
+	 CESAR PETRINA, 0, 18
+	 GUSTAVO PEZZOLI, 0, 19
+	 OSCAR PISTONE, 0, 20
+	 	 Total reservas confirmadas: 20 
+	 	 	 	 	 	 Total acumulado: 20 
+Referencia interna: 1242 
+	 CECILIA RIVELLI, Canje de Tissera, 1
+	 DANIEL RIZZO, 0, 2
+	 	 Total reservas confirmadas: 2 
+	 	 	 	 	 	 Total acumulado: 22 
+Referencia interna: 1243 
+	 GUSTAVO ROBLEDO, Mercedes de XD, 1
+	 CARLOS RODRIGUEZ, 0, 2
+	 	 Total reservas confirmadas: 2 
+	 	 	 	 	 	 Total acumulado: 24 
+Referencia interna: 1247 
+	 MARIELA CORRALES, Gerencia, 1
+	 LAURA DENKER, 0, 2
+	 	 Total reservas confirmadas: 2 
+	 	 	 	 	 	 Total acumulado: 26 
+Referencia interna: 1244 
+	 MIGUEL CAPPA, Cuesta Blanca, 1
+	 ALEJANDRO CARDIERI, 0, 2
+	 	 Total reservas confirmadas: 2 
+	 	 	 	 	 	 Total acumulado: 28 
+Referencia interna: 1245 
+	 DANIEL CARRERA, Gerencia, 1
+	 ALEJANDRA CATTANEO, 0, 2
+	 	 Total reservas confirmadas: 2 
+	 	 	 	 	 	 Total acumulado: 30 
+Referencia interna: 1246 
+	 ANIBAL CHINIKAILO, Gerencia, 1
+	 LUIS CLAVERINO, 0, 2
+	 	 Total reservas confirmadas: 2 
+	 	 	 	 	 	 Total acumulado: 32 
+Referencia interna: 1241 
+	 SILVIA RIBOLDI, Compa��a, 1
+	 JULIAN RIVAS, 0, 2
+	 	 Total reservas confirmadas: 2 
+	 	 	 	 	 	 Total acumulado: 34 
+maine@notebook:~/Desktop/tp-sistemasop/bin$ ./Stop_A.sh 
+Se detuvo el demonio de Recibir_A con PID: <8791>.
+maine@notebook:~/Desktop/tp-sistemasop/bin$ cd ..
+maine@notebook:~/Desktop/tp-sistemasop$ cd funciones/
+
+# Desinstalación de la aplicación
+
+maine@notebook:~/Desktop/tp-sistemasop/funciones$ ./Desinstalar.sh 
+¿Está seguro que desea desisntalar la aplicación? Todos los datos se perderán. (Si-No)
+
+Si
