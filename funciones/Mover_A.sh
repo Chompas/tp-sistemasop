@@ -38,7 +38,7 @@ nombreOrigen="${1##*/}"
 # Verificar si el origen y el destino son iguales. Si este fuera el caso, no mover
 if [ "$dirOrigen" = "$dirDestino" ]; then
 	if [ $# -eq 3 ]; then
-		./Grabar_L.sh "$comando" -t w "Origen y destino iguales. No se mueve"
+		Grabar_L.sh "$comando" -t w "Origen y destino iguales. No se mueve"
 	fi	
 	exit 0
 fi
@@ -46,13 +46,13 @@ fi
 # Si el origen no existe o el destino no existe, error. Si este fuera el caso, no mover
 if [ ! -f "$origen" ]; then
 	if [ $# -eq 3 ]; then
-		./Grabar_L.sh "$comando" -t e ""$origen" no existe"
+		Grabar_L.sh "$comando" -t e ""$origen" no existe"
 	fi	
     exit 1
 fi
 if [ ! -d "$dirDestino" ]; then
 	if [ $# -eq 3 ]; then
-		./Grabar_L.sh "$comando" -t e ""$dirDestino" no existe"
+		Grabar_L.sh "$comando" -t e ""$dirDestino" no existe"
 	fi	
     exit 1
 fi
@@ -86,7 +86,7 @@ if [ -f "$dirDestino/$nombreOrigen" ]; then
 	nnn=$(echo $nnn +1 | bc -l)
 	
 	if [ $# -eq 3 ]; then
-		./Grabar_L.sh "$comando" -t w "Archivo duplicado"
+		Grabar_L.sh "$comando" -t w "Archivo duplicado"
 	fi	
 	
 	# Muevo a dup con el nuevo nombre

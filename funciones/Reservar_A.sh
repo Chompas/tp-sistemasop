@@ -261,9 +261,9 @@ cantidadOK=0
 cantidadNOK=0
 
 # 1. Inicializar log
-./Grabar_L.sh "Reservar_A" -t i "Inicio de Reservar"
+Grabar_L.sh "Reservar_A" -t i "Inicio de Reservar"
 cant=$(cantidadArchivos "$GRUPO/$ACEPDIR")
-./Grabar_L.sh "Reservar_A" -t i "Cantidad de Archivos en $GRUPO/$ACEPDIR: $cant"
+Grabar_L.sh "Reservar_A" -t i "Cantidad de Archivos en $GRUPO/$ACEPDIR: $cant"
 
 # Me fijo si ya esta corriendo
 lockFile=/tmp/pIdGrabarLockFile
@@ -280,7 +280,7 @@ fi
 # Si no hay archivos
 if [ $cant = 0 ]
 then
-	./Grabar_L.sh "Reservar_A" -t e "No hay archivos a procesar"
+	Grabar_L.sh "Reservar_A" -t e "No hay archivos a procesar"
 	exit 1;
 fi
 
@@ -291,7 +291,7 @@ ACEPFILES="$GRUPO/$ACEPDIR/*"
 # 2. Procesar Un Archivo
 for f in $ACEPFILES
 do
-	./Grabar_L.sh "Reservar_A" -t i "Archivo a procesar: $f"
+	Grabar_L.sh "Reservar_A" -t i "Archivo a procesar: $f"
 	
 	IFS='-' read -ra CAMPOS_FILENAME <<< "${f##*/}"
 	# 0: id obra o sala
@@ -304,13 +304,13 @@ do
 	if [ -f "$GRUPO/$PROCDIR/${f##*/}" ]
 	then
 		# Archivo ya existe. Lo rechazo
-		./Grabar_L.sh "Reservar_A" -t w "Se rechaza el archivo por estar DUPLICADO"
-		./Mover_A.sh $f "$GRUPO/$RECHDIR" "Reservar_A"
+		Grabar_L.sh "Reservar_A" -t w "Se rechaza el archivo por estar DUPLICADO"
+		Mover_A.sh $f "$GRUPO/$RECHDIR" "Reservar_A"
 	elif [ ! -s $f ]
 	then
 		# 4. Archivo vacio. Lo rechazo
-		./Grabar_L.sh "Reservar_A" -t w "Se rechaza el archivo por estar VACIO"
-		./Mover_A.sh $f "$GRUPO/$RECHDIR" "Reservar_A"
+		Grabar_L.sh "Reservar_A" -t w "Se rechaza el archivo por estar VACIO"
+		Mover_A.sh $f "$GRUPO/$RECHDIR" "Reservar_A"
 	else
 		
 		# Proceso archivo
@@ -369,12 +369,12 @@ do
 				fi
 			fi
 		done < $f
-		./Mover_A.sh $f "$GRUPO/$PROCDIR" "Reservar_A"
+		Mover_A.sh $f "$GRUPO/$PROCDIR" "Reservar_A"
 	fi
 done
 
-./Grabar_L.sh "Reservar_A" -t i "Cantidad de registros grabados en reservas.ok: $cantidadOK"
-./Grabar_L.sh "Reservar_A" -t i "Cantidad de registros grabados en reservas.nok: $cantidadNOK"
+Grabar_L.sh "Reservar_A" -t i "Cantidad de registros grabados en reservas.ok: $cantidadOK"
+Grabar_L.sh "Reservar_A" -t i "Cantidad de registros grabados en reservas.nok: $cantidadNOK"
 
 index=0
 for id in "${IDS_FUNCIONES[@]}"
@@ -386,4 +386,4 @@ index=$(expr $index + 1)
 done
 
 # 9 Cerrar el Log
-./Grabar_L.sh "Reservar_A" -t i "Fin de Reservar_A"
+Grabar_L.sh "Reservar_A" -t i "Fin de Reservar_A"
