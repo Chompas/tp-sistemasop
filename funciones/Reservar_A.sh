@@ -146,7 +146,7 @@ function reservarEvento() {
 	
 	#Parametros:
 	# ${CAMPOS_FILENAME[0]} ${CAMPOS[1]} ${CAMPOS[2]} ${CAMPOS[5]} $numeroEvento ${CAMPOS[0]} ${CAMPOS_FILENAME[1]}
-		
+	
 	idEvento=$5
 	dispSolicitada=$4
 	index=0
@@ -194,9 +194,15 @@ function reservarEvento() {
 		nombreSala=$(obtenerNombre $sala)
 		cantidadButacasConf=$dispSolicitada
 		idCombo=$idEvento
-		refInterna=$6
+		if [ -z $7 ]
+		then
+			correo=$6
+		else
+			refInterna=$6
+			correo=$7
+		fi
+		
 		cantidadButacasSolic=$dispSolicitada
-		correo=$7
 		user=$USER
 		fechaGrabacion=$(date +"%Y/%m/%d") #FORMATO A DETERMINAR
 		
