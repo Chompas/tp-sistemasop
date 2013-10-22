@@ -36,8 +36,7 @@ Instalación
 `cd funciones`
 2. Darle permisos de ejecución al script `Instalar_TP.sh`:  
 `chmod +x Instalar_TP.sh`
-3. Ejecutar el script pasando como parámetro la ruta donde se desee realizar las instalación:  
-`./Instalar_TP.sh`
+3. Ejecutar el script: `./Instalar_TP.sh`
 4. Seguir los pasos indicados.
 
 
