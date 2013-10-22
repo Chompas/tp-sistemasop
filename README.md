@@ -81,4 +81,4 @@ Primeros pasos
 1. Ir al directorio de instalación de los ejecutables `bin`.
 2. Ejecutar el comando `. ./Iniciar_A.sh`.
 3. Correr el demonio eligiendo `Si` al final de la ejecución del `Iniciar_A`,  
-o corriendo `./Start_A.sh`
+o corriendo `Start_A.sh`.
